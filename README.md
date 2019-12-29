@@ -2,7 +2,7 @@
 A simple tiny space game [originally written in JavaFX][1] by [Gerrit Grunwald (a.k.a hansolo_)][2]
 and ported to Flutter and Dart.
 
-Donations are welcome at [Paypal](https://paypal.me/hans0l0)
+Gerrit is welcoming donations at [Paypal](https://paypal.me/hans0l0)
 
 ### Overview
 ![Overview](https://raw.githubusercontent.com/HanSolo/SpaceFX/master/SpaceFX.png)
