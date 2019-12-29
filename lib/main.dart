@@ -27,7 +27,12 @@ final _title = "SpaceFl";
 /// To do list:
 ///   [x] Experiment with direct rendering
 ///   [x] Initial port of actor classes
-///   [ ]
+///   [ ] Copy over image and audio assets from original
+///   [ ] Load and draw background image
+///   [ ] Draw stars
+///   [ ] Load and draw asteroid images
+///   [ ] Load and draw enemy images
+///   [ ] Handle input events
 void main() => RenderingFlutterBinding(root: RenderGameBox());
 //void main() => runApp(SpaceFlGame());
 
