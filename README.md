@@ -5,6 +5,8 @@ and ported to Flutter and Dart.
 Gerrit is welcoming donations at [Paypal](https://paypal.me/hans0l0)
 
 ### Overview
+All Flutter source code is in the `lib` directory. Platform-specifc build files and source code lives in the `ios`, `android`, and `web` directories.
+
 ![Overview](https://raw.githubusercontent.com/HanSolo/SpaceFX/master/SpaceFX.png)
 
 ### Youtube video
