@@ -14,39 +14,34 @@
  * limitations under the License.
  */
 
-import 'package:spacefl/game.dart';
+import 'dart:ui';
 
-class EnemyBossExplosion {
-  static const double FRAME_WIDTH = 200;
-  static const double FRAME_HEIGHT = 200;
-  static const double FRAME_CENTER = 100;
-  static const int MAX_FRAME_X = 4;
-  static const int MAX_FRAME_Y = 7;
+import 'package:spacefl/game/game.dart';
 
+class Torpedo {
+  final Image image;
   double x;
   double y;
   double vX;
   double vY;
-  double scale;
-  int countX = 0;
-  int countY = 0;
 
-  EnemyBossExplosion(this.x, this.y, this.vX, this.vY, this.scale);
+  Torpedo(this.image, this.x, double y)
+      : y = y - image.height,
+        vX = 0,
+        vY = Game.TORPEDO_SPEED;
+
+  get width => image.width;
+
+  get height => image.height;
+
+  get size => width > height ? width : height;
+
+  get radius => size * 0.5;
 
   void update(Game game) {
-    x += vX;
-    y += vY;
-
-    countX++;
-    if (countX == MAX_FRAME_X) {
-      countY++;
-      if (countX == MAX_FRAME_X && countY == MAX_FRAME_Y) {
-        game.state.enemyBossExplosionsToRemove.add(this);
-      }
-      countX = 0;
-      if (countY == MAX_FRAME_Y) {
-        countY = 0;
-      }
+    y -= vY;
+    if (y < -size) {
+      game.state.torpedoesToRemove.add(this);
     }
   }
 }

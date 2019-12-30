@@ -15,8 +15,8 @@
  */
 
 import 'package:flutter/rendering.dart';
-import 'package:spacefl/game.dart';
-import 'package:spacefl/render_game_box.dart';
+import 'package:spacefl/game/game.dart';
+import 'package:spacefl/game/rendering/render_game_box.dart';
 
 /*
  * To do list:

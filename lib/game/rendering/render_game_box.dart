@@ -17,8 +17,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:spacefl/game.dart';
-import 'package:spacefl/render_fns.dart';
+import 'package:spacefl/game/game.dart';
+import 'package:spacefl/game/rendering/render_fns.dart';
 
 /// A custom impl of [RenderBox] that draws the game board by talking directly
 /// to Flutter's rendering engine.

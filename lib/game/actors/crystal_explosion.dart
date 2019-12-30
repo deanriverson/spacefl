@@ -14,35 +14,34 @@
  * limitations under the License.
  */
 
-import 'package:spacefl/game.dart';
+import 'package:spacefl/game/game.dart';
 
-class AsteroidExplosion {
-  static const double FRAME_WIDTH = 256;
-  static const double FRAME_HEIGHT = 256;
-  static const double FRAME_CENTER = 128;
-  static const int MAX_FRAME_X = 8;
-  static const int MAX_FRAME_Y = 7;
+class CrystalExplosion {
+  static const double FRAME_WIDTH  = 100;
+  static const double FRAME_HEIGHT = 100;
+  static const double FRAME_CENTER = 50;
+  static const int    MAX_FRAME_X  = 4;
+  static const int    MAX_FRAME_Y  = 7;
 
-  double x;
   double y;
+  double x;
   double vX;
   double vY;
   double scale;
-  int countX = 0;
-  int countY = 0;
+  int    countX = 0;
+  int    countY = 0;
 
-  AsteroidExplosion(this.x, this.y, this.vX, this.vY, this.scale);
+  CrystalExplosion(this.x, this.y, this.vX, this.vY, this.scale);
 
   void update(Game game) {
     x += vX;
     y += vY;
 
-
     countX++;
     if (countX == MAX_FRAME_X) {
       countY++;
       if (countX == MAX_FRAME_X && countY == MAX_FRAME_Y) {
-        game.state.asteroidExplosionsToRemove.add(this);
+        game.state.crystalExplosionsToRemove.add(this);
       }
       countX = 0;
       if (countY == MAX_FRAME_Y) {

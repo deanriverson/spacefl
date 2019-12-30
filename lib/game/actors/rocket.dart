@@ -16,7 +16,7 @@
 
 import 'dart:ui';
 
-import 'package:spacefl/game.dart';
+import 'package:spacefl/game/game.dart';
 
 class Rocket {
   final Image image;

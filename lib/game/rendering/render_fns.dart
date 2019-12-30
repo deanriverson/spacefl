@@ -15,7 +15,7 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:spacefl/game.dart';
+import 'package:spacefl/game/game.dart';
 
 final _imagePaint = Paint();
 

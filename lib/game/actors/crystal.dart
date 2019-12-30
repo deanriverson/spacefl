@@ -17,7 +17,7 @@
 import 'dart:math' as math;
 import 'dart:ui';
 
-import 'package:spacefl/game.dart';
+import 'package:spacefl/game/game.dart';
 
 class Crystal {
   final math.Random rnd = new math.Random();

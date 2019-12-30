@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import 'package:spacefl/game.dart';
+import 'package:spacefl/game/game.dart';
 
 class EnemyBossHit {
   static const double FRAME_WIDTH  = 80;

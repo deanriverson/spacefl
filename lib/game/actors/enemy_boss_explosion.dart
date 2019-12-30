@@ -14,37 +14,38 @@
  * limitations under the License.
  */
 
-import 'package:spacefl/game.dart';
+import 'package:spacefl/game/game.dart';
 
-class SpaceShipExplosion {
-  static const double FRAME_WIDTH  = 100;
-  static const double FRAME_HEIGHT = 100;
-  static const double FRAME_CENTER = 50;
-  static const int    MAX_FRAME_X  = 8;
-  static const int    MAX_FRAME_Y  = 6;
+class EnemyBossExplosion {
+  static const double FRAME_WIDTH = 200;
+  static const double FRAME_HEIGHT = 200;
+  static const double FRAME_CENTER = 100;
+  static const int MAX_FRAME_X = 4;
+  static const int MAX_FRAME_Y = 7;
 
   double x;
   double y;
-  int    countX = 0;
-  int    countY = 0;
+  double vX;
+  double vY;
+  double scale;
+  int countX = 0;
+  int countY = 0;
 
-  SpaceShipExplosion(this.x, this.y);
+  EnemyBossExplosion(this.x, this.y, this.vX, this.vY, this.scale);
 
   void update(Game game) {
+    x += vX;
+    y += vY;
+
     countX++;
     if (countX == MAX_FRAME_X) {
-      countX = 0;
       countY++;
+      if (countX == MAX_FRAME_X && countY == MAX_FRAME_Y) {
+        game.state.enemyBossExplosionsToRemove.add(this);
+      }
+      countX = 0;
       if (countY == MAX_FRAME_Y) {
         countY = 0;
-      }
-      if (countX == 0 && countY == 0) {
-        final state = game.state;
-        final boardSize = state.boardSize;
-
-        state.hasBeenHit = false;
-        state.spaceShip.x = boardSize.width * 0.5;
-        state.spaceShip.y = boardSize.height - 2 * state.spaceShip.height;
       }
     }
   }

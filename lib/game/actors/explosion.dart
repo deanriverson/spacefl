@@ -14,34 +14,40 @@
  * limitations under the License.
  */
 
-import 'dart:ui';
+import 'package:spacefl/game/game.dart';
 
-import 'package:spacefl/game.dart';
+class Explosion {
+  static const double FRAME_WIDTH  = 192;
+  static const double FRAME_HEIGHT = 192;
+  static const double FRAME_CENTER = 96;
+  static const int    MAX_FRAME_X  = 5;
+  static const int    MAX_FRAME_Y  = 4;
 
-class Torpedo {
-  final Image image;
   double x;
   double y;
   double vX;
   double vY;
+  double scale;
+  int    countX = 0;
+  int    countY = 0;
 
-  Torpedo(this.image, this.x, double y)
-      : y = y - image.height,
-        vX = 0,
-        vY = Game.TORPEDO_SPEED;
-
-  get width => image.width;
-
-  get height => image.height;
-
-  get size => width > height ? width : height;
-
-  get radius => size * 0.5;
+  Explosion(this.x, this.y, this.vX, this.vY, this.scale);
 
   void update(Game game) {
-    y -= vY;
-    if (y < -size) {
-      game.state.torpedoesToRemove.add(this);
+    x += vX;
+    y += vY;
+
+    countX++;
+    if (countX == MAX_FRAME_X) {
+      countY++;
+      if (countX == MAX_FRAME_X && countY == MAX_FRAME_Y) {
+        game.state.explosionsToRemove.add(this);
+      }
+      countX = 0;
+      if (countY == MAX_FRAME_Y) {
+        countY = 0;
+      }
     }
   }
 }
+

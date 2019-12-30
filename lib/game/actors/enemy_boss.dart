@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
+import 'dart:math' as math;
 import 'dart:ui';
 
-import 'package:spacefl/game.dart';
+import 'package:spacefl/game/game.dart';
 
-class Enemy {
-  static const int MAX_VALUE = 49;
+class EnemyBoss {
+  static const int MAX_VALUE = 99;
 
-  final Image image;
+  final math.Random rnd = new math.Random();
   final double xVariation = 1;
   final double minSpeedY = 3;
 
+  Image image;
   double x;
   double y;
   double rot;
@@ -37,15 +39,16 @@ class Enemy {
   double vYVariation;
   int value;
   double lastShotY;
+  int hits;
 
-  Enemy(this.image) {
+
+  EnemyBoss(this.image) {
     init();
   }
 
   void init() {
     throw UnimplementedError();
-    // Provide access to random
-//    Game.instance();
+
 //    // Position
 //    x = rnd.nextDouble() * WIDTH;
 //    y = -image.getHeight();
@@ -56,9 +59,9 @@ class Enemy {
 //    // Random Speed
 //    vYVariation = (rnd.nextDouble() * 0.5) + 0.2;
 //
-//    width  = image.getWidth();
+//    width = image.getWidth();
 //    height = image.getHeight();
-//    size   = width > height ? width : height;
+//    size = width > height ? width : height;
 //    radius = size * 0.5;
 //
 //    // Velocity
@@ -76,23 +79,37 @@ class Enemy {
 //
 //    // Related to laser fire
 //    lastShotY = 0;
-  }
-
-  // TODO: implement
-  void respawn() {
-    throw UnimplementedError();
-//    image = enemyImages[RND.nextInt(enemyImages.length)];
-//    init();
+//
+//    // No of hits
+//    hits = 5; //RND.nextInt(5);
   }
 
   void update(Game game) {
     throw UnimplementedError();
 //    x += vX;
 //    y += vY;
-
-    // Respawn Enemy
+//
+//    switch (hits) {
+//      case 5:
+//        image = enemyBossImg4;
+//        break;
+//      case 4:
+//        image = enemyBossImg3;
+//        break;
+//      case 3:
+//        image = enemyBossImg2;
+//        break;
+//      case 2:
+//        image = enemyBossImg1;
+//        break;
+//      case 1:
+//        image = enemyBossImg0;
+//        break;
+//    }
+//
+//    // Respawn Enemy
 //    if (x < -size || x > WIDTH + size || y > HEIGHT + size) {
-//      respawn();
+//      state.enemyBossesToRemove.add(this);
 //    }
   }
 }

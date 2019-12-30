@@ -16,9 +16,9 @@
 
 import 'dart:ui';
 
-import 'package:spacefl/game.dart';
+import 'package:spacefl/game/game.dart';
 
-class EnemyBossTorpedo {
+class EnemyTorpedo {
   final Image image;
 
   double x;
@@ -26,13 +26,26 @@ class EnemyBossTorpedo {
   double vX;
   double vY;
 
+  EnemyTorpedo(this.image, this.x, this.y, this.vX, this.vY);
 
-  EnemyBossTorpedo(this.image, double x, this.y, this.vX, this.vY)
-    : this.x = x - image.width / 2.0;
+//  {
+//    this.image = image;
+//    this.x = x - image.getWidth() / 2.0;
+//    this.y = y;
+//    this.width = image.getWidth();
+//    this.height = image.getHeight();
+//    this.size = width > height ? width : height;
+//    this.radius = size * 0.5;
+//    this.vX = vX;
+//    this.vY = vY;
+//  }
 
   get width => image.width;
+
   get height => image.height;
+
   get size => width > height ? width : height;
+
   get radius => size * 0.5;
 
   void update(Game game) {
@@ -40,19 +53,16 @@ class EnemyBossTorpedo {
 
 //    x += vX;
 //    y += vY;
-
-//    final hasBeenHit = state.hasBeenHit;
-//    final spaceShip = state.spaceShip;
 //
 //    if (!hasBeenHit) {
-//      bool hit;
+//      boolean hit;
 //      if (spaceShip.shield) {
 //        hit = isHitCircleCircle(x, y, radius, spaceShip.x, spaceShip.y, deflectorShieldRadius);
 //      } else {
 //        hit = isHitCircleCircle(x, y, radius, spaceShip.x, spaceShip.y, spaceShip.radius);
 //      }
 //      if (hit) {
-//        enemyBossTorpedosToRemove.add(EnemyBossTorpedo.this);
+//        enemyTorpedoesToRemove.add(EnemyTorpedo.this);
 //        if (spaceShip.shield) {
 //          playSound(shieldHitSound);
 //        } else {
@@ -65,7 +75,7 @@ class EnemyBossTorpedo {
 //        }
 //      }
 //    } else if (y > HEIGHT) {
-//      enemyBossTorpedosToRemove.add(EnemyBossTorpedo.this);
+//      state.enemyTorpedoesToRemove.add(this);
 //    }
   }
 }

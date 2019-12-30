@@ -14,26 +14,10 @@
  * limitations under the License.
  */
 
-import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/services.dart';
-import 'package:spacefl/actors/asteroid_explosion.dart';
-import 'package:spacefl/actors/crystal.dart';
-import 'package:spacefl/actors/crystal_explosion.dart';
-import 'package:spacefl/actors/enemy_boss.dart';
-import 'package:spacefl/actors/enemy_boss_explosion.dart';
-import 'package:spacefl/actors/enemy_boss_hit.dart';
-import 'package:spacefl/actors/enemy_boss_torpedo.dart';
-import 'package:spacefl/actors/enemy_torpedo.dart';
-import 'package:spacefl/actors/explosion.dart';
-import 'package:spacefl/actors/hit.dart';
-import 'package:spacefl/actors/player.dart';
-import 'package:spacefl/actors/rocket.dart';
-import 'package:spacefl/actors/rocket_explosion.dart';
-import 'package:spacefl/actors/space_ship.dart';
-import 'package:spacefl/actors/space_ship_explosion.dart';
-import 'package:spacefl/actors/torpedo.dart';
+import 'package:spacefl/game/game_state.dart';
 
 class _GameImages {
   static const BACKGROUND = 'assets/images/background.jpg';
@@ -52,62 +36,6 @@ class _GameImages {
     final frameInfo = await codec.getNextFrame();
     return frameInfo.image;
   }
-}
-
-class GameState {
-  SpaceShip spaceShip;
-  SpaceShipExplosion spaceShipExplosion;
-
-  List<Player> hallOfFame = [];
-
-  List<Hit> hits = [];
-  List<Hit> hitsToRemove = [];
-  List<Crystal> crystals = [];
-  List<Crystal> crystalsToRemove = [];
-  List<Rocket> rockets = [];
-  List<Rocket> rocketsToRemove = [];
-  List<Torpedo> torpedoes = [];
-  List<Torpedo> torpedoesToRemove = [];
-
-  List<EnemyBoss> enemyBosses = [];
-  List<EnemyBoss> enemyBossesToRemove = [];
-  List<EnemyTorpedo> enemyTorpedoes = [];
-  List<EnemyTorpedo> enemyTorpedoesToRemove = [];
-  List<EnemyBossHit> enemyBossHits = [];
-  List<EnemyBossHit> enemyBossHitsToRemove = [];
-  List<EnemyBossTorpedo> enemyBossTorpedoes = [];
-  List<EnemyBossTorpedo> enemyBossTorpedoesToRemove = [];
-
-  List<RocketExplosion> rocketExplosions = [];
-  List<RocketExplosion> rocketExplosionsToRemove = [];
-  List<EnemyBossExplosion> enemyBossExplosions = [];
-  List<EnemyBossExplosion> enemyBossExplosionsToRemove = [];
-  List<Explosion> explosions = [];
-  List<Explosion> explosionsToRemove = [];
-  List<AsteroidExplosion> asteroidExplosions = [];
-  List<AsteroidExplosion> asteroidExplosionsToRemove = [];
-  List<CrystalExplosion> crystalExplosions = [];
-  List<CrystalExplosion> crystalExplosionsToRemove = [];
-
-  Random random = Random();
-  Size boardSize = Size.zero;
-
-  double scorePosX;
-  double scorePosY;
-  double backgroundViewportY = 2079; //backgroundImg.getHeight() - HEIGHT;
-
-  int score = 0;
-  int lifeCount = Game.LIVES;
-  int shieldCount = Game.SHIELDS;
-  int lastShieldActivated;
-  int lastEnemyBossAttack;
-  int lastCrystal;
-  int lastTimerCall;
-  bool hasBeenHit = false;
-  bool running = false;
-  bool gameOverScreen = false;
-  bool hallOfFameScreen = false;
-  bool inputAllowed = false;
 }
 
 class Game {

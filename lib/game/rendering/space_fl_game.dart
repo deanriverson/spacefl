@@ -16,7 +16,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:spacefl/render_fns.dart';
+import 'package:spacefl/game/rendering/render_fns.dart';
 
 const _title = "SpaceFl";
 
