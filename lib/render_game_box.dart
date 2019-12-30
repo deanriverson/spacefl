@@ -47,6 +47,8 @@ class RenderGameBox extends RenderBox {
   void paint(PaintingContext ctx, Offset offset) {
     final canvas = ctx.canvas;
     canvas.drawRect(Rect.fromLTWH(offset.dx, offset.dy, size.width, size.height), backgroundPaint);
+
+    // TODO: use drawFps from render_fns
     _drawFps(canvas, size);
   }
 
