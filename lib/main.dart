@@ -24,10 +24,19 @@ import 'package:spacefl/game/rendering/render_game_box.dart';
  *   [x] Copy over image and audio assets from original
  *   [x] Load and draw background image
  *   [x] Draw stars
- *   [ ] Load and draw asteroid images
- *   [ ] Load and draw enemy images
+ *   [x] Load and draw asteroids
+ *   [ ] Load and draw enemies
+ *   [ ] Load and draw crystals
+ *   [ ] Draw space ship and shield
  *   [ ] Handle input events
- *   [ ] Draw space ship
+ *   [ ] Draw player torpedoes and rockets
+ *   [ ] Hit testing on asteroids
+ *   [ ] Hit testing on enemies
+ *   [ ] Draw asteroid and enemy explosions
+ *   [ ] Draw enemy torpedoes
+ *   [ ] Hit testing on space ship
+ *   [ ] Draw space ship explosion
+ *   [ ] Draw score, lives, and mini shields
  */
 
 /// Run the game using the Flutter rendering engine directly
