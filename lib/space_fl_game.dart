@@ -38,10 +38,10 @@ class GameBoard extends StatefulWidget {
   _GameBoardState createState() => _GameBoardState();
 }
 
-double _deltaTime = 0;
+Duration _deltaTime = Duration.zero;
 
 class _GameBoardState extends State<GameBoard> {
-  int _lastMillis = 0;
+  Duration _lastDuration = Duration.zero;
   Ticker _gameTicker;
 
   @override
@@ -50,9 +50,8 @@ class _GameBoardState extends State<GameBoard> {
     _gameTicker = Ticker(
         (duration) {
         setState(() {
-          final millis = duration.inMilliseconds;
-          _deltaTime = (millis - _lastMillis) / Duration.millisecondsPerSecond;
-          _lastMillis = millis;
+          _deltaTime = duration - _lastDuration;
+          _lastDuration = duration;
         });
       },
     )..start();

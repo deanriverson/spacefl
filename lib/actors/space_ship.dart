@@ -47,6 +47,8 @@ class SpaceShip {
 //  }
 
   void update() {
+    throw UnimplementedError();
+
 //    x += vX;
 //    y += vY;
 //    if (x + width * 0.5 > WIDTH) {

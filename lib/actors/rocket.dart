@@ -16,7 +16,7 @@
 
 import 'dart:ui';
 
-import 'package:spacefl/game_state.dart';
+import 'package:spacefl/game.dart';
 
 class Rocket {
   final Image image;
@@ -49,7 +49,9 @@ class Rocket {
 //    this.vY         = ROCKET_SPEED;
 //  }
 
-  void update(GameState state) {
+  void update(Game game) {
+    throw UnimplementedError();
+
 //    y -= vY;
 //    if (y < -size) {
 //      rocketsToRemove.add(Rocket.this);

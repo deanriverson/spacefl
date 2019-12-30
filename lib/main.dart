@@ -18,19 +18,28 @@ import 'package:flutter/rendering.dart';
 import 'package:spacefl/game.dart';
 import 'package:spacefl/render_game_box.dart';
 
-/// To do list:
-///   [x] Experiment with direct rendering
-///   [x] Initial port of actor classes
-///   [x] Copy over image and audio assets from original
-///   [ ] Load and draw background image
-///   [ ] Draw stars
-///   [ ] Load and draw asteroid images
-///   [ ] Load and draw enemy images
-///   [ ] Handle input events
-Future<void> main() async {
+/*
+ * To do list:
+ *   [x] Experiment with direct rendering
+ *   [x] Initial port of actor classes
+ *   [x] Copy over image and audio assets from original
+ *   [x] Load and draw background image
+ *   [ ] Draw stars
+ *   [ ] Load and draw asteroid images
+ *   [ ] Load and draw enemy images
+ *   [ ] Handle input events
+ *   [ ] Draw space ship
+ */
+
+/// Run the game using the Flutter rendering engine directly
+void main() {
+  // Order matters
   _initRendering();
   _initGame();
 }
+
+/// Run the game using Flutter widgets
+//void main() => runApp(SpaceFlGame());
 
 void _initRendering() {
   RenderingFlutterBinding(root: RenderGameBox());
@@ -39,5 +48,3 @@ void _initRendering() {
 void _initGame() {
   Game.instance();
 }
-
-//void main() => runApp(SpaceFlGame());

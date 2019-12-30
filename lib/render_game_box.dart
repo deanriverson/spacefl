@@ -24,12 +24,11 @@ import 'package:spacefl/render_fns.dart';
 /// to Flutter's rendering engine.
 class RenderGameBox extends RenderBox {
   int _frameCallbackId;
-  double _deltaT = 0;
+  Duration _deltaT = Duration.zero;
   Duration _lastTime = Duration.zero;
 
-  final imagePaint = Paint();
-  final backgroundPaint = Paint()
-    ..color = Colors.black;
+//  final backgroundPaint = Paint()
+//    ..color = Colors.black;
 
   @override
   void attach(PipelineOwner owner) {
@@ -50,13 +49,8 @@ class RenderGameBox extends RenderBox {
   void paint(PaintingContext ctx, Offset offset) {
     final canvas = ctx.canvas;
     final game = Game.instance();
-    canvas.drawRect(Rect.fromLTWH(offset.dx, offset.dy, size.width, size.height), backgroundPaint);
 
-    final backgroundImage = game.images.backgroundImage;
-    if (backgroundImage != null) {
-      canvas.drawImage(backgroundImage, Offset.zero, imagePaint);
-    }
-
+    drawBackground(canvas, size, game);
     drawFps(canvas, size, _deltaT);
   }
 
@@ -69,22 +63,31 @@ class RenderGameBox extends RenderBox {
   }
 
   void _tick(Duration timestamp) {
-    if (!attached) {
+    if (!attached || size == null) {
       return;
     }
+
     _scheduleTick();
-    _computeDeltaT(timestamp);
+
+    _deltaT = _computeDeltaT(timestamp);
+    _updateGame(_deltaT);
+
     markNeedsPaint();
   }
 
-  void _computeDeltaT(Duration now) {
+  Duration _computeDeltaT(Duration now) {
     Duration delta = now - _lastTime;
     if (_lastTime == Duration.zero) {
       delta = Duration.zero;
     }
 
     _lastTime = now;
-    _deltaT = delta.inMicroseconds / Duration.microsecondsPerSecond;
+    return delta;
+  }
+
+  void _updateGame(Duration _deltaT) {
+    final game = Game.instance();
+    game.state.boardSize = size;
   }
 }
 

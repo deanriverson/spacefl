@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import 'package:spacefl/game_state.dart';
+import 'package:spacefl/game.dart';
 
 class EnemyBossHit {
   static const double FRAME_WIDTH  = 80;
@@ -32,7 +32,7 @@ class EnemyBossHit {
 
   EnemyBossHit(this.x, this.y, this.vX, this.vY);
 
-  void update(GameState state) {
+  void update(Game game) {
     x += vX;
     y += vY;
 
@@ -40,7 +40,7 @@ class EnemyBossHit {
     if (countX == MAX_FRAME_X) {
       countY++;
       if (countX == MAX_FRAME_X && countY == MAX_FRAME_Y) {
-        state.enemyBossHitsToRemove.add(this);
+        game.state.enemyBossHitsToRemove.add(this);
       }
       countX = 0;
       if (countY == MAX_FRAME_Y) {

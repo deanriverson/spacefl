@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import 'package:spacefl/game_state.dart';
+import 'package:spacefl/game.dart';
 
 class SpaceShipExplosion {
   static const double FRAME_WIDTH  = 100;
@@ -30,8 +30,7 @@ class SpaceShipExplosion {
 
   SpaceShipExplosion(this.x, this.y);
 
-  // TODO: get WIDTH and HEIGHT constants
-  void update(GameState state) {
+  void update(Game game) {
     countX++;
     if (countX == MAX_FRAME_X) {
       countX = 0;
@@ -40,9 +39,12 @@ class SpaceShipExplosion {
         countY = 0;
       }
       if (countX == 0 && countY == 0) {
+        final state = game.state;
+        final boardSize = state.boardSize;
+
         state.hasBeenHit = false;
-//        state.spaceShip.x = WIDTH * 0.5;
-//        state.spaceShip.y = HEIGHT - 2 * state.spaceShip.height;
+        state.spaceShip.x = boardSize.width * 0.5;
+        state.spaceShip.y = boardSize.height - 2 * state.spaceShip.height;
       }
     }
   }

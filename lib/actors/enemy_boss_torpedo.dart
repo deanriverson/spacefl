@@ -16,7 +16,7 @@
 
 import 'dart:ui';
 
-import 'package:spacefl/game_state.dart';
+import 'package:spacefl/game.dart';
 
 class EnemyBossTorpedo {
   final Image image;
@@ -35,10 +35,11 @@ class EnemyBossTorpedo {
   get size => width > height ? width : height;
   get radius => size * 0.5;
 
-  // TODO: get deflectorShieldRadius, isHitCircleCircle, HEIGHT constants, etc. into here
-  void update(GameState state) {
-    x += vX;
-    y += vY;
+  void update(Game game) {
+    throw UnimplementedError();
+
+//    x += vX;
+//    y += vY;
 
 //    final hasBeenHit = state.hasBeenHit;
 //    final spaceShip = state.spaceShip;

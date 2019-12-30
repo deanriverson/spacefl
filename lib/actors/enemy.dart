@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-import 'dart:math' as math;
 import 'dart:ui';
 
-import 'package:spacefl/game_state.dart';
+import 'package:spacefl/game.dart';
 
 class Enemy {
   static const int MAX_VALUE = 49;
 
   final Image image;
-  final math.Random rnd = new math.Random();
   final double xVariation = 1;
   final double minSpeedY = 3;
 
@@ -44,8 +42,10 @@ class Enemy {
     init();
   }
 
-  // TODO: Get WIDTH and other constants to this method
   void init() {
+    throw UnimplementedError();
+    // Provide access to random
+//    Game.instance();
 //    // Position
 //    x = rnd.nextDouble() * WIDTH;
 //    y = -image.getHeight();
@@ -80,14 +80,15 @@ class Enemy {
 
   // TODO: implement
   void respawn() {
+    throw UnimplementedError();
 //    image = enemyImages[RND.nextInt(enemyImages.length)];
 //    init();
   }
 
-  // TODO: Get WIDTH and other constants to this method
-  void update(GameState state) {
-    x += vX;
-    y += vY;
+  void update(Game game) {
+    throw UnimplementedError();
+//    x += vX;
+//    y += vY;
 
     // Respawn Enemy
 //    if (x < -size || x > WIDTH + size || y > HEIGHT + size) {

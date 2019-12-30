@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import 'package:spacefl/game_state.dart';
+import 'package:spacefl/game.dart';
 
 class CrystalExplosion {
   static const double FRAME_WIDTH  = 100;
@@ -33,7 +33,7 @@ class CrystalExplosion {
 
   CrystalExplosion(this.x, this.y, this.vX, this.vY, this.scale);
 
-  void update(GameState state) {
+  void update(Game game) {
     x += vX;
     y += vY;
 
@@ -41,7 +41,7 @@ class CrystalExplosion {
     if (countX == MAX_FRAME_X) {
       countY++;
       if (countX == MAX_FRAME_X && countY == MAX_FRAME_Y) {
-        state.crystalExplosionsToRemove.add(this);
+        game.state.crystalExplosionsToRemove.add(this);
       }
       countX = 0;
       if (countY == MAX_FRAME_Y) {

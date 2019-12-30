@@ -17,7 +17,7 @@
 import 'dart:math' as math;
 import 'dart:ui';
 
-import 'package:spacefl/game_state.dart';
+import 'package:spacefl/game.dart';
 
 class Crystal {
   final math.Random rnd = new math.Random();
@@ -47,8 +47,9 @@ class Crystal {
     init();
   }
 
-  // TODO: Get WIDTH and other constants to this method
   void init() {
+    throw UnimplementedError();
+
 //    // Position
 //    x = rnd.nextDouble() * WIDTH;
 //    y = -image.getHeight();
@@ -77,25 +78,25 @@ class Crystal {
 //    rotateRight = rnd.nextBoolean();
   }
 
-  // TODO: Get WIDTH and other constants to this method
-  void update(GameState state) {
-    x += vX;
-    y += vY;
-
-    cX = x + imgCenterX;
-    cY = y + imgCenterY;
-
-    if (rotateRight) {
-      rot += vR;
-      if (rot > 360) {
-        rot = 0;
-      }
-    } else {
-      rot -= vR;
-      if (rot < 0) {
-        rot = 360;
-      }
-    }
+  void update(Game game) {
+    throw UnimplementedError();
+//    x += vX;
+//    y += vY;
+//
+//    cX = x + imgCenterX;
+//    cY = y + imgCenterY;
+//
+//    if (rotateRight) {
+//      rot += vR;
+//      if (rot > 360) {
+//        rot = 0;
+//      }
+//    } else {
+//      rot -= vR;
+//      if (rot < 0) {
+//        rot = 360;
+//      }
+//    }
 
     // Respawn crystal
 //    if (x < -size || x - radius > WIDTH || y - height > HEIGHT) {

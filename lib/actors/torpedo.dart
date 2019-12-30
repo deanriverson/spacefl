@@ -16,37 +16,32 @@
 
 import 'dart:ui';
 
-import 'package:spacefl/game_state.dart';
+import 'package:spacefl/game.dart';
 
 class Torpedo {
   final Image image;
   double x;
   double y;
-  double width;
-  double height;
-  double size;
-  double radius;
   double vX;
   double vY;
 
-  Torpedo(this.image);
+  Torpedo(this.image, this.x, double y)
+      : y = y - image.height,
+        vX = 0,
+        vY = Game.TORPEDO_SPEED;
 
-//  Torpedo(final Image image, final double x, final double y) {
-//    this.image  = image;
-//    this.x      = x;
-//    this.y      = y - image.height;
-//    this.width  = image.width;
-//    this.height = image.height;
-//    this.size   = width > height ? width : height;
-//    this.radius = size * 0.5;
-//    this.vX     = 0;
-//    this.vY     = TORPEDO_SPEED;
-//  }
+  get width => image.width;
 
-  void update(GameState state) {
-//    y -= vY;
-//    if (y < -size) {
-//      torpedosToRemove.add(Torpedo.this);
-//    }
+  get height => image.height;
+
+  get size => width > height ? width : height;
+
+  get radius => size * 0.5;
+
+  void update(Game game) {
+    y -= vY;
+    if (y < -size) {
+      game.state.torpedoesToRemove.add(this);
+    }
   }
 }

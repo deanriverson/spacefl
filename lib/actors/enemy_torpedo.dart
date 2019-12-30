@@ -16,7 +16,7 @@
 
 import 'dart:ui';
 
-import 'package:spacefl/game_state.dart';
+import 'package:spacefl/game.dart';
 
 class EnemyTorpedo {
   final Image image;
@@ -48,8 +48,9 @@ class EnemyTorpedo {
 
   get radius => size * 0.5;
 
-  // TODO: Get WIDTH and other constants to this method
-  void update(GameState state) {
+  void update(Game game) {
+    throw UnimplementedError();
+
 //    x += vX;
 //    y += vY;
 //

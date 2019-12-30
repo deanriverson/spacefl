@@ -15,11 +15,33 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:spacefl/game.dart';
 
-void drawFps(Canvas canvas, Size size, double deltaT) {
-  TextSpan span = new TextSpan(text: '${(1.0 / deltaT).toStringAsFixed(1)} FPS');
+final _imagePaint = Paint();
+
+void drawFps(Canvas canvas, Size size, Duration deltaT) {
+  double fps = Duration.microsecondsPerSecond / deltaT.inMicroseconds;
+  TextSpan span = new TextSpan(text: '${fps.toStringAsFixed(1)} FPS');
   TextPainter tp = new TextPainter(text: span, textAlign: TextAlign.left, textDirection: TextDirection.ltr);
   tp.layout();
   tp.paint(canvas, new Offset(size.width - tp.width - 5.0, 30.0));
 }
 
+void drawBackground(Canvas canvas, Size size, Game game) {
+  if (!Game.SHOW_BACKGROUND) {
+    return;
+  }
+
+  final state = game.state;
+  final backgroundImage = game.images.backgroundImage;
+
+  state.backgroundViewportY -= 0.5;
+  if (state.backgroundViewportY <= 0) {
+    state.backgroundViewportY = 2079; //backgroundImg.getHeight() - HEIGHT;
+  }
+
+  final src = Rect.fromLTWH(0, state.backgroundViewportY, size.width, size.height);
+  final dst = Rect.fromLTWH(0, 0, size.width, size.height);
+
+  canvas.drawImageRect(backgroundImage, src, dst, _imagePaint);
+}

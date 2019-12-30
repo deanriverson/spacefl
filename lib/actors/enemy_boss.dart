@@ -17,7 +17,7 @@
 import 'dart:math' as math;
 import 'dart:ui';
 
-import 'package:spacefl/game_state.dart';
+import 'package:spacefl/game.dart';
 
 class EnemyBoss {
   static const int MAX_VALUE = 99;
@@ -46,8 +46,9 @@ class EnemyBoss {
     init();
   }
 
-  // TODO: Get WIDTH and other constants to this method
   void init() {
+    throw UnimplementedError();
+
 //    // Position
 //    x = rnd.nextDouble() * WIDTH;
 //    y = -image.getHeight();
@@ -83,8 +84,8 @@ class EnemyBoss {
 //    hits = 5; //RND.nextInt(5);
   }
 
-  // TODO: Get enemy boss images here
-  void update(GameState state) {
+  void update(Game game) {
+    throw UnimplementedError();
 //    x += vX;
 //    y += vY;
 //
