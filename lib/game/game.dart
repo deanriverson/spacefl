@@ -16,27 +16,8 @@
 
 import 'dart:ui';
 
-import 'package:flutter/services.dart';
+import 'package:spacefl/game/game_images.dart';
 import 'package:spacefl/game/game_state.dart';
-
-class _GameImages {
-  static const BACKGROUND = 'assets/images/background.jpg';
-
-  Image _backgroundImage;
-
-  get backgroundImage => _backgroundImage;
-
-  Future<void> loadImages() async {
-    _backgroundImage = await _loadImage(BACKGROUND);
-  }
-
-  Future<Image> _loadImage(String key) async {
-    final byteData = await rootBundle.load(key);
-    final codec = await instantiateImageCodec(byteData.buffer.asUint8List());
-    final frameInfo = await codec.getNextFrame();
-    return frameInfo.image;
-  }
-}
 
 class Game {
   static const bool PLAY_SOUND = true;
@@ -76,7 +57,7 @@ class Game {
   static Game _instance;
 
   final state = GameState();
-  final images = _GameImages();
+  final images = GameImages();
 
   Game._();
 

@@ -63,6 +63,7 @@ class RenderGameBox extends RenderBox {
 
     drawBackground(canvas, size, game);
     drawStars(canvas, size, game);
+    drawAsteroids(canvas, size, game);
     drawFps(canvas, size, _deltaT);
   }
 

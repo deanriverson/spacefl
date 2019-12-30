@@ -17,6 +17,7 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:spacefl/game/actors/asteroid.dart';
 import 'package:spacefl/game/actors/asteroid_explosion.dart';
 import 'package:spacefl/game/actors/crystal.dart';
 import 'package:spacefl/game/actors/crystal_explosion.dart';
@@ -42,6 +43,7 @@ class GameState {
 
   List<Player> hallOfFame = [];
   List<Star> stars = List<Star>(Game.NO_OF_STARS);
+  List<Asteroid> asteroids = List<Asteroid>(Game.NO_OF_ASTEROIDS);
 
   List<Hit> hits = [];
   List<Hit> hitsToRemove = [];
@@ -96,6 +98,7 @@ class GameState {
   /// Initialize all actors and other game state
   void init(Game game) {
     _initStars(game);
+    _initAsteroids(game);
   }
 
   /// Update the game's state.
@@ -104,6 +107,7 @@ class GameState {
   /// allow us to eventually update positions based on velocity and time.
   void update(Game game, Duration deltaT) {
     _updateStars(game, deltaT);
+    _updateAsteroids(game, deltaT);
   }
 
   void _initStars(Game game) {
@@ -112,9 +116,21 @@ class GameState {
     }
   }
 
+  void _initAsteroids(Game game) {
+    for (int i = 0 ; i < Game.NO_OF_ASTEROIDS ; i++) {
+      asteroids[i] = Asteroid(game);
+    }
+  }
+
   void _updateStars(Game game, Duration _) {
     for (int i = 0; i < Game.NO_OF_STARS; i++) {
       stars[i].update(game);
+    }
+  }
+
+  void _updateAsteroids(Game game, Duration _) {
+    for (int i = 0 ; i < Game.NO_OF_ASTEROIDS ; i++) {
+      asteroids[i].update(game);
     }
   }
 }

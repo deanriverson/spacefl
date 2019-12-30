@@ -58,3 +58,22 @@ void drawStars(Canvas canvas, Size size, Game game) {
     }
   }
 }
+
+void drawAsteroids(Canvas canvas, Size size, Game game) {
+  if (Game.SHOW_ASTEROIDS) {
+    for (int i = 0; i < Game.NO_OF_ASTEROIDS; i++) {
+      final a = game.state.asteroids[i];
+
+      canvas.save();
+
+      canvas.translate(a.cX, a.cY);
+      canvas.rotate(a.rot);
+      canvas.scale(a.scale, a.scale);
+      canvas.translate(-a.imgCenterX, -a.imgCenterY);
+//      canvas.drawImage(a.image, 0, 0);
+      canvas.drawImage(a.image, Offset.zero, _imagePaint);
+
+      canvas.restore();
+    }
+  }
+}
