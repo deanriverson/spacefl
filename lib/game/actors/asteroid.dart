@@ -62,8 +62,6 @@ class Asteroid {
     y = -image.height.toDouble();
     rot = 0;
 
-    print('placed asteroid at ($x, $y)');
-
     // Random Size
     scale = (rnd.nextDouble() * 0.6) + 0.2;
 
@@ -97,9 +95,6 @@ class Asteroid {
     // Respawn asteroid
     final boardSize = game.state.boardSize;
     if (x < -(2*size) || x - radius > boardSize.width || y - height > boardSize.height) {
-      if (x < -size) {
-        print('fell of left: x=$x, size=$size');
-      }
       init(game);
     }
 
