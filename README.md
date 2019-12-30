@@ -10,7 +10,7 @@ All Flutter source code is in the [lib](lib) directory. Platform-specifc build f
 ![Overview](https://raw.githubusercontent.com/HanSolo/SpaceFX/master/SpaceFX.png)
 
 ### Youtube video
-Gerrit recorded a little [video](https://youtu.be/IS71geUu9RE) that shows the game in action.
+Gerrit recorded a short [video](https://youtu.be/IS71geUu9RE) that shows the game in action.
 
 ### Getting Started with Flutter
 
