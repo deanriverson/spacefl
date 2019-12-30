@@ -31,8 +31,10 @@ class RenderGameBox extends RenderBox {
 //    ..color = Colors.black;
 
   @override
-  void attach(PipelineOwner owner) {
+  Future<void> attach(PipelineOwner owner) async {
     super.attach(owner);
+
+    await Game.instance().loadAssets();
     _scheduleTick();
   }
 
@@ -46,11 +48,21 @@ class RenderGameBox extends RenderBox {
   bool get sizedByParent => true;
 
   @override
+  void performResize() {
+    super.performResize();
+
+    final game = Game.instance();
+    game.state.boardSize = size;
+    game.state.init(game);
+  }
+
+  @override
   void paint(PaintingContext ctx, Offset offset) {
     final canvas = ctx.canvas;
     final game = Game.instance();
 
     drawBackground(canvas, size, game);
+    drawStars(canvas, size, game);
     drawFps(canvas, size, _deltaT);
   }
 
@@ -63,14 +75,14 @@ class RenderGameBox extends RenderBox {
   }
 
   void _tick(Duration timestamp) {
-    if (!attached || size == null) {
+    _scheduleTick();
+
+    if (!attached || !hasSize) {
       return;
     }
 
-    _scheduleTick();
-
     _deltaT = _computeDeltaT(timestamp);
-    _updateGame(_deltaT);
+    Game.instance().update(_deltaT);
 
     markNeedsPaint();
   }
@@ -84,11 +96,4 @@ class RenderGameBox extends RenderBox {
     _lastTime = now;
     return delta;
   }
-
-  void _updateGame(Duration _deltaT) {
-    final game = Game.instance();
-    game.state.boardSize = size;
-  }
 }
-
-

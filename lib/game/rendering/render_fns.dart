@@ -15,9 +15,13 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:spacefl/game/actors/star.dart';
 import 'package:spacefl/game/game.dart';
 
 final _imagePaint = Paint();
+final _starPaint = Paint()
+    ..color = Color.fromARGB(230, 255, 255, 255);
+
 
 void drawFps(Canvas canvas, Size size, Duration deltaT) {
   double fps = Duration.microsecondsPerSecond / deltaT.inMicroseconds;
@@ -44,4 +48,13 @@ void drawBackground(Canvas canvas, Size size, Game game) {
   final dst = Rect.fromLTWH(0, 0, size.width, size.height);
 
   canvas.drawImageRect(backgroundImage, src, dst, _imagePaint);
+}
+
+void drawStars(Canvas canvas, Size size, Game game) {
+  if (Game.SHOW_STARS) {
+    for (int i = 0; i < Game.NO_OF_STARS; i++) {
+      Star star = game.state.stars[i];
+      canvas.drawOval(star.rect, _starPaint);
+    }
+  }
 }

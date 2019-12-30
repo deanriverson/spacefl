@@ -32,6 +32,7 @@ import 'package:spacefl/game/actors/rocket.dart';
 import 'package:spacefl/game/actors/rocket_explosion.dart';
 import 'package:spacefl/game/actors/space_ship.dart';
 import 'package:spacefl/game/actors/space_ship_explosion.dart';
+import 'package:spacefl/game/actors/star.dart';
 import 'package:spacefl/game/actors/torpedo.dart';
 import 'package:spacefl/game/game.dart';
 
@@ -40,6 +41,7 @@ class GameState {
   SpaceShipExplosion spaceShipExplosion;
 
   List<Player> hallOfFame = [];
+  List<Star> stars = List<Star>(Game.NO_OF_STARS);
 
   List<Hit> hits = [];
   List<Hit> hitsToRemove = [];
@@ -85,9 +87,34 @@ class GameState {
   int lastCrystal;
   int lastTimerCall;
   bool hasBeenHit = false;
+  bool initialized = false;
   bool running = false;
   bool gameOverScreen = false;
   bool hallOfFameScreen = false;
   bool inputAllowed = false;
-}
 
+  /// Initialize all actors and other game state
+  void init(Game game) {
+    _initStars(game);
+  }
+
+  /// Update the game's state.
+  ///
+  /// I'm passing in deltaT to this function but it's not used yet.  This would
+  /// allow us to eventually update positions based on velocity and time.
+  void update(Game game, Duration deltaT) {
+    _updateStars(game, deltaT);
+  }
+
+  void _initStars(Game game) {
+    for (int i = 0; i < Game.NO_OF_STARS; i++) {
+      stars[i] = Star(game);
+    }
+  }
+
+  void _updateStars(Game game, Duration _) {
+    for (int i = 0; i < Game.NO_OF_STARS; i++) {
+      stars[i].update(game);
+    }
+  }
+}

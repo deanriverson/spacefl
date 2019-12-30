@@ -15,7 +15,6 @@
  */
 
 import 'package:flutter/rendering.dart';
-import 'package:spacefl/game/game.dart';
 import 'package:spacefl/game/rendering/render_game_box.dart';
 
 /*
@@ -24,7 +23,7 @@ import 'package:spacefl/game/rendering/render_game_box.dart';
  *   [x] Initial port of actor classes
  *   [x] Copy over image and audio assets from original
  *   [x] Load and draw background image
- *   [ ] Draw stars
+ *   [x] Draw stars
  *   [ ] Load and draw asteroid images
  *   [ ] Load and draw enemy images
  *   [ ] Handle input events
@@ -33,18 +32,8 @@ import 'package:spacefl/game/rendering/render_game_box.dart';
 
 /// Run the game using the Flutter rendering engine directly
 void main() {
-  // Order matters
-  _initRendering();
-  _initGame();
+  RenderingFlutterBinding(root: RenderGameBox());
 }
 
 /// Run the game using Flutter widgets
 //void main() => runApp(SpaceFlGame());
-
-void _initRendering() {
-  RenderingFlutterBinding(root: RenderGameBox());
-}
-
-void _initGame() {
-  Game.instance();
-}

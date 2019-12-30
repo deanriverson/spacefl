@@ -83,9 +83,17 @@ class Game {
   factory Game.instance() {
     if (_instance == null) {
       _instance = Game._();
-      _instance.images.loadImages();
     }
 
     return Game._instance;
+  }
+
+  Future<void> loadAssets() async {
+    final game = Game.instance();
+    await game.images.loadImages();
+  }
+
+  void update(Duration deltaT) {
+    _instance.state.update(this, deltaT);
   }
 }
