@@ -20,6 +20,6 @@ void drawFps(Canvas canvas, Size size, double deltaT) {
   TextSpan span = new TextSpan(text: '${(1.0 / deltaT).toStringAsFixed(1)} FPS');
   TextPainter tp = new TextPainter(text: span, textAlign: TextAlign.left, textDirection: TextDirection.ltr);
   tp.layout();
-  tp.paint(canvas, new Offset(size.width - tp.width - 5.0, 0.0));
+  tp.paint(canvas, new Offset(size.width - tp.width - 5.0, 30.0));
 }
 

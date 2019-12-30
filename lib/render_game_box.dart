@@ -17,6 +17,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:spacefl/game.dart';
+import 'package:spacefl/render_fns.dart';
 
 /// A custom impl of [RenderBox] that draws the game board by talking directly
 /// to Flutter's rendering engine.
@@ -25,6 +27,7 @@ class RenderGameBox extends RenderBox {
   double _deltaT = 0;
   Duration _lastTime = Duration.zero;
 
+  final imagePaint = Paint();
   final backgroundPaint = Paint()
     ..color = Colors.black;
 
@@ -46,17 +49,15 @@ class RenderGameBox extends RenderBox {
   @override
   void paint(PaintingContext ctx, Offset offset) {
     final canvas = ctx.canvas;
+    final game = Game.instance();
     canvas.drawRect(Rect.fromLTWH(offset.dx, offset.dy, size.width, size.height), backgroundPaint);
 
-    // TODO: use drawFps from render_fns
-    _drawFps(canvas, size);
-  }
+    final backgroundImage = game.images.backgroundImage;
+    if (backgroundImage != null) {
+      canvas.drawImage(backgroundImage, Offset.zero, imagePaint);
+    }
 
-  void _drawFps(Canvas canvas, Size size) {
-    TextSpan span = new TextSpan(text: '${(1.0 / _deltaT).toStringAsFixed(1)} FPS');
-    TextPainter tp = new TextPainter(text: span, textAlign: TextAlign.left, textDirection: TextDirection.ltr);
-    tp.layout();
-    tp.paint(canvas, new Offset(size.width - tp.width - 5.0, 30.0));
+    drawFps(canvas, size, _deltaT);
   }
 
   void _scheduleTick() {
