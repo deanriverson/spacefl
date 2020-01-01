@@ -21,7 +21,7 @@ import 'package:spacefl/game/game.dart';
 
 /// A custom impl of [RenderBox] that draws the game board by talking directly
 /// to Flutter's rendering engine.
-class RenderGameBox extends RenderBox {
+class RenderGameBoard extends RenderBox {
   int _frameCallbackId;
 
   @override

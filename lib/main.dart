@@ -15,7 +15,7 @@
  */
 
 import 'package:flutter/widgets.dart';
-import 'package:spacefl/game/rendering/space_fl_game.dart';
+import 'package:spacefl/widgets/space_fl_game.dart';
 
 /*
  * To do list:

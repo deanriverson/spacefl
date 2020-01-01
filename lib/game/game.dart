@@ -18,7 +18,7 @@ import 'dart:ui';
 
 import 'package:spacefl/game/game_images.dart';
 import 'package:spacefl/game/game_state.dart';
-import 'package:spacefl/game/rendering/render_fns.dart';
+import 'package:spacefl/game/game_rendering.dart';
 
 class Game {
   static const bool playSound = true;
