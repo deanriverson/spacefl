@@ -106,12 +106,15 @@ class GameState {
   Duration get deltaT => _deltaT;
 
   /// Initialize all actors and other game state
-  void init(Game game) {
+  void init(Game game, Size size) {
+    boardSize = size;
     spaceShip = SpaceShip(game);
 
     initActorList(stars, Game.starCount, () => Star(game));
     initActorList(asteroids, Game.asteroidCount, () => Asteroid(game));
     initActorList(enemies, Game.enemyCount, () => Enemy(game));
+
+    initialized = true;
   }
 
   /// Update the game's state.

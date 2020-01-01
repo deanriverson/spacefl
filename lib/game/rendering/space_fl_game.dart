@@ -15,84 +15,106 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:spacefl/game/game.dart';
-import 'package:spacefl/game/rendering/render_fns.dart';
+import 'package:spacefl/game/rendering/render_game_box.dart';
 
-const _title = "SpaceFl";
-
-/// Experimenting with drawing the game board with Flutter widgets.
+/// Load the assets and start the game
 class SpaceFlGame extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final game = Game.instance();
+
     return MaterialApp(
-      title: _title,
-      theme: ThemeData(
-        primaryColor: Colors.black,
-      ),
-      home: GameBoard());
-  }
-}
-
-class GameBoard extends StatefulWidget {
-  @override
-  _GameBoardState createState() => _GameBoardState();
-}
-
-class _GameBoardState extends State<GameBoard> {
-//  Duration _lastDuration = Duration.zero;
-  Ticker _gameTicker;
-
-  @override
-  void initState() {
-    super.initState();
-    _gameTicker = Ticker(
-        (duration) {
-        setState(() {
-//          _deltaTime = duration - _lastDuration;
-//          _lastDuration = duration;
-        });
-      },
-    )..start();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _gameTicker.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(_title)),
-      body: SafeArea(
-        child: Stack(
-          children: [
-            ConstrainedBox(
-              constraints: BoxConstraints.expand(),
-              child: CustomPaint(painter: GamePainter()),
-            )
-          ],
+      title: 'SpaceFL',
+      theme: ThemeData.dark(),
+      home: Scaffold(
+        body: FutureBuilder(
+          future: game.loadAssets(),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return SizedBox(
+                width: double.infinity,
+                height: double.infinity,
+                child: GameBoard(),
+              );
+            } else {
+              return Container(
+                color: Color.fromARGB(255, 27, 48, 70),
+                child: Center(
+                  child: Text('Loading...', style: Theme.of(context).textTheme.display2),
+                ),
+              );
+            }
+          },
         ),
       ),
     );
   }
 }
 
-class GamePainter extends CustomPainter {
-  final backgroundPaint = Paint()..color = Colors.black;
-  final greenPaint = Paint()..color = Colors.green;
-
+class GameBoard extends LeafRenderObjectWidget {
   @override
-  void paint(Canvas canvas, Size size) {
-    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), backgroundPaint);
-    canvas.drawRect(Rect.fromLTWH(0, 0, size.width / 2, size.height / 2), greenPaint);
-
-    drawFps(canvas, Game.instance());
-  }
-
-  @override
-  bool shouldRepaint(GamePainter oldDelegate) => true;
+  RenderObject createRenderObject(BuildContext context) => RenderGameBox();
 }
 
+//class GameBoard extends StatefulWidget {
+//  @override
+//  _GameBoardState createState() => _GameBoardState();
+//}
+//
+//class _GameBoardState extends State<GameBoard> {
+////  Duration _lastDuration = Duration.zero;
+//  Ticker _gameTicker;
+//
+//  @override
+//  void initState() {
+//    super.initState();
+//    _gameTicker = Ticker(
+//      (duration) {
+//        setState(() {
+////          _deltaTime = duration - _lastDuration;
+////          _lastDuration = duration;
+//        });
+//      },
+//    )..start();
+//  }
+//
+//  @override
+//  void dispose() {
+//    super.dispose();
+//    _gameTicker.dispose();
+//  }
+//
+//  @override
+//  Widget build(BuildContext context) {
+//    return Scaffold(
+//      appBar: AppBar(title: Text(_title)),
+//      body: SafeArea(
+//        child: Stack(
+//          children: [
+//            ConstrainedBox(
+//              constraints: BoxConstraints.expand(),
+//              child: CustomPaint(painter: GamePainter()),
+//            )
+//          ],
+//        ),
+//      ),
+//    );
+//  }
+//}
+//
+//class GamePainter extends CustomPainter {
+//  final backgroundPaint = Paint()..color = Colors.black;
+//  final greenPaint = Paint()..color = Colors.green;
+//
+//  @override
+//  void paint(Canvas canvas, Size size) {
+//    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), backgroundPaint);
+//    canvas.drawRect(Rect.fromLTWH(0, 0, size.width / 2, size.height / 2), greenPaint);
+//
+//    drawFps(canvas, Game.instance());
+//  }
+//
+//  @override
+//  bool shouldRepaint(GamePainter oldDelegate) => true;
+//}

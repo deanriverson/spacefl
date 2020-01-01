@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import 'package:flutter/rendering.dart';
-import 'package:spacefl/game/rendering/render_game_box.dart';
+import 'package:flutter/widgets.dart';
+import 'package:spacefl/game/rendering/space_fl_game.dart';
 
 /*
  * To do list:
@@ -27,7 +27,7 @@ import 'package:spacefl/game/rendering/render_game_box.dart';
  *   [x] Load and draw asteroids
  *   [x] Load and draw enemies
  *   [x] Load and draw crystals
- *   [ ] Draw space ship and shield
+ *   [x] Draw space ship and shield
  *   [ ] Handle input events
  *   [ ] Draw player torpedoes and rockets
  *   [ ] Hit testing on asteroids
@@ -39,15 +39,5 @@ import 'package:spacefl/game/rendering/render_game_box.dart';
  *   [ ] Draw score, lives, and mini shields
  */
 
-/// Run the game using the Flutter rendering engine directly
-void main() {
-  RenderingFlutterBinding(root: RenderGameBox());
-}
-
-/// Run the game using Flutter widgets.
-///
-/// Note: This path is abandoned for now and this code is out of date
-/// as compared to the direct rendering code. I may pick this up again
-/// if I ever get as far as letting the player enter their name since
-/// that would probably be easier to handle using Flutter widgets.
-//void main() => runApp(SpaceFlGame());
+/// Run the application using a Stateless Widget
+void main() => runApp(SpaceFlGame());

@@ -77,6 +77,8 @@ class Game {
 
   Future<void> loadAssets() async => await _instance.images.loadImages();
 
+  void init(Size size) => _instance.state.init(this, size);
+
   void update(Duration deltaT) => _instance.state.update(this, deltaT);
 
   void repaint(Canvas canvas) {

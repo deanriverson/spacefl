@@ -25,10 +25,8 @@ class RenderGameBox extends RenderBox {
   int _frameCallbackId;
 
   @override
-  Future<void> attach(PipelineOwner owner) async {
+  void attach(PipelineOwner owner) {
     super.attach(owner);
-
-    await Game.instance().loadAssets();
     _scheduleTick();
   }
 
@@ -41,17 +39,16 @@ class RenderGameBox extends RenderBox {
   @override
   void performResize() {
     super.performResize();
-
-    final game = Game.instance();
-    game.state.boardSize = size;
-    game.state.init(game);
+    Game.instance().init(size);
   }
 
   @override
   bool get sizedByParent => true;
 
   @override
-  void paint(PaintingContext ctx, Offset offset)  => Game.instance().repaint(ctx.canvas);
+  void paint(PaintingContext ctx, Offset offset) {
+    Game.instance().repaint(ctx.canvas);
+  }
 
   void _scheduleTick() {
     _frameCallbackId = SchedulerBinding.instance.scheduleFrameCallback(_tick);
