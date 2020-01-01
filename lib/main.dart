@@ -47,7 +47,7 @@ void main() {
 /// Run the game using Flutter widgets.
 ///
 /// Note: This path is abandoned for now and this code is out of date
-/// as compared the direct rendering code. I may pick this up again
+/// as compared to the direct rendering code. I may pick this up again
 /// if I ever get as far as letting the player enter their name since
 /// that would probably be easier to handle using Flutter widgets.
 //void main() => runApp(SpaceFlGame());

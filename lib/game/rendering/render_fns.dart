@@ -20,7 +20,8 @@ import 'package:spacefl/game/game.dart';
 final _imagePaint = Paint();
 final _starPaint = Paint()..color = Color.fromARGB(230, 255, 255, 255);
 
-void drawFps(Canvas canvas, Size size, Game game) {
+void drawFps(Canvas canvas, Game game) {
+  final size = game.state.boardSize;
   double fps = Duration.microsecondsPerSecond / game.state.deltaT.inMicroseconds;
   TextSpan span = new TextSpan(text: '${fps.toStringAsFixed(1)} FPS');
   TextPainter tp = new TextPainter(text: span, textAlign: TextAlign.left, textDirection: TextDirection.ltr);
@@ -28,12 +29,13 @@ void drawFps(Canvas canvas, Size size, Game game) {
   tp.paint(canvas, new Offset(size.width - tp.width - 5.0, 30.0));
 }
 
-void drawBackground(Canvas canvas, Size size, Game game) {
+void drawBackground(Canvas canvas, Game game) {
   if (!Game.showBackground) {
     return;
   }
 
   final state = game.state;
+  final size = state.boardSize;
   final backgroundImage = game.images.backgroundImage;
 
   state.backgroundViewportY -= 0.5;
@@ -47,7 +49,7 @@ void drawBackground(Canvas canvas, Size size, Game game) {
   canvas.drawImageRect(backgroundImage, src, dst, _imagePaint);
 }
 
-void drawStars(Canvas canvas, Size size, Game game) {
+void drawStars(Canvas canvas, Game game) {
   if (Game.showStars) {
     for (final star in game.state.stars) {
       canvas.drawOval(star.rect, _starPaint);
@@ -55,7 +57,7 @@ void drawStars(Canvas canvas, Size size, Game game) {
   }
 }
 
-void drawAsteroids(Canvas canvas, Size size, Game game) {
+void drawAsteroids(Canvas canvas, Game game) {
   if (Game.showAsteroids) {
     for (final a in game.state.asteroids) {
       canvas.save();
@@ -71,7 +73,7 @@ void drawAsteroids(Canvas canvas, Size size, Game game) {
   }
 }
 
-void drawEnemies(Canvas canvas, Size size, Game game) {
+void drawEnemies(Canvas canvas, Game game) {
   for (final e in game.state.enemies) {
     canvas.save();
 
@@ -86,7 +88,7 @@ void drawEnemies(Canvas canvas, Size size, Game game) {
 //  }
 }
 
-void drawCrystals(Canvas canvas, Size size, Game game) {
+void drawCrystals(Canvas canvas, Game game) {
   for (final c in game.state.crystals) {
     canvas.save();
 
@@ -99,8 +101,25 @@ void drawCrystals(Canvas canvas, Size size, Game game) {
   }
 }
 
-void drawSpaceShip(Canvas canvas, Size size, Game game) {
+void drawSpaceShip(Canvas canvas, Game game) {
   final spaceShip = game.state.spaceShip;
   final offset = Offset(spaceShip.x - spaceShip.radius, spaceShip.y - spaceShip.radius);
   canvas.drawImage(spaceShip.image, offset, _imagePaint);
+
+  if (spaceShip.shield) {
+    final opacity = game.state.random.nextDouble() * 0.5 + 0.1;
+    final shieldPaint = Paint()
+      ..color = Colors.white.withOpacity(opacity);
+
+    final offset = Offset(spaceShip.x - spaceShip.shieldRadius, spaceShip.y - spaceShip.shieldRadius);
+
+    canvas.drawImage(spaceShip.shieldImage, offset, shieldPaint);
+
+    // TODO: Draw shield indicator.  Do this here or in a separate drawUI function?
+//    ctx.setStroke(Game.scoreColor);
+//    ctx.setFill(Game.scoreColor);
+//    ctx.strokeRect(Game.shieldIn, SHIELD_INDICATOR_Y, SHIELD_INDICATOR_WIDTH, SHIELD_INDICATOR_HEIGHT);
+//    ctx.fillRect(Game.shieldIn, SHIELD_INDICATOR_Y,
+//        SHIELD_INDICATOR_WIDTH - SHIELD_INDICATOR_WIDTH * delta / DEFLECTOR_SHIELD_TIME, SHIELD_INDICATOR_HEIGHT);
+  }
 }

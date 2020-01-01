@@ -19,26 +19,31 @@ import 'dart:ui';
 import 'package:spacefl/game/game.dart';
 
 class SpaceShip {
-  final Image _imageNoThrust;
-  final Image _imageThrust;
+  final Image _shieldImage;
+  final Image _thrustImage;
+  final Image _noThrustImage;
 
   double _x;
   double _y;
   double _size;
   double _radius;
+  double _shieldRadius;
 
   double vX;
   double vY;
   bool shield;
 
   SpaceShip(Game game)
-      : _imageNoThrust = game.images.spaceShipImage,
-        _imageThrust = game.images.spaceShipThrustImage {
+      : _noThrustImage = game.images.spaceShipImage,
+        _thrustImage = game.images.spaceShipThrustImage,
+        _shieldImage = game.images.deflectorShieldImage {
     _size = (width > height ? width : height).toDouble();
     _radius = _size * 0.5;
     vX = 0;
     vY = 0;
+
     shield = false;
+    _shieldRadius = _shieldImage.width * 0.5;
 
     resetPosition(game);
   }
@@ -56,13 +61,17 @@ class SpaceShip {
 
   double get radius => _radius;
 
-  int get width => _imageNoThrust.width;
+  double get shieldRadius => _shieldRadius;
 
-  int get height => _imageNoThrust.height;
+  int get width => _noThrustImage.width;
 
-  Image get image => _isMoving() ? _imageThrust : _imageNoThrust;
+  int get height => _noThrustImage.height;
 
-  void update(Game game) {
+  Image get image => _isMoving() ? _thrustImage : _noThrustImage;
+
+  Image get shieldImage => _shieldImage;
+
+  void update(Game game, Duration timestamp) {
     final boardSize = game.state.boardSize;
 
     _x += vX;
@@ -76,8 +85,15 @@ class SpaceShip {
 
     if (_y + height * 0.5 > boardSize.height) {
       _y = boardSize.height - height * 0.5;
-    } else if (_y - height * 0.5< 0) {
+    } else if (_y - height * 0.5 < 0) {
       _y = height * 0.5;
+    }
+
+    if (shield) {
+      if (timestamp - game.state.lastShieldActivated > Game.deflectorShieldDuration) {
+        shield = false;
+        game.state.shieldCount--;
+      }
     }
   }
 

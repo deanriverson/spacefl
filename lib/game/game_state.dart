@@ -119,7 +119,7 @@ class GameState {
     _frameReset(game);
     _deltaT = _computeDeltaT(timestamp);
 
-    _updateActors(game, deltaT);
+    _updateActors(game, timestamp, deltaT);
     _updateSpawns(game, timestamp);
   }
 
@@ -140,13 +140,13 @@ class GameState {
     return delta;
   }
 
-  void _updateActors(Game game, Duration deltaT) {
+  void _updateActors(Game game, Duration timestamp, Duration deltaT) {
     updateActorList(stars, game, deltaT);
     updateActorList(asteroids, game, deltaT);
     updateActorList(enemies, game, deltaT);
     updateActorList(crystals, game, deltaT);
 
-    spaceShip.update(game);
+    spaceShip.update(game, timestamp);
   }
 
   void _updateSpawns(Game game, Duration now) {

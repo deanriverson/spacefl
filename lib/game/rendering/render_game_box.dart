@@ -18,7 +18,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:spacefl/game/game.dart';
-import 'package:spacefl/game/rendering/render_fns.dart';
 
 /// A custom impl of [RenderBox] that draws the game board by talking directly
 /// to Flutter's rendering engine.
@@ -40,9 +39,6 @@ class RenderGameBox extends RenderBox {
   }
 
   @override
-  bool get sizedByParent => true;
-
-  @override
   void performResize() {
     super.performResize();
 
@@ -52,18 +48,10 @@ class RenderGameBox extends RenderBox {
   }
 
   @override
-  void paint(PaintingContext ctx, Offset offset) {
-    final canvas = ctx.canvas;
-    final game = Game.instance();
+  bool get sizedByParent => true;
 
-    drawBackground(canvas, size, game);
-    drawStars(canvas, size, game);
-    drawAsteroids(canvas, size, game);
-    drawEnemies(canvas, size, game);
-    drawCrystals(canvas, size, game);
-    drawSpaceShip(canvas, size, game);
-    drawFps(canvas, size, game);
-  }
+  @override
+  void paint(PaintingContext ctx, Offset offset)  => Game.instance().repaint(ctx.canvas);
 
   void _scheduleTick() {
     _frameCallbackId = SchedulerBinding.instance.scheduleFrameCallback(_tick);

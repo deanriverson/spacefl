@@ -18,6 +18,7 @@ import 'dart:ui';
 
 import 'package:spacefl/game/game_images.dart';
 import 'package:spacefl/game/game_state.dart';
+import 'package:spacefl/game/rendering/render_fns.dart';
 
 class Game {
   static const bool playSound = true;
@@ -77,4 +78,17 @@ class Game {
   Future<void> loadAssets() async => await _instance.images.loadImages();
 
   void update(Duration deltaT) => _instance.state.update(this, deltaT);
+
+  void repaint(Canvas canvas) {
+    drawBackground(canvas, this);
+    drawStars(canvas, this);
+
+    drawAsteroids(canvas, this);
+    drawEnemies(canvas, this);
+    drawCrystals(canvas, this);
+
+    drawSpaceShip(canvas, this);
+
+    drawFps(canvas, this);
+  }
 }

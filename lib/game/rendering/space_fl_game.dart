@@ -89,7 +89,7 @@ class GamePainter extends CustomPainter {
     canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), backgroundPaint);
     canvas.drawRect(Rect.fromLTWH(0, 0, size.width / 2, size.height / 2), greenPaint);
 
-    drawFps(canvas, size, Game.instance());
+    drawFps(canvas, Game.instance());
   }
 
   @override
