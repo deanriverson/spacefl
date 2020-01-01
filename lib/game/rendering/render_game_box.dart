@@ -24,8 +24,6 @@ import 'package:spacefl/game/rendering/render_fns.dart';
 /// to Flutter's rendering engine.
 class RenderGameBox extends RenderBox {
   int _frameCallbackId;
-  Duration _deltaT = Duration.zero;
-  Duration _lastTime = Duration.zero;
 
 //  final backgroundPaint = Paint()
 //    ..color = Colors.black;
@@ -64,7 +62,9 @@ class RenderGameBox extends RenderBox {
     drawBackground(canvas, size, game);
     drawStars(canvas, size, game);
     drawAsteroids(canvas, size, game);
-    drawFps(canvas, size, _deltaT);
+    drawEnemies(canvas, size, game);
+    drawCrystals(canvas, size, game);
+    drawFps(canvas, size, game);
   }
 
   void _scheduleTick() {
@@ -82,19 +82,7 @@ class RenderGameBox extends RenderBox {
       return;
     }
 
-    _deltaT = _computeDeltaT(timestamp);
-    Game.instance().update(_deltaT);
-
+    Game.instance().update(timestamp);
     markNeedsPaint();
-  }
-
-  Duration _computeDeltaT(Duration now) {
-    Duration delta = now - _lastTime;
-    if (_lastTime == Duration.zero) {
-      delta = Duration.zero;
-    }
-
-    _lastTime = now;
-    return delta;
   }
 }

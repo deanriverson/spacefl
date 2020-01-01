@@ -21,9 +21,9 @@ import 'package:spacefl/game/game.dart';
 class Asteroid {
   static const int MAX_VALUE = 10;
 
-  final double xVariation = 1.0;
-  final double minSpeedY = 1.0;
-  final double minRotationR = 0.005;
+  final double xVariation = 2.0;
+  final double minSpeedY = 2.0;
+  final double minRotationR = 0.1;
 
   Image image;
   double x;
@@ -84,7 +84,7 @@ class Asteroid {
     // Velocity
     vX = ((rnd.nextDouble() * xVariation) - xVariation * 0.5) * Game.VELOCITY_FACTOR_X;
     vY = (((rnd.nextDouble() * 1.5) + minSpeedY * 1 / scale) * vYVariation) * Game.VELOCITY_FACTOR_Y;
-    vR = (((rnd.nextDouble()) * 0.01) + minRotationR) * Game.VELOCITY_FACTOR_R;
+    vR = (((rnd.nextDouble()) * 0.5) + minRotationR) * Game.VELOCITY_FACTOR_R;
     rotateRight = rnd.nextBool();
   }
 

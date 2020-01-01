@@ -20,7 +20,7 @@ import 'package:spacefl/game/game.dart';
 
 class Star {
   final double xVariation = 0;
-  final double minSpeedY = 2;
+  final double minSpeedY = 4;
 
   Rect rect;
   double vX;

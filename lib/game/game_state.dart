@@ -17,10 +17,12 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:spacefl/game/actors/actor_utils.dart';
 import 'package:spacefl/game/actors/asteroid.dart';
 import 'package:spacefl/game/actors/asteroid_explosion.dart';
 import 'package:spacefl/game/actors/crystal.dart';
 import 'package:spacefl/game/actors/crystal_explosion.dart';
+import 'package:spacefl/game/actors/enemy.dart';
 import 'package:spacefl/game/actors/enemy_boss.dart';
 import 'package:spacefl/game/actors/enemy_boss_explosion.dart';
 import 'package:spacefl/game/actors/enemy_boss_hit.dart';
@@ -41,41 +43,50 @@ class GameState {
   SpaceShip spaceShip;
   SpaceShipExplosion spaceShipExplosion;
 
-  List<Player> hallOfFame = [];
-  List<Star> stars = List<Star>(Game.NO_OF_STARS);
-  List<Asteroid> asteroids = List<Asteroid>(Game.NO_OF_ASTEROIDS);
+  final stars = List<Star>(Game.NO_OF_STARS);
+  final asteroids = List<Asteroid>(Game.NO_OF_ASTEROIDS);
+  final enemies = List<Enemy>(Game.NO_OF_ENEMIES);
 
-  List<Hit> hits = [];
-  List<Hit> hitsToRemove = [];
-  List<Crystal> crystals = [];
-  List<Crystal> crystalsToRemove = [];
-  List<Rocket> rockets = [];
-  List<Rocket> rocketsToRemove = [];
-  List<Torpedo> torpedoes = [];
-  List<Torpedo> torpedoesToRemove = [];
+  final hallOfFame = <Player>[];
+  final hits = <Hit>[];
+  final hitsToRemove = <Hit>[];
+  final crystals = <Crystal>[];
+  final crystalsToRemove = <Crystal>{};
+  final rockets = <Rocket>[];
+  final rocketsToRemove = <Rocket>[];
+  final torpedoes = <Torpedo>[];
+  final torpedoesToRemove = <Torpedo>[];
 
-  List<EnemyBoss> enemyBosses = [];
-  List<EnemyBoss> enemyBossesToRemove = [];
-  List<EnemyTorpedo> enemyTorpedoes = [];
-  List<EnemyTorpedo> enemyTorpedoesToRemove = [];
-  List<EnemyBossHit> enemyBossHits = [];
-  List<EnemyBossHit> enemyBossHitsToRemove = [];
-  List<EnemyBossTorpedo> enemyBossTorpedoes = [];
-  List<EnemyBossTorpedo> enemyBossTorpedoesToRemove = [];
+  final enemyBosses = <EnemyBoss>[];
+  final enemyBossesToRemove = <EnemyBoss>[];
+  final enemyTorpedoes = <EnemyTorpedo>[];
+  final enemyTorpedoesToRemove = <EnemyTorpedo>[];
+  final enemyBossHits = <EnemyBossHit>[];
+  final enemyBossHitsToRemove = <EnemyBossHit>[];
+  final enemyBossTorpedoes = <EnemyBossTorpedo>[];
+  final enemyBossTorpedoesToRemove = <EnemyBossTorpedo>[];
 
-  List<RocketExplosion> rocketExplosions = [];
-  List<RocketExplosion> rocketExplosionsToRemove = [];
-  List<EnemyBossExplosion> enemyBossExplosions = [];
-  List<EnemyBossExplosion> enemyBossExplosionsToRemove = [];
-  List<Explosion> explosions = [];
-  List<Explosion> explosionsToRemove = [];
-  List<AsteroidExplosion> asteroidExplosions = [];
-  List<AsteroidExplosion> asteroidExplosionsToRemove = [];
-  List<CrystalExplosion> crystalExplosions = [];
-  List<CrystalExplosion> crystalExplosionsToRemove = [];
+  final rocketExplosions = <RocketExplosion>[];
+  final rocketExplosionsToRemove = <RocketExplosion>[];
+  final enemyBossExplosions = <EnemyBossExplosion>[];
+  final enemyBossExplosionsToRemove = <EnemyBossExplosion>[];
+  final explosions = <Explosion>[];
+  final explosionsToRemove = <Explosion>[];
+  final asteroidExplosions = <AsteroidExplosion>[];
+  final asteroidExplosionsToRemove = <AsteroidExplosion>[];
+  final crystalExplosions = <CrystalExplosion>[];
+  final crystalExplosionsToRemove = <CrystalExplosion>[];
 
   Random random = Random();
   Size boardSize = Size.zero;
+
+  Duration lastShieldActivated = Duration.zero;
+  Duration lastEnemyBossAttack = Duration.zero;
+  Duration lastCrystal = Duration.zero;
+  Duration lastTimerCall = Duration.zero;
+
+  Duration _deltaT = Duration.zero;
+  Duration _lastTimestamp = Duration.zero;
 
   double scorePosX;
   double scorePosY;
@@ -84,10 +95,7 @@ class GameState {
   int score = 0;
   int lifeCount = Game.LIVES;
   int shieldCount = Game.SHIELDS;
-  int lastShieldActivated;
-  int lastEnemyBossAttack;
-  int lastCrystal;
-  int lastTimerCall;
+
   bool hasBeenHit = false;
   bool initialized = false;
   bool running = false;
@@ -95,42 +103,56 @@ class GameState {
   bool hallOfFameScreen = false;
   bool inputAllowed = false;
 
+  Duration get deltaT => _deltaT;
+
   /// Initialize all actors and other game state
   void init(Game game) {
-    _initStars(game);
-    _initAsteroids(game);
+    initActorList(stars, Game.NO_OF_STARS, () => Star(game));
+    initActorList(asteroids, Game.NO_OF_ASTEROIDS, () => Asteroid(game));
+    initActorList(enemies, Game.NO_OF_ENEMIES, () => Enemy(game));
   }
 
   /// Update the game's state.
-  ///
-  /// I'm passing in deltaT to this function but it's not used yet.  This would
-  /// allow us to eventually update positions based on velocity and time.
-  void update(Game game, Duration deltaT) {
-    _updateStars(game, deltaT);
-    _updateAsteroids(game, deltaT);
+  void update(Game game, Duration timestamp) {
+    _frameReset(game);
+    _deltaT = _computeDeltaT(timestamp);
+
+    _updateActors(game, deltaT);
+    _updateSpawns(game, timestamp);
   }
 
-  void _initStars(Game game) {
-    for (int i = 0; i < Game.NO_OF_STARS; i++) {
-      stars[i] = Star(game);
+  void _frameReset(Game game) {
+    if (crystalsToRemove.isNotEmpty) {
+      crystals.removeWhere((c) => crystalsToRemove.contains(c));
+      crystalsToRemove.clear();
     }
   }
 
-  void _initAsteroids(Game game) {
-    for (int i = 0 ; i < Game.NO_OF_ASTEROIDS ; i++) {
-      asteroids[i] = Asteroid(game);
+  Duration _computeDeltaT(Duration now) {
+    Duration delta = now - _lastTimestamp;
+    if (_lastTimestamp == Duration.zero) {
+      delta = Duration.zero;
     }
+
+    _lastTimestamp = now;
+    return delta;
   }
 
-  void _updateStars(Game game, Duration _) {
-    for (int i = 0; i < Game.NO_OF_STARS; i++) {
-      stars[i].update(game);
-    }
+  void _updateActors(Game game, Duration deltaT) {
+    updateActorList(stars, game, deltaT);
+    updateActorList(asteroids, game, deltaT);
+    updateActorList(enemies, game, deltaT);
+    updateActorList(crystals, game, deltaT);
   }
 
-  void _updateAsteroids(Game game, Duration _) {
-    for (int i = 0 ; i < Game.NO_OF_ASTEROIDS ; i++) {
-      asteroids[i].update(game);
+  void _updateSpawns(Game game, Duration now) {
+//    if (now > lastEnemyBossAttack + ENEMY_BOSS_ATTACK_INTERVAL) {
+//      spawnEnemyBoss();
+//      lastEnemyBossAttack = now;
+//    }
+    if (isTimeToSpawn(now, lastCrystal, Game.CRYSTAL_SPAWN_INTERVAL)) {
+      Crystal.spawn(game);
+      lastCrystal = now;
     }
   }
 }

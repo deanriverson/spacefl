@@ -16,6 +16,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:spacefl/game/game.dart';
 import 'package:spacefl/game/rendering/render_fns.dart';
 
 const _title = "SpaceFl";
@@ -38,10 +39,8 @@ class GameBoard extends StatefulWidget {
   _GameBoardState createState() => _GameBoardState();
 }
 
-Duration _deltaTime = Duration.zero;
-
 class _GameBoardState extends State<GameBoard> {
-  Duration _lastDuration = Duration.zero;
+//  Duration _lastDuration = Duration.zero;
   Ticker _gameTicker;
 
   @override
@@ -50,8 +49,8 @@ class _GameBoardState extends State<GameBoard> {
     _gameTicker = Ticker(
         (duration) {
         setState(() {
-          _deltaTime = duration - _lastDuration;
-          _lastDuration = duration;
+//          _deltaTime = duration - _lastDuration;
+//          _lastDuration = duration;
         });
       },
     )..start();
@@ -90,7 +89,7 @@ class GamePainter extends CustomPainter {
     canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), backgroundPaint);
     canvas.drawRect(Rect.fromLTWH(0, 0, size.width / 2, size.height / 2), greenPaint);
 
-    drawFps(canvas, size, _deltaTime);
+    drawFps(canvas, size, Game.instance());
   }
 
   @override

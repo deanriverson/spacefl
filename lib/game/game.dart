@@ -41,17 +41,17 @@ class Game {
   static const int ENEMY_FIRE_SENSITIVITY = 10;
   static const Duration ENEMY_BOSS_ATTACK_INTERVAL = Duration(seconds: 20);
   static const Duration CRYSTAL_SPAWN_INTERVAL = Duration(seconds: 25);
-  static const double WIDTH = 700;
-  static const double HEIGHT = 900;
-  static const double FIRST_QUARTER_WIDTH = WIDTH * 0.25;
-  static const double LAST_QUARTER_WIDTH = WIDTH * 0.75;
-  static const double SHIELD_INDICATOR_X = WIDTH * 0.73;
-  static const double SHIELD_INDICATOR_Y = HEIGHT * 0.06;
-  static const double SHIELD_INDICATOR_WIDTH = WIDTH * 0.26;
-  static const double SHIELD_INDICATOR_HEIGHT = HEIGHT * 0.01428571;
-  static const double VELOCITY_FACTOR_X = 1.0;
-  static const double VELOCITY_FACTOR_Y = 1.0;
-  static const double VELOCITY_FACTOR_R = 1.0;
+//  static const double WIDTH = 700;
+//  static const double HEIGHT = 900;
+//  static const double FIRST_QUARTER_WIDTH = WIDTH * 0.25;
+//  static const double LAST_QUARTER_WIDTH = WIDTH * 0.75;
+//  static const double SHIELD_INDICATOR_X = WIDTH * 0.73;
+//  static const double SHIELD_INDICATOR_Y = HEIGHT * 0.06;
+//  static const double SHIELD_INDICATOR_WIDTH = WIDTH * 0.26;
+//  static const double SHIELD_INDICATOR_HEIGHT = HEIGHT * 0.01428571;
+  static const double VELOCITY_FACTOR_X = 0.5;
+  static const double VELOCITY_FACTOR_Y = 0.5;
+  static const double VELOCITY_FACTOR_R = 0.01;
   static const Color SCORE_COLOR = Color.fromARGB(255, 51, 210, 206);
 
   static Game _instance;
@@ -74,7 +74,5 @@ class Game {
     await game.images.loadImages();
   }
 
-  void update(Duration deltaT) {
-    _instance.state.update(this, deltaT);
-  }
+  void update(Duration deltaT) => _instance.state.update(this, deltaT);
 }

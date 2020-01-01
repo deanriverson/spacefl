@@ -14,33 +14,54 @@
  * limitations under the License.
  */
 
+import 'dart:collection';
 import 'dart:ui';
 
 import 'package:flutter/services.dart';
 
 const _imagePath = 'assets/images';
 const _background = '$_imagePath/background.jpg';
+const _crystal = '$_imagePath/crystal.png';
 
 const _asteroidImageCount = 11;
-const _asteroidTargetSizes = [140, 140, 140, 110, 100, 120, 110, 100, 130, 120, 140];
+const _asteroidImageSizes = [140, 140, 140, 110, 100, 120, 110, 100, 130, 120, 140];
 
-String _genAsteroidPath(int idx) => '$_imagePath/asteroid${idx + 1}.png';
+const _enemyImageCount = 3;
+const _enemyImageSizes = [56, 50, 68];
+
+typedef String PathGenerator(int idx);
+
+PathGenerator _createPathGenerator(String assetName) => (int idx) => '$_imagePath/$assetName${idx + 1}.png';
 
 class GameImages {
   Image _backgroundImage;
+  Image _crystalImage;
+  final _enemyImages = List<Image>(_enemyImageCount);
+  final _asteroidImages = List<Image>(_asteroidImageCount);
 
   Image get backgroundImage => _backgroundImage;
 
-  final _asteroidImages = List<Image>(_asteroidImageCount);
+  Image get crystalImage => _crystalImage;
 
-  List<Image> get asteroidImages => _asteroidImages;
+  List<Image> get enemyImages => UnmodifiableListView(_enemyImages);
+
+  List<Image> get asteroidImages => UnmodifiableListView(_asteroidImages);
 
   Future<void> loadImages() async {
     _backgroundImage = await _loadImage(_background);
+    _crystalImage = await _loadImage(_crystal, targetWidth: 100, targetHeight: 100);
+
+    final enemyPath = _createPathGenerator('enemy');
+    final asteroidPath = _createPathGenerator('asteroid');
+
+    for (int i = 0; i < _enemyImageCount; ++i) {
+      final size = _enemyImageSizes[i];
+      _enemyImages[i] = await _loadImage(enemyPath(i), targetWidth: size, targetHeight: size);
+    }
 
     for (int i = 0; i < _asteroidImageCount; ++i) {
-      final size = _asteroidTargetSizes[i];
-      _asteroidImages[i] = await _loadImage(_genAsteroidPath(i), targetWidth: size, targetHeight: size);
+      final size = _asteroidImageSizes[i];
+      _asteroidImages[i] = await _loadImage(asteroidPath(i), targetWidth: size, targetHeight: size);
     }
   }
 

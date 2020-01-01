@@ -43,64 +43,75 @@ class Crystal {
   bool rotateRight;
   double vYVariation;
 
-  Crystal(this.image) {
-    init();
+  static void spawn(Game game) {
+    game.state.crystals.add(new Crystal(game));
   }
 
-  void init() {
-    throw UnimplementedError();
+  Crystal(Game game) {
+    init(game);
+  }
 
-//    // Position
-//    x = rnd.nextDouble() * WIDTH;
-//    y = -image.getHeight();
-//    rot = 0;
-//
-//    // Random Speed
-//    vYVariation = (rnd.nextDouble() * 0.5) + 0.2;
-//
-//    width = image.getWidth();
-//    height = image.getHeight();
-//    size = width > height ? width : height;
-//    radius = size * 0.5;
-//    imgCenterX = image.getWidth() * 0.5;
-//    imgCenterY = image.getHeight() * 0.5;
-//
-//    // Velocity
-//    if (x < FIRST_QUARTER_WIDTH) {
-//      vX = rnd.nextDouble() * VELOCITY_FACTOR_X;
-//    } else if (x > LAST_QUARTER_WIDTH) {
-//      vX = -rnd.nextDouble() * VELOCITY_FACTOR_X;
-//    } else {
-//      vX = ((rnd.nextDouble() * xVariation) - xVariation * 0.5) * VELOCITY_FACTOR_X;
-//    }
-//    vY = (((rnd.nextDouble() * 1.5) + minSpeedY) * vYVariation) * VELOCITY_FACTOR_Y;
-//    vR = (((rnd.nextDouble()) * 0.5) + minRotationR) * VELOCITY_FACTOR_R;
-//    rotateRight = rnd.nextBoolean();
+  void init(Game game) {
+    final rnd = game.state.random;
+    final boardSize = game.state.boardSize;
+
+    image = game.images.crystalImage;
+
+    // Position
+    x = rnd.nextDouble() * boardSize.width;
+    y = -image.height.toDouble();
+    rot = 0;
+
+    // Random Speed
+    vYVariation = (rnd.nextDouble() * 0.5) + 0.2;
+
+    width = image.width.toDouble();
+    height = image.height.toDouble();
+    size = width > height ? width : height;
+    radius = size * 0.5;
+    imgCenterX = image.width * 0.5;
+    imgCenterY = image.height * 0.5;
+
+    // Velocity
+    if (x < boardSize.width * 0.25) {
+      vX = rnd.nextDouble() * Game.VELOCITY_FACTOR_X;
+    } else if (x > boardSize.width * 0.75) {
+      vX = -rnd.nextDouble() * Game.VELOCITY_FACTOR_X;
+    } else {
+      vX = ((rnd.nextDouble() * xVariation) - xVariation * 0.5) * Game.VELOCITY_FACTOR_X;
+    }
+    vY = (((rnd.nextDouble() * 1.5) + minSpeedY) * vYVariation) * Game.VELOCITY_FACTOR_Y;
+    vR = (((rnd.nextDouble()) * 0.5) + minRotationR) * Game.VELOCITY_FACTOR_R;
+    rotateRight = rnd.nextBool();
   }
 
   void update(Game game) {
-    throw UnimplementedError();
-//    x += vX;
-//    y += vY;
-//
-//    cX = x + imgCenterX;
-//    cY = y + imgCenterY;
-//
-//    if (rotateRight) {
-//      rot += vR;
-//      if (rot > 360) {
-//        rot = 0;
-//      }
-//    } else {
-//      rot -= vR;
-//      if (rot < 0) {
-//        rot = 360;
-//      }
-//    }
+    final boardSize = game.state.boardSize;
 
-    // Respawn crystal
-//    if (x < -size || x - radius > WIDTH || y - height > HEIGHT) {
-//      state.crystalsToRemove.add(this);
-//    }
+    x += vX;
+    y += vY;
+
+    cX = x + imgCenterX;
+    cY = y + imgCenterY;
+
+    if (rotateRight) {
+      rot += vR;
+      if (rot > 360) {
+        rot = 0;
+      }
+    } else {
+      rot -= vR;
+      if (rot < 0) {
+        rot = 360;
+      }
+    }
+
+    // Remove crystal
+    if (x < -size || x - radius > boardSize.width || y - height > boardSize.height) {
+      game.state.crystalsToRemove.add(this);
+    }
   }
+
+  @override
+  String toString() => 'Crystal@($x, $y)';
 }
