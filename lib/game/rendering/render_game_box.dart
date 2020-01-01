@@ -25,9 +25,6 @@ import 'package:spacefl/game/rendering/render_fns.dart';
 class RenderGameBox extends RenderBox {
   int _frameCallbackId;
 
-//  final backgroundPaint = Paint()
-//    ..color = Colors.black;
-
   @override
   Future<void> attach(PipelineOwner owner) async {
     super.attach(owner);
@@ -39,7 +36,7 @@ class RenderGameBox extends RenderBox {
   @override
   void detach() {
     super.detach();
-    _unscheduleTick();
+    _cancelTick();
   }
 
   @override
@@ -64,6 +61,7 @@ class RenderGameBox extends RenderBox {
     drawAsteroids(canvas, size, game);
     drawEnemies(canvas, size, game);
     drawCrystals(canvas, size, game);
+    drawSpaceShip(canvas, size, game);
     drawFps(canvas, size, game);
   }
 
@@ -71,7 +69,7 @@ class RenderGameBox extends RenderBox {
     _frameCallbackId = SchedulerBinding.instance.scheduleFrameCallback(_tick);
   }
 
-  void _unscheduleTick() {
+  void _cancelTick() {
     SchedulerBinding.instance.cancelFrameCallbackWithId(_frameCallbackId);
   }
 

@@ -43,9 +43,9 @@ class GameState {
   SpaceShip spaceShip;
   SpaceShipExplosion spaceShipExplosion;
 
-  final stars = List<Star>(Game.NO_OF_STARS);
-  final asteroids = List<Asteroid>(Game.NO_OF_ASTEROIDS);
-  final enemies = List<Enemy>(Game.NO_OF_ENEMIES);
+  final stars = List<Star>(Game.starCount);
+  final asteroids = List<Asteroid>(Game.asteroidCount);
+  final enemies = List<Enemy>(Game.enemyCount);
 
   final hallOfFame = <Player>[];
   final hits = <Hit>[];
@@ -93,8 +93,8 @@ class GameState {
   double backgroundViewportY = 2079; //backgroundImg.getHeight() - HEIGHT;
 
   int score = 0;
-  int lifeCount = Game.LIVES;
-  int shieldCount = Game.SHIELDS;
+  int lifeCount = Game.lifeCount;
+  int shieldCount = Game.shieldCount;
 
   bool hasBeenHit = false;
   bool initialized = false;
@@ -107,9 +107,11 @@ class GameState {
 
   /// Initialize all actors and other game state
   void init(Game game) {
-    initActorList(stars, Game.NO_OF_STARS, () => Star(game));
-    initActorList(asteroids, Game.NO_OF_ASTEROIDS, () => Asteroid(game));
-    initActorList(enemies, Game.NO_OF_ENEMIES, () => Enemy(game));
+    spaceShip = SpaceShip(game);
+
+    initActorList(stars, Game.starCount, () => Star(game));
+    initActorList(asteroids, Game.asteroidCount, () => Asteroid(game));
+    initActorList(enemies, Game.enemyCount, () => Enemy(game));
   }
 
   /// Update the game's state.
@@ -143,6 +145,8 @@ class GameState {
     updateActorList(asteroids, game, deltaT);
     updateActorList(enemies, game, deltaT);
     updateActorList(crystals, game, deltaT);
+
+    spaceShip.update(game);
   }
 
   void _updateSpawns(Game game, Duration now) {
@@ -150,7 +154,7 @@ class GameState {
 //      spawnEnemyBoss();
 //      lastEnemyBossAttack = now;
 //    }
-    if (isTimeToSpawn(now, lastCrystal, Game.CRYSTAL_SPAWN_INTERVAL)) {
+    if (isTimeToSpawn(now, lastCrystal, Game.crystalSpawnInterval)) {
       Crystal.spawn(game);
       lastCrystal = now;
     }

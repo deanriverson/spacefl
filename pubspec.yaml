@@ -60,6 +60,9 @@ flutter:
     - assets/images/enemy2.png
     - assets/images/enemy3.png
     - assets/images/crystal.png
+    - assets/images/fighter.png
+    - assets/images/fighterThrust.png
+    - assets/images/deflectorshield.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

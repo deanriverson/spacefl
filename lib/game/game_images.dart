@@ -20,8 +20,11 @@ import 'dart:ui';
 import 'package:flutter/services.dart';
 
 const _imagePath = 'assets/images';
-const _background = '$_imagePath/background.jpg';
-const _crystal = '$_imagePath/crystal.png';
+const _backgroundAsset = '$_imagePath/background.jpg';
+const _crystalAsset = '$_imagePath/crystal.png';
+const _spaceShipAsset = '$_imagePath/fighter.png';
+const _spaceShipThrustAsset = '$_imagePath/fighterThrust.png';
+const _deflectorShieldAsset = '$_imagePath/deflectorshield.png';
 
 const _asteroidImageCount = 11;
 const _asteroidImageSizes = [140, 140, 140, 110, 100, 120, 110, 100, 130, 120, 140];
@@ -36,6 +39,12 @@ PathGenerator _createPathGenerator(String assetName) => (int idx) => '$_imagePat
 class GameImages {
   Image _backgroundImage;
   Image _crystalImage;
+  Image _spaceShipImage;
+  Image _spaceShipThrustImage;
+  Image _miniSpaceShipImage;
+  Image _deflectorShieldImage;
+  Image _miniDeflectorShieldImage;
+
   final _enemyImages = List<Image>(_enemyImageCount);
   final _asteroidImages = List<Image>(_asteroidImageCount);
 
@@ -43,13 +52,30 @@ class GameImages {
 
   Image get crystalImage => _crystalImage;
 
+  Image get spaceShipImage => _spaceShipImage;
+
+  Image get spaceShipThrustImage => _spaceShipThrustImage;
+
+  Image get miniSpaceShipImage => _miniSpaceShipImage;
+
+  Image get deflectorShieldImage => _deflectorShieldImage;
+
+  Image get miniDeflectorShieldImage => _miniDeflectorShieldImage;
+
   List<Image> get enemyImages => UnmodifiableListView(_enemyImages);
 
   List<Image> get asteroidImages => UnmodifiableListView(_asteroidImages);
 
   Future<void> loadImages() async {
-    _backgroundImage = await _loadImage(_background);
-    _crystalImage = await _loadImage(_crystal, targetWidth: 100, targetHeight: 100);
+    _backgroundImage = await _loadImage(_backgroundAsset);
+    _crystalImage = await _loadImage(_crystalAsset, targetWidth: 100, targetHeight: 100);
+
+    _spaceShipImage = await _loadImage(_spaceShipAsset, targetWidth: 48, targetHeight: 48);
+    _spaceShipThrustImage = await _loadImage(_spaceShipThrustAsset, targetWidth: 48, targetHeight: 48);
+    _miniSpaceShipImage = await _loadImage(_spaceShipAsset, targetWidth: 16, targetHeight: 16);
+
+    _deflectorShieldImage = await _loadImage(_deflectorShieldAsset, targetWidth: 100, targetHeight: 100);
+    _miniDeflectorShieldImage = await _loadImage(_deflectorShieldAsset, targetWidth: 16, targetHeight: 16);
 
     final enemyPath = _createPathGenerator('enemy');
     final asteroidPath = _createPathGenerator('asteroid');

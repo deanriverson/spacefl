@@ -29,7 +29,7 @@ void drawFps(Canvas canvas, Size size, Game game) {
 }
 
 void drawBackground(Canvas canvas, Size size, Game game) {
-  if (!Game.SHOW_BACKGROUND) {
+  if (!Game.showBackground) {
     return;
   }
 
@@ -48,7 +48,7 @@ void drawBackground(Canvas canvas, Size size, Game game) {
 }
 
 void drawStars(Canvas canvas, Size size, Game game) {
-  if (Game.SHOW_STARS) {
+  if (Game.showStars) {
     for (final star in game.state.stars) {
       canvas.drawOval(star.rect, _starPaint);
     }
@@ -56,7 +56,7 @@ void drawStars(Canvas canvas, Size size, Game game) {
 }
 
 void drawAsteroids(Canvas canvas, Size size, Game game) {
-  if (Game.SHOW_ASTEROIDS) {
+  if (Game.showAsteroids) {
     for (final a in game.state.asteroids) {
       canvas.save();
 
@@ -97,4 +97,10 @@ void drawCrystals(Canvas canvas, Size size, Game game) {
 
     canvas.restore();
   }
+}
+
+void drawSpaceShip(Canvas canvas, Size size, Game game) {
+  final spaceShip = game.state.spaceShip;
+  final offset = Offset(spaceShip.x - spaceShip.radius, spaceShip.y - spaceShip.radius);
+  canvas.drawImage(spaceShip.image, offset, _imagePaint);
 }

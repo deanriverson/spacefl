@@ -16,52 +16,70 @@
 
 import 'dart:ui';
 
-class SpaceShip {
-  final Image image;
-  final Image imageThrust;
+import 'package:spacefl/game/game.dart';
 
-  double  x;
-  double  y;
-  double  size;
-  double  radius;
-  double  width;
-  double  height;
-  double  vX;
-  double  vY;
+class SpaceShip {
+  final Image _imageNoThrust;
+  final Image _imageThrust;
+
+  double _x;
+  double _y;
+  double _size;
+  double _radius;
+
+  double vX;
+  double vY;
   bool shield;
 
-  SpaceShip(this.image, this.imageThrust);
+  SpaceShip(Game game)
+      : _imageNoThrust = game.images.spaceShipImage,
+        _imageThrust = game.images.spaceShipThrustImage {
+    _size = (width > height ? width : height).toDouble();
+    _radius = _size * 0.5;
+    vX = 0;
+    vY = 0;
+    shield = false;
 
-//  public SpaceShip(final Image image, final Image imageThrust) {
-//    this.image       = image;
-//    this.imageThrust = imageThrust;
-//    this.x           = WIDTH * 0.5;
-//    this.y           = HEIGHT - 2 * image.getHeight();
-//    this.width       = image.getWidth();
-//    this.height      = image.getHeight();
-//    this.size        = width > height ? width : height;
-//    this.radius      = size * 0.5;
-//    this.vX          = 0;
-//    this.vY          = 0;
-//    this.shield      = false;
-//  }
-
-  void update() {
-    throw UnimplementedError();
-
-//    x += vX;
-//    y += vY;
-//    if (x + width * 0.5 > WIDTH) {
-//      x = WIDTH - width * 0.5;
-//    }
-//    if (x - width * 0.5 < 0) {
-//      x = width * 0.5;
-//    }
-//    if (y + height * 0.5 > HEIGHT) {
-//      y = HEIGHT - height * 0.5;
-//    }
-//    if (y - height * 0.5< 0) {
-//      y = height * 0.5;
-//    }
+    resetPosition(game);
   }
+
+  void resetPosition(Game game) {
+    _x = game.state.boardSize.width * 0.5;
+    _y = game.state.boardSize.height - 2 * image.height;
+  }
+
+  double get x => _x;
+
+  double get y => _y;
+
+  double get size => _size;
+
+  double get radius => _radius;
+
+  int get width => _imageNoThrust.width;
+
+  int get height => _imageNoThrust.height;
+
+  Image get image => _isMoving() ? _imageThrust : _imageNoThrust;
+
+  void update(Game game) {
+    final boardSize = game.state.boardSize;
+
+    _x += vX;
+    _y += vY;
+
+    if (_x + width * 0.5 > boardSize.width) {
+      _x = boardSize.width - width * 0.5;
+    } else if (_x - width * 0.5 < 0) {
+      _x = width * 0.5;
+    }
+
+    if (_y + height * 0.5 > boardSize.height) {
+      _y = boardSize.height - height * 0.5;
+    } else if (_y - height * 0.5< 0) {
+      _y = height * 0.5;
+    }
+  }
+
+  bool _isMoving() => vX != 0 || vY != 0;
 }

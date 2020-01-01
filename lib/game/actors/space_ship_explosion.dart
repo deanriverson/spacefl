@@ -40,11 +40,8 @@ class SpaceShipExplosion {
       }
       if (countX == 0 && countY == 0) {
         final state = game.state;
-        final boardSize = state.boardSize;
-
         state.hasBeenHit = false;
-        state.spaceShip.x = boardSize.width * 0.5;
-        state.spaceShip.y = boardSize.height - 2 * state.spaceShip.height;
+        state.spaceShip.resetPosition(game);
       }
     }
   }

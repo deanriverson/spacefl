@@ -43,8 +43,8 @@ class Star {
     vYVariation = (rnd.nextDouble() * 0.5) + 0.2;
 
     // Velocity
-    vX = ((rnd.nextDouble() * xVariation) - xVariation * 0.5).round() * Game.VELOCITY_FACTOR_X;
-    vY = (((rnd.nextDouble() * 1.5) + minSpeedY) * vYVariation).round() * Game.VELOCITY_FACTOR_Y;
+    vX = ((rnd.nextDouble() * xVariation) - xVariation * 0.5).round() * Game.velocityFactorX;
+    vY = (((rnd.nextDouble() * 1.5) + minSpeedY) * vYVariation).round() * Game.velocityFactorY;
   }
 
   void update(Game game) {

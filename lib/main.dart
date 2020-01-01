@@ -25,8 +25,8 @@ import 'package:spacefl/game/rendering/render_game_box.dart';
  *   [x] Load and draw background image
  *   [x] Draw stars
  *   [x] Load and draw asteroids
- *   [ ] Load and draw enemies
- *   [ ] Load and draw crystals
+ *   [x] Load and draw enemies
+ *   [x] Load and draw crystals
  *   [ ] Draw space ship and shield
  *   [ ] Handle input events
  *   [ ] Draw player torpedoes and rockets

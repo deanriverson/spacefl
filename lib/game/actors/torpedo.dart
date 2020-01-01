@@ -28,7 +28,7 @@ class Torpedo {
   Torpedo(this.image, this.x, double y)
       : y = y - image.height,
         vX = 0,
-        vY = Game.TORPEDO_SPEED;
+        vY = Game.torpedoSpeed;
 
   get width => image.width;
 

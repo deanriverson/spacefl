@@ -82,9 +82,9 @@ class Asteroid {
     imgCenterY = image.height * 0.5;
 
     // Velocity
-    vX = ((rnd.nextDouble() * xVariation) - xVariation * 0.5) * Game.VELOCITY_FACTOR_X;
-    vY = (((rnd.nextDouble() * 1.5) + minSpeedY * 1 / scale) * vYVariation) * Game.VELOCITY_FACTOR_Y;
-    vR = (((rnd.nextDouble()) * 0.5) + minRotationR) * Game.VELOCITY_FACTOR_R;
+    vX = ((rnd.nextDouble() * xVariation) - xVariation * 0.5) * Game.velocityFactorX;
+    vY = (((rnd.nextDouble() * 1.5) + minSpeedY * 1 / scale) * vYVariation) * Game.velocityFactorY;
+    vR = (((rnd.nextDouble()) * 0.5) + minRotationR) * Game.velocityFactorR;
     rotateRight = rnd.nextBool();
   }
 

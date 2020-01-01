@@ -78,13 +78,13 @@ class Enemy {
 
     // Velocity
     if (x < boardSize.width * 0.25) {
-      vX = (rnd.nextDouble() * 0.5) * Game.VELOCITY_FACTOR_X;
+      vX = (rnd.nextDouble() * 0.5) * Game.velocityFactorX;
     } else if (x > boardSize.width * 0.75) {
-      vX = -(rnd.nextDouble() * 0.5) * Game.VELOCITY_FACTOR_X;
+      vX = -(rnd.nextDouble() * 0.5) * Game.velocityFactorX;
     } else {
-      vX = ((rnd.nextDouble() * xVariation) - xVariation * 0.5) * Game.VELOCITY_FACTOR_X;
+      vX = ((rnd.nextDouble() * xVariation) - xVariation * 0.5) * Game.velocityFactorX;
     }
-    vY = (((rnd.nextDouble() * 1.5) + minSpeedY) * vYVariation) * Game.VELOCITY_FACTOR_Y;
+    vY = (((rnd.nextDouble() * 1.5) + minSpeedY) * vYVariation) * Game.velocityFactorY;
 
     // Rotation
     rot = radToDeg(math.atan2(vY, vX)) - 90;
