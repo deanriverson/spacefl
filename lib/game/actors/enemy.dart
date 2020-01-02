@@ -17,6 +17,8 @@
 import 'dart:math' as math;
 import 'dart:ui';
 
+import 'package:spacefl/game/actors/rocket.dart';
+import 'package:spacefl/game/actors/torpedo.dart';
 import 'package:spacefl/game/game.dart';
 import 'package:spacefl/game/math_utils.dart';
 
@@ -45,6 +47,8 @@ class Enemy {
   }
 
   void update(Game game) {
+    final state = game.state;
+
     x += vX;
     y += vY;
 
@@ -52,6 +56,22 @@ class Enemy {
     final boardSize = game.state.boardSize;
     if (x < -size || x > boardSize.width + size || y > boardSize.height + size) {
       _init(game);
+    }
+
+    for (Torpedo t in state.torpedoes) {
+      if (isHitCircleCircle(t.x, t.y, t.radius, x, y, radius)) {
+        state.spawnAsteroidExplosion(x, y, vX, vY, 0.5);
+        state.destroyTorpedo(t);
+        _init(game);
+      }
+    }
+
+    for (Rocket r in state.rockets) {
+      if (isHitCircleCircle(r.x, r.y, r.radius, x, y, radius)) {
+        state.spawnAsteroidExplosion(x, y, vX, vY, 0.5);
+        state.destroyRocket(r);
+        _init(game);
+      }
     }
   }
 
@@ -71,9 +91,9 @@ class Enemy {
     // Random Speed
     vYVariation = (rnd.nextDouble() * 0.5) + 0.2;
 
-    width  = image.width.toDouble();
+    width = image.width.toDouble();
     height = image.height.toDouble();
-    size   = width > height ? width : height;
+    size = width > height ? width : height;
     radius = size * 0.5;
 
     // Velocity

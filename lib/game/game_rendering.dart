@@ -16,6 +16,7 @@
 
 import 'dart:ui';
 import 'package:flutter/rendering.dart';
+import 'package:spacefl/game/actors/asteroid_explosion.dart';
 import 'package:spacefl/game/actors/rocket.dart';
 import 'package:spacefl/game/actors/torpedo.dart';
 import 'package:spacefl/game/game.dart';
@@ -138,16 +139,34 @@ void drawShots(Canvas canvas, Game game) {
   }
 }
 
-void _drawImageWithOffset(
-  Canvas canvas,
+void drawExplosions(Canvas canvas, Game game) {
+  final aeImg = game.images.asteroidExplosionImage;
+  for (AsteroidExplosion ae in game.state.asteroidExplosions) {
+    final src = Rect.fromLTWH(
+      ae.countX * AsteroidExplosion.frameWidth,
+      ae.countY * AsteroidExplosion.frameHeight,
+      AsteroidExplosion.frameWidth,
+      AsteroidExplosion.frameHeight
+    );
+
+    final dst = Rect.fromLTWH(
+      ae.x,
+      ae.y,
+      AsteroidExplosion.frameWidth * ae.scale,
+      AsteroidExplosion.frameHeight * ae.scale
+    );
+
+    canvas.drawImageRect(aeImg, src, dst, _imagePaint);
+  }
+}
+
+void _drawImageWithOffset(Canvas canvas,
   Image image,
   double x,
   double y,
   double xOffset,
   double yOffset,
-  {Paint paint}
-) {
+  {Paint paint}) {
   final offset = Offset(x - xOffset, y - yOffset);
   canvas.drawImage(image, offset, paint ?? _imagePaint);
-
 }

@@ -106,6 +106,7 @@ class Game {
 
     drawSpaceShip(canvas, this);
     drawShots(canvas, this);
+    drawExplosions(canvas, this);
 
     drawFps(canvas, this);
   }

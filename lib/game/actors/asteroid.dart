@@ -16,7 +16,10 @@
 
 import 'dart:ui';
 
+import 'package:spacefl/game/actors/rocket.dart';
+import 'package:spacefl/game/actors/torpedo.dart';
 import 'package:spacefl/game/game.dart';
+import 'package:spacefl/game/math_utils.dart';
 
 class Asteroid {
   static const int MAX_VALUE = 10;
@@ -89,11 +92,13 @@ class Asteroid {
   }
 
   void update(Game game) {
+    final state = game.state;
+    final boardSize = state.boardSize;
+
     x += vX;
     y += vY;
 
     // Respawn asteroid
-    final boardSize = game.state.boardSize;
     if (x < -(2*size) || x - radius > boardSize.width || y - height > boardSize.height) {
       init(game);
     }
@@ -110,6 +115,28 @@ class Asteroid {
       rot -= vR;
       if (rot < 0) {
         rot = 360;
+      }
+    }
+
+    for (Torpedo t in state.torpedoes) {
+      if (isHitCircleCircle(t.x, t.y, t.radius, cX, cY, radius)) {
+        --hits;
+        if (hits == 0) {
+          state.spawnAsteroidExplosion(cX, cY, vX, vY, scale);
+          state.destroyTorpedo(t);
+          init(game);
+        }
+      }
+    }
+
+    for (Rocket r in state.rockets) {
+      if (isHitCircleCircle(r.x, r.y, r.radius, cX, cY, radius)) {
+        --hits;
+        if (hits == 0) {
+          state.spawnAsteroidExplosion(cX, cY, vX, vY, scale);
+          state.destroyRocket(r);
+          init(game);
+        }
       }
     }
   }

@@ -29,12 +29,13 @@ import 'package:spacefl/widgets/space_fl_game.dart';
  *   [x] Load and draw crystals
  *   [x] Draw space ship and shield
  *   [x] Handle input events
- *   [ ] Draw player torpedoes and rockets
- *   [ ] Hit testing on asteroids
+ *   [x] Draw player torpedoes and rockets
+ *   [x] Hit testing on asteroids
  *   [ ] Hit testing on enemies
- *   [ ] Draw asteroid and enemy explosions
+ *   [x] Draw asteroid and enemy explosions
  *   [ ] Draw enemy torpedoes
  *   [ ] Hit testing on space ship
+ *   [ ] Enemies fire back
  *   [ ] Draw space ship explosion
  *   [ ] Draw score, lives, and mini shields
  *   [ ] Play sound effects

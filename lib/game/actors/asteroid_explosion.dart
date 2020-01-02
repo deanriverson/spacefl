@@ -17,11 +17,12 @@
 import 'package:spacefl/game/game.dart';
 
 class AsteroidExplosion {
-  static const double FRAME_WIDTH = 256;
-  static const double FRAME_HEIGHT = 256;
-  static const double FRAME_CENTER = 128;
-  static const int MAX_FRAME_X = 8;
-  static const int MAX_FRAME_Y = 7;
+  static const int maxFrameX = 8;
+  static const int maxFrameY = 7;
+
+  static const double frameWidth = 256;
+  static const double frameHeight = 256;
+  static const double frameCenter = 128;
 
   double x;
   double y;
@@ -37,15 +38,14 @@ class AsteroidExplosion {
     x += vX;
     y += vY;
 
-
     countX++;
-    if (countX == MAX_FRAME_X) {
+    if (countX == maxFrameX) {
       countY++;
-      if (countX == MAX_FRAME_X && countY == MAX_FRAME_Y) {
+      if (countX == maxFrameX && countY == maxFrameY) {
         game.state.asteroidExplosionsToRemove.add(this);
       }
       countX = 0;
-      if (countY == MAX_FRAME_Y) {
+      if (countY == maxFrameY) {
         countY = 0;
       }
     }

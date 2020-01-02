@@ -133,17 +133,27 @@ class GameState {
     _lastTimestamp = timestamp;
 
     _updateActors(game, timestamp, deltaT);
-    _updateSpawns(game, timestamp);
+    _updateAutoSpawns(game, timestamp);
   }
 
   void spawnTorpedo(Game game, double x, double y) {
     torpedoes.add(Torpedo(game, x, y));
   }
 
+  void destroyTorpedo(Torpedo t) => torpedoesToRemove.add(t);
+
   void spawnRocket(Game game, double x, double y) {
     if (rockets.length < Game.maxRocketCount) {
       rockets.add(Rocket(game, x, y));
     }
+  }
+
+  void destroyRocket(Rocket t) => rocketsToRemove.add(t);
+
+  void spawnAsteroidExplosion(double x, double y, double vX, double vY, double scale) {
+    final xPos = x - AsteroidExplosion.frameCenter * scale;
+    final yPos = y - AsteroidExplosion.frameCenter * scale;
+    asteroidExplosions.add(AsteroidExplosion(xPos, yPos, vX, vY, scale));
   }
 
   void _frameReset(Game game) {
@@ -184,13 +194,15 @@ class GameState {
     updateActorList(asteroids, game, deltaT);
     updateActorList(enemies, game, deltaT);
     updateActorList(crystals, game, deltaT);
+
     updateActorList(torpedoes, game, deltaT);
     updateActorList(rockets, game, deltaT);
+    updateActorList(asteroidExplosions, game, deltaT);
 
     spaceShip.update(game, timestamp);
   }
 
-  void _updateSpawns(Game game, Duration now) {
+  void _updateAutoSpawns(Game game, Duration now) {
 //    if (now > lastEnemyBossAttack + ENEMY_BOSS_ATTACK_INTERVAL) {
 //      spawnEnemyBoss();
 //      lastEnemyBossAttack = now;

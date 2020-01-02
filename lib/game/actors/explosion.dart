@@ -17,19 +17,20 @@
 import 'package:spacefl/game/game.dart';
 
 class Explosion {
-  static const double FRAME_WIDTH  = 192;
-  static const double FRAME_HEIGHT = 192;
-  static const double FRAME_CENTER = 96;
-  static const int    MAX_FRAME_X  = 5;
-  static const int    MAX_FRAME_Y  = 4;
+  static const int maxFrameX = 5;
+  static const int maxFrameY = 4;
+
+  static const double frameWidth = 192;
+  static const double frameHeight = 192;
+  static const double frameCenter = 96;
 
   double x;
   double y;
   double vX;
   double vY;
   double scale;
-  int    countX = 0;
-  int    countY = 0;
+  int countX = 0;
+  int countY = 0;
 
   Explosion(this.x, this.y, this.vX, this.vY, this.scale);
 
@@ -38,16 +39,15 @@ class Explosion {
     y += vY;
 
     countX++;
-    if (countX == MAX_FRAME_X) {
+    if (countX == maxFrameX) {
       countY++;
-      if (countX == MAX_FRAME_X && countY == MAX_FRAME_Y) {
+      if (countX == maxFrameX && countY == maxFrameY) {
         game.state.explosionsToRemove.add(this);
       }
       countX = 0;
-      if (countY == MAX_FRAME_Y) {
+      if (countY == maxFrameY) {
         countY = 0;
       }
     }
   }
 }
-

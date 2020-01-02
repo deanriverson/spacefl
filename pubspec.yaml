@@ -65,6 +65,8 @@ flutter:
     - assets/images/deflectorshield.png
     - assets/images/torpedo.png
     - assets/images/rocket.png
+    - assets/images/explosion.png
+    - assets/images/asteroidExplosion.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
