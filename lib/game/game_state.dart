@@ -53,29 +53,29 @@ class GameState {
   final crystals = <Crystal>[];
   final crystalsToRemove = <Crystal>{};
   final rockets = <Rocket>[];
-  final rocketsToRemove = <Rocket>[];
+  final rocketsToRemove = <Rocket>{};
   final torpedoes = <Torpedo>[];
-  final torpedoesToRemove = <Torpedo>[];
+  final torpedoesToRemove = <Torpedo>{};
 
   final enemyBosses = <EnemyBoss>[];
-  final enemyBossesToRemove = <EnemyBoss>[];
+  final enemyBossesToRemove = <EnemyBoss>{};
   final enemyTorpedoes = <EnemyTorpedo>[];
-  final enemyTorpedoesToRemove = <EnemyTorpedo>[];
+  final enemyTorpedoesToRemove = <EnemyTorpedo>{};
   final enemyBossHits = <EnemyBossHit>[];
-  final enemyBossHitsToRemove = <EnemyBossHit>[];
+  final enemyBossHitsToRemove = <EnemyBossHit>{};
   final enemyBossTorpedoes = <EnemyBossTorpedo>[];
-  final enemyBossTorpedoesToRemove = <EnemyBossTorpedo>[];
+  final enemyBossTorpedoesToRemove = <EnemyBossTorpedo>{};
 
   final rocketExplosions = <RocketExplosion>[];
-  final rocketExplosionsToRemove = <RocketExplosion>[];
+  final rocketExplosionsToRemove = <RocketExplosion>{};
   final enemyBossExplosions = <EnemyBossExplosion>[];
-  final enemyBossExplosionsToRemove = <EnemyBossExplosion>[];
+  final enemyBossExplosionsToRemove = <EnemyBossExplosion>{};
   final explosions = <Explosion>[];
-  final explosionsToRemove = <Explosion>[];
+  final explosionsToRemove = <Explosion>{};
   final asteroidExplosions = <AsteroidExplosion>[];
-  final asteroidExplosionsToRemove = <AsteroidExplosion>[];
+  final asteroidExplosionsToRemove = <AsteroidExplosion>{};
   final crystalExplosions = <CrystalExplosion>[];
-  final crystalExplosionsToRemove = <CrystalExplosion>[];
+  final crystalExplosionsToRemove = <CrystalExplosion>{};
 
   Random random = Random();
   Size boardSize = Size.zero;
@@ -136,10 +136,37 @@ class GameState {
     _updateSpawns(game, timestamp);
   }
 
+  void spawnTorpedo(Game game, double x, double y) {
+    torpedoes.add(Torpedo(game, x, y));
+  }
+
+  void spawnRocket(Game game, double x, double y) {
+    if (rockets.length < Game.maxRocketCount) {
+      rockets.add(Rocket(game, x, y));
+    }
+  }
+
   void _frameReset(Game game) {
-    if (crystalsToRemove.isNotEmpty) {
-      crystals.removeWhere((c) => crystalsToRemove.contains(c));
-      crystalsToRemove.clear();
+    _clearActors(rockets, rocketsToRemove);
+    _clearActors(crystals, crystalsToRemove);
+    _clearActors(torpedoes, torpedoesToRemove);
+
+    _clearActors(enemyBosses, enemyBossesToRemove);
+    _clearActors(enemyTorpedoes, enemyTorpedoesToRemove);
+    _clearActors(enemyBossHits, enemyBossHitsToRemove);
+    _clearActors(enemyBossTorpedoes, enemyBossTorpedoesToRemove);
+
+    _clearActors(explosions, explosionsToRemove);
+    _clearActors(rocketExplosions, rocketExplosionsToRemove);
+    _clearActors(crystalExplosions, crystalExplosionsToRemove);
+    _clearActors(asteroidExplosions, asteroidExplosionsToRemove);
+    _clearActors(enemyBossExplosions, enemyBossExplosionsToRemove);
+  }
+
+  void _clearActors<T>(List<T> actors, Set<T> actorsToRemove) {
+    if (actorsToRemove.isNotEmpty) {
+      actors.removeWhere((c) => actorsToRemove.contains(c));
+      actorsToRemove.clear();
     }
   }
 
@@ -157,6 +184,8 @@ class GameState {
     updateActorList(asteroids, game, deltaT);
     updateActorList(enemies, game, deltaT);
     updateActorList(crystals, game, deltaT);
+    updateActorList(torpedoes, game, deltaT);
+    updateActorList(rockets, game, deltaT);
 
     spaceShip.update(game, timestamp);
   }

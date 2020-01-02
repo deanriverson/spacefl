@@ -102,7 +102,7 @@ class SpaceShip {
   }
 
   /// Handle game events that affect this space ship
-  void handleEvent(GameEvent ev) {
+  void handleEvent(GameEvent ev, Game game) {
     switch (ev) {
       case GameEvent.accelerateUp:
         vY = -5;
@@ -131,7 +131,7 @@ class SpaceShip {
         return;
 
       case GameEvent.activateShield:
-        _activateShield();
+        _activateShield(game);
         return;
       case GameEvent.fireRocket:
         // TODO: Handle this case.
@@ -144,11 +144,9 @@ class SpaceShip {
     }
   }
 
-  void _activateShield() {
-    print('Activate shield called');
-
+  void _activateShield(Game game) {
     if (_shieldCount > 0 && !_shieldUp) {
-      _lastShieldActivated = Game.instance().state.lastTimestamp;
+      _lastShieldActivated = game.state.lastTimestamp;
       _shieldUp = true;
 
       // TODO: play sound

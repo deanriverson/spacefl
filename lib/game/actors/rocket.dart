@@ -29,32 +29,25 @@ class Rocket {
   double halfHeight;
   double size;
   double radius;
-  double vX;
-  double vY;
+  double vX = 0;
+  double vY = Game.rocketSpeed;
 
-  Rocket(this.image);
+  Rocket(Game game, this.x, y) : image = game.images.rocketImage {
+    this.y = y - image.height;
+    this.width      = image.width.toDouble();
+    this.height     = image.height.toDouble();
 
+    this.halfWidth  = width * 0.5;
+    this.halfHeight = height * 0.5;
 
-//  Rocket(final Image image, final double x, final double y) {
-//    this.image      = image;
-//    this.x          = x;
-//    this.y          = y - image.getHeight();
-//    this.width      = image.getWidth();
-//    this.height     = image.getHeight();
-//    this.halfWidth  = width * 0.5;
-//    this.halfHeight = height * 0.5;
-//    this.size       = width > height ? width : height;
-//    this.radius     = size * 0.5;
-//    this.vX         = 0;
-//    this.vY         = ROCKET_SPEED;
-//  }
+    this.size       = width > height ? width : height;
+    this.radius     = size * 0.5;
+  }
 
   void update(Game game) {
-    throw UnimplementedError();
-
-//    y -= vY;
-//    if (y < -size) {
-//      rocketsToRemove.add(Rocket.this);
-//    }
+    y -= vY;
+    if (y < -size) {
+      game.state.rocketsToRemove.add(this);
+    }
   }
 }

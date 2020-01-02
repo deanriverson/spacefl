@@ -14,11 +14,15 @@
  * limitations under the License.
  */
 
-import 'package:flutter/material.dart';
+import 'dart:ui';
+import 'package:flutter/rendering.dart';
+import 'package:spacefl/game/actors/rocket.dart';
+import 'package:spacefl/game/actors/torpedo.dart';
 import 'package:spacefl/game/game.dart';
 
 final _imagePaint = Paint();
-final _starPaint = Paint()..color = Color.fromARGB(230, 255, 255, 255);
+final _starPaint = Paint()
+  ..color = Color.fromARGB(230, 255, 255, 255);
 
 void drawFps(Canvas canvas, Game game) {
   final size = game.state.boardSize;
@@ -109,7 +113,7 @@ void drawSpaceShip(Canvas canvas, Game game) {
   if (spaceShip.shieldUp) {
     final opacity = game.state.random.nextDouble() * 0.5 + 0.1;
     final shieldPaint = Paint()
-      ..color = Colors.white.withOpacity(opacity);
+      ..color = Color(0xFFFFFFFF).withOpacity(opacity);
 
     final offset = Offset(spaceShip.x - spaceShip.shieldRadius, spaceShip.y - spaceShip.shieldRadius);
 
@@ -122,4 +126,28 @@ void drawSpaceShip(Canvas canvas, Game game) {
 //    ctx.fillRect(Game.shieldIn, SHIELD_INDICATOR_Y,
 //        SHIELD_INDICATOR_WIDTH - SHIELD_INDICATOR_WIDTH * delta / DEFLECTOR_SHIELD_TIME, SHIELD_INDICATOR_HEIGHT);
   }
+}
+
+void drawShots(Canvas canvas, Game game) {
+  for (Torpedo t in game.state.torpedoes) {
+    _drawImageWithOffset(canvas, t.image, t.x, t.y, t.radius, t.radius);
+  }
+
+  for (Rocket r in game.state.rockets) {
+    _drawImageWithOffset(canvas, r.image, r.x, r.y, r.halfWidth, r.halfHeight);
+  }
+}
+
+void _drawImageWithOffset(
+  Canvas canvas,
+  Image image,
+  double x,
+  double y,
+  double xOffset,
+  double yOffset,
+  {Paint paint}
+) {
+  final offset = Offset(x - xOffset, y - yOffset);
+  canvas.drawImage(image, offset, paint ?? _imagePaint);
+
 }

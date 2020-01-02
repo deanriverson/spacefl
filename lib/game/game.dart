@@ -32,11 +32,10 @@ enum GameEvent {
   activateShield,
   fireRocket,
   fireTorpedo,
-  gamePause
+  pauseGame
 }
 
 class Game {
-
   static const bool playSound = true;
   static const bool playMusic = true;
   static const bool showStars = true;
@@ -46,7 +45,7 @@ class Game {
 
   static const int lifeCount = 5;
   static const int shieldCount = 10;
-  static const int rocketCount = 3;
+  static const int maxRocketCount = 3;
   static const int starCount = showStars ? 200 : 0;
   static const int asteroidCount = showAsteroids ? 15 : 0;
   static const int enemyCount = showEnemies ? 5 : 0;
@@ -106,6 +105,7 @@ class Game {
     drawCrystals(canvas, this);
 
     drawSpaceShip(canvas, this);
+    drawShots(canvas, this);
 
     drawFps(canvas, this);
   }
@@ -121,13 +121,20 @@ class Game {
       case GameEvent.decelerateUp:
       case GameEvent.decelerateDown:
       case GameEvent.activateShield:
-      case GameEvent.fireRocket:
-      case GameEvent.fireTorpedo:
-        state.spaceShip.handleEvent(ev);
+        state.spaceShip.handleEvent(ev, this);
         return;
 
-      case GameEvent.gamePause:
-        // TODO: Handle this case.
+      case GameEvent.fireTorpedo:
+        state.spawnTorpedo(this, state.spaceShip.x, state.spaceShip.y);
+//        playSound(laserSound);
+        return;
+
+      case GameEvent.fireRocket:
+        state.spawnRocket(this, state.spaceShip.x, state.spaceShip.y);
+//        playSound(rocketLaunchSound);
+        return;
+
+      case GameEvent.pauseGame:
         break;
 
       default:

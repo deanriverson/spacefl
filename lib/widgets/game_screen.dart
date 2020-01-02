@@ -39,6 +39,8 @@ final _keyDownMap = <LogicalKeyboardKey, GameEvent>{
   LogicalKeyboardKey.arrowLeft: GameEvent.accelerateLeft,
   LogicalKeyboardKey.arrowRight: GameEvent.accelerateRight,
   LogicalKeyboardKey.keyS: GameEvent.activateShield,
+  LogicalKeyboardKey.keyR: GameEvent.fireRocket,
+  LogicalKeyboardKey.space: GameEvent.fireTorpedo,
 };
 
 final _keyUpMap = <LogicalKeyboardKey, GameEvent>{

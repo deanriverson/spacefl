@@ -63,6 +63,8 @@ flutter:
     - assets/images/fighter.png
     - assets/images/fighterThrust.png
     - assets/images/deflectorshield.png
+    - assets/images/torpedo.png
+    - assets/images/rocket.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

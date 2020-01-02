@@ -19,20 +19,23 @@ import 'dart:ui';
 import 'package:spacefl/game/game.dart';
 
 class Torpedo {
-  final Image image;
+  final Image _image;
   double x;
   double y;
-  double vX;
+  double vX = 0;
   double vY;
 
-  Torpedo(this.image, this.x, double y)
-      : y = y - image.height,
-        vX = 0,
-        vY = Game.torpedoSpeed;
+  Torpedo(Game game, this.x, double y)
+      : _image = game.images.torpedoImage,
+        vY = Game.torpedoSpeed {
+    this.y = y - _image.height;
+  }
 
-  get width => image.width;
+  Image get image => _image;
 
-  get height => image.height;
+  get width => _image.width;
+
+  get height => _image.height;
 
   get size => width > height ? width : height;
 

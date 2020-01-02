@@ -23,6 +23,8 @@ const _imagePath = 'assets/images';
 const _backgroundAsset = '$_imagePath/background.jpg';
 const _crystalAsset = '$_imagePath/crystal.png';
 const _spaceShipAsset = '$_imagePath/fighter.png';
+const _torpedoAsset = '$_imagePath/torpedo.png';
+const _rocketAsset = '$_imagePath/rocket.png';
 const _spaceShipThrustAsset = '$_imagePath/fighterThrust.png';
 const _deflectorShieldAsset = '$_imagePath/deflectorshield.png';
 
@@ -44,6 +46,8 @@ class GameImages {
   Image _miniSpaceShipImage;
   Image _deflectorShieldImage;
   Image _miniDeflectorShieldImage;
+  Image _torpedoImage;
+  Image _rocketImage;
 
   final _enemyImages = List<Image>(_enemyImageCount);
   final _asteroidImages = List<Image>(_asteroidImageCount);
@@ -62,6 +66,10 @@ class GameImages {
 
   Image get miniDeflectorShieldImage => _miniDeflectorShieldImage;
 
+  Image get torpedoImage => _torpedoImage;
+
+  Image get rocketImage => _rocketImage;
+
   List<Image> get enemyImages => UnmodifiableListView(_enemyImages);
 
   List<Image> get asteroidImages => UnmodifiableListView(_asteroidImages);
@@ -76,6 +84,9 @@ class GameImages {
 
     _deflectorShieldImage = await _loadImage(_deflectorShieldAsset, targetWidth: 100, targetHeight: 100);
     _miniDeflectorShieldImage = await _loadImage(_deflectorShieldAsset, targetWidth: 16, targetHeight: 16);
+
+    _torpedoImage = await _loadImage(_torpedoAsset, targetWidth: 17, targetHeight: 20);
+    _rocketImage = await _loadImage(_rocketAsset, targetWidth: 17, targetHeight: 50);
 
     final enemyPath = _createPathGenerator('enemy');
     final asteroidPath = _createPathGenerator('asteroid');
