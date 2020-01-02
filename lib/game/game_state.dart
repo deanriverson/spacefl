@@ -107,7 +107,16 @@ class GameState {
 
   /// Initialize all actors and other game state
   void init(Game game, Size size) {
+    if (boardSize == size) {
+      return;
+    }
+
     boardSize = size;
+
+    if (initialized) {
+      return;
+    }
+
     spaceShip = SpaceShip(game);
 
     initActorList(stars, Game.starCount, () => Star(game));
