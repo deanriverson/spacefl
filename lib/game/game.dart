@@ -20,7 +20,23 @@ import 'package:spacefl/game/game_images.dart';
 import 'package:spacefl/game/game_state.dart';
 import 'package:spacefl/game/game_rendering.dart';
 
+enum GameEvent {
+  accelerateLeft,
+  accelerateRight,
+  accelerateUp,
+  accelerateDown,
+  decelerateLeft,
+  decelerateRight,
+  decelerateUp,
+  decelerateDown,
+  activateShield,
+  fireRocket,
+  fireTorpedo,
+  gamePause
+}
+
 class Game {
+
   static const bool playSound = true;
   static const bool playMusic = true;
   static const bool showStars = true;
@@ -92,5 +108,30 @@ class Game {
     drawSpaceShip(canvas, this);
 
     drawFps(canvas, this);
+  }
+
+  void handleEvent(GameEvent ev) {
+    switch (ev) {
+      case GameEvent.accelerateLeft:
+      case GameEvent.accelerateRight:
+      case GameEvent.accelerateUp:
+      case GameEvent.accelerateDown:
+      case GameEvent.decelerateLeft:
+      case GameEvent.decelerateRight:
+      case GameEvent.decelerateUp:
+      case GameEvent.decelerateDown:
+      case GameEvent.activateShield:
+      case GameEvent.fireRocket:
+      case GameEvent.fireTorpedo:
+        state.spaceShip.handleEvent(ev);
+        return;
+
+      case GameEvent.gamePause:
+        // TODO: Handle this case.
+        break;
+
+      default:
+        print('Unhandled game event! $ev');
+    }
   }
 }

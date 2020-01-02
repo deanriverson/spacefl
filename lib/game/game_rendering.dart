@@ -106,7 +106,7 @@ void drawSpaceShip(Canvas canvas, Game game) {
   final offset = Offset(spaceShip.x - spaceShip.radius, spaceShip.y - spaceShip.radius);
   canvas.drawImage(spaceShip.image, offset, _imagePaint);
 
-  if (spaceShip.shield) {
+  if (spaceShip.shieldUp) {
     final opacity = game.state.random.nextDouble() * 0.5 + 0.1;
     final shieldPaint = Paint()
       ..color = Colors.white.withOpacity(opacity);

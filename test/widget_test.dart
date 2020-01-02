@@ -8,7 +8,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:spacefl/game/rendering/space_fl_game.dart';
+import 'package:spacefl/widgets/space_fl_game.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {

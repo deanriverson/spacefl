@@ -80,7 +80,6 @@ class GameState {
   Random random = Random();
   Size boardSize = Size.zero;
 
-  Duration lastShieldActivated = Duration.zero;
   Duration lastEnemyBossAttack = Duration.zero;
   Duration lastCrystal = Duration.zero;
   Duration lastTimerCall = Duration.zero;
@@ -94,7 +93,6 @@ class GameState {
 
   int score = 0;
   int lifeCount = Game.lifeCount;
-  int shieldCount = Game.shieldCount;
 
   bool hasBeenHit = false;
   bool initialized = false;
@@ -104,6 +102,8 @@ class GameState {
   bool inputAllowed = false;
 
   Duration get deltaT => _deltaT;
+
+  Duration get lastTimestamp => _lastTimestamp;
 
   /// Initialize all actors and other game state
   void init(Game game, Size size) {
@@ -129,7 +129,8 @@ class GameState {
   /// Update the game's state.
   void update(Game game, Duration timestamp) {
     _frameReset(game);
-    _deltaT = _computeDeltaT(timestamp);
+    _deltaT = _computeDeltaT(timestamp, _lastTimestamp);
+    _lastTimestamp = timestamp;
 
     _updateActors(game, timestamp, deltaT);
     _updateSpawns(game, timestamp);
@@ -142,13 +143,12 @@ class GameState {
     }
   }
 
-  Duration _computeDeltaT(Duration now) {
-    Duration delta = now - _lastTimestamp;
-    if (_lastTimestamp == Duration.zero) {
+  Duration _computeDeltaT(Duration now, Duration lastTimestamp) {
+    Duration delta = now - lastTimestamp;
+    if (lastTimestamp == Duration.zero) {
       delta = Duration.zero;
     }
 
-    _lastTimestamp = now;
     return delta;
   }
 

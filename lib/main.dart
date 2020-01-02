@@ -28,7 +28,7 @@ import 'package:spacefl/widgets/space_fl_game.dart';
  *   [x] Load and draw enemies
  *   [x] Load and draw crystals
  *   [x] Draw space ship and shield
- *   [ ] Handle input events
+ *   [x] Handle input events
  *   [ ] Draw player torpedoes and rockets
  *   [ ] Hit testing on asteroids
  *   [ ] Hit testing on enemies
@@ -37,6 +37,8 @@ import 'package:spacefl/widgets/space_fl_game.dart';
  *   [ ] Hit testing on space ship
  *   [ ] Draw space ship explosion
  *   [ ] Draw score, lives, and mini shields
+ *   [ ] Play sound effects
+ *   [ ] Play music
  */
 
 /// Run the application using a Stateless Widget

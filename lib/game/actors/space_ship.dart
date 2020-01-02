@@ -29,20 +29,20 @@ class SpaceShip {
   double _radius;
   double _shieldRadius;
 
-  double vX;
-  double vY;
-  bool shield;
+  bool _shieldUp = false;
+  int _shieldCount = Game.shieldCount;
+  Duration _lastShieldActivated = Duration.zero;
+
+  double vX = 0;
+  double vY = 0;
 
   SpaceShip(Game game)
       : _noThrustImage = game.images.spaceShipImage,
         _thrustImage = game.images.spaceShipThrustImage,
         _shieldImage = game.images.deflectorShieldImage {
     _size = (width > height ? width : height).toDouble();
-    _radius = _size * 0.5;
-    vX = 0;
-    vY = 0;
 
-    shield = false;
+    _radius = _size * 0.5;
     _shieldRadius = _shieldImage.width * 0.5;
 
     resetPosition(game);
@@ -62,6 +62,10 @@ class SpaceShip {
   double get radius => _radius;
 
   double get shieldRadius => _shieldRadius;
+
+  bool get shieldUp => _shieldUp;
+
+  int get shieldCount => _shieldCount;
 
   int get width => _noThrustImage.width;
 
@@ -89,11 +93,66 @@ class SpaceShip {
       _y = height * 0.5;
     }
 
-    if (shield) {
-      if (timestamp - game.state.lastShieldActivated > Game.deflectorShieldDuration) {
-        shield = false;
-        game.state.shieldCount--;
+    if (_shieldUp) {
+      if (timestamp - _lastShieldActivated > Game.deflectorShieldDuration) {
+        _shieldUp = false;
+        _shieldCount--;
       }
+    }
+  }
+
+  /// Handle game events that affect this space ship
+  void handleEvent(GameEvent ev) {
+    switch (ev) {
+      case GameEvent.accelerateUp:
+        vY = -5;
+        return;
+
+      case GameEvent.accelerateDown:
+        vY = 5;
+        return;
+
+      case GameEvent.decelerateUp:
+      case GameEvent.decelerateDown:
+        vY = 0;
+        return;
+
+      case GameEvent.accelerateLeft:
+        vX = -5;
+        return;
+
+      case GameEvent.accelerateRight:
+        vX = 5;
+        return;
+
+      case GameEvent.decelerateLeft:
+      case GameEvent.decelerateRight:
+        vX = 0;
+        return;
+
+      case GameEvent.activateShield:
+        _activateShield();
+        return;
+      case GameEvent.fireRocket:
+        // TODO: Handle this case.
+        return;
+      case GameEvent.fireTorpedo:
+        // TODO: Handle this case.
+        return;
+      default:
+        return;
+    }
+  }
+
+  void _activateShield() {
+    print('Activate shield called');
+
+    if (_shieldCount > 0 && !_shieldUp) {
+      _lastShieldActivated = Game.instance().state.lastTimestamp;
+      _shieldUp = true;
+
+      // TODO: play sound
+//      playSound(deflectorShieldSound);
     }
   }
 
