@@ -18,6 +18,7 @@ import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:spacefl/game/actors/rocket.dart';
+import 'package:spacefl/game/actors/space_ship.dart';
 import 'package:spacefl/game/actors/torpedo.dart';
 import 'package:spacefl/game/game.dart';
 import 'package:spacefl/game/math_utils.dart';
@@ -48,14 +49,20 @@ class Enemy {
 
   void update(Game game) {
     final state = game.state;
+    final boardSize = state.boardSize;
 
     x += vX;
     y += vY;
 
-    // Respawn Enemy
-    final boardSize = game.state.boardSize;
-    if (x < -size || x > boardSize.width + size || y > boardSize.height + size) {
+    if (_isOffBoard(boardSize)) {
       _init(game);
+    }
+
+    if (_shouldFireOn(state.spaceShip)) {
+      if (y - lastShotY > 15) {
+        state.spawnEnemyTorpedo(game, x, y, vX, vY);
+        lastShotY = y;
+      }
     }
 
     for (Torpedo t in state.torpedoes) {
@@ -68,7 +75,7 @@ class Enemy {
 
     for (Rocket r in state.rockets) {
       if (isHitCircleCircle(r.x, r.y, r.radius, x, y, radius)) {
-        state.spawnAsteroidExplosion(x, y, vX, vY, 0.5);
+        state.spawnRocketExplosion(x, y, vX, vY, 0.5);
         state.destroyRocket(r);
         _init(game);
       }
@@ -107,9 +114,14 @@ class Enemy {
     vY = (((rnd.nextDouble() * 1.5) + minSpeedY) * vYVariation) * Game.velocityFactorY;
 
     // Rotation
-    rot = radToDeg(math.atan2(vY, vX)) - 90;
+    rot = math.atan2(vY, vX) - math.pi / 2;
 
     // Related to laser fire
     lastShotY = 0;
   }
+
+  bool _isOffBoard(Size boardSize) => x < -size || x > boardSize.width + size || y > boardSize.height + size;
+
+  bool _shouldFireOn(SpaceShip spaceShip) =>
+      x > spaceShip.x - Game.enemyFireSensitivity && x < spaceShip.x + Game.enemyFireSensitivity;
 }

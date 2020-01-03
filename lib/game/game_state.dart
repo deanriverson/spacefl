@@ -49,7 +49,7 @@ class GameState {
 
   final hallOfFame = <Player>[];
   final hits = <Hit>[];
-  final hitsToRemove = <Hit>[];
+  final hitsToRemove = <Hit>{};
   final crystals = <Crystal>[];
   final crystalsToRemove = <Crystal>{};
   final rockets = <Rocket>[];
@@ -136,11 +136,18 @@ class GameState {
     _updateAutoSpawns(game, timestamp);
   }
 
-  void spawnTorpedo(Game game, double x, double y) {
-    torpedoes.add(Torpedo(game, x, y));
+  void spawnAsteroidExplosion(double x, double y, double vX, double vY, double scale) {
+    final xPos = x - AsteroidExplosion.frameCenter * scale;
+    final yPos = y - AsteroidExplosion.frameCenter * scale;
+    asteroidExplosions.add(AsteroidExplosion(xPos, yPos, vX, vY, scale));
   }
 
-  void destroyTorpedo(Torpedo t) => torpedoesToRemove.add(t);
+  void spawnEnemyTorpedo(Game game, double x, double y, double vX, double vY) {
+    double vFactor = Game.enemyTorpedoSpeed / vY;
+    enemyTorpedoes.add(EnemyTorpedo(game, x, y, vFactor * vX, vFactor * vY));
+    // TODO - play sound
+//    playSound(enemyLaserSound);
+  }
 
   void spawnRocket(Game game, double x, double y) {
     if (rockets.length < Game.maxRocketCount) {
@@ -148,36 +155,44 @@ class GameState {
     }
   }
 
-  void destroyRocket(Rocket t) => rocketsToRemove.add(t);
-
-  void spawnAsteroidExplosion(double x, double y, double vX, double vY, double scale) {
-    final xPos = x - AsteroidExplosion.frameCenter * scale;
-    final yPos = y - AsteroidExplosion.frameCenter * scale;
-    asteroidExplosions.add(AsteroidExplosion(xPos, yPos, vX, vY, scale));
+  void spawnRocketExplosion(double x, double y, double vX, double vY, double scale) {
+    final xPos = x - RocketExplosion.frameCenter * scale;
+    final yPos = y - RocketExplosion.frameCenter * scale;
+    rocketExplosions.add(RocketExplosion(xPos, yPos, vX, vY, scale));
   }
+
+  void spawnTorpedo(Game game, double x, double y) {
+    torpedoes.add(Torpedo(game, x, y));
+  }
+
+  void destroyAsteroidExplosion(AsteroidExplosion ae) => asteroidExplosionsToRemove.add(ae);
+
+  void destroyEnemyTorpedo(EnemyTorpedo t) => enemyTorpedoesToRemove.add(t);
+
+  void destroyRocket(Rocket r) => rocketsToRemove.add(r);
+
+  void destroyRocketExplosion(RocketExplosion re) => rocketExplosionsToRemove.add(re);
+
+  void destroyTorpedo(Torpedo t) => torpedoesToRemove.add(t);
 
   void _frameReset(Game game) {
-    _clearActors(rockets, rocketsToRemove);
-    _clearActors(crystals, crystalsToRemove);
-    _clearActors(torpedoes, torpedoesToRemove);
+    clearActors(rockets, rocketsToRemove);
+    clearActors(crystals, crystalsToRemove);
+    clearActors(torpedoes, torpedoesToRemove);
 
-    _clearActors(enemyBosses, enemyBossesToRemove);
-    _clearActors(enemyTorpedoes, enemyTorpedoesToRemove);
-    _clearActors(enemyBossHits, enemyBossHitsToRemove);
-    _clearActors(enemyBossTorpedoes, enemyBossTorpedoesToRemove);
+    clearActors(enemyBosses, enemyBossesToRemove);
+    clearActors(enemyTorpedoes, enemyTorpedoesToRemove);
+    clearActors(enemyBossHits, enemyBossHitsToRemove);
+    clearActors(enemyBossTorpedoes, enemyBossTorpedoesToRemove);
 
-    _clearActors(explosions, explosionsToRemove);
-    _clearActors(rocketExplosions, rocketExplosionsToRemove);
-    _clearActors(crystalExplosions, crystalExplosionsToRemove);
-    _clearActors(asteroidExplosions, asteroidExplosionsToRemove);
-    _clearActors(enemyBossExplosions, enemyBossExplosionsToRemove);
-  }
+    clearActors(hits, hitsToRemove);
+    clearActors(enemyBossHits, enemyBossHitsToRemove);
 
-  void _clearActors<T>(List<T> actors, Set<T> actorsToRemove) {
-    if (actorsToRemove.isNotEmpty) {
-      actors.removeWhere((c) => actorsToRemove.contains(c));
-      actorsToRemove.clear();
-    }
+    clearActors(explosions, explosionsToRemove);
+    clearActors(rocketExplosions, rocketExplosionsToRemove);
+    clearActors(crystalExplosions, crystalExplosionsToRemove);
+    clearActors(asteroidExplosions, asteroidExplosionsToRemove);
+    clearActors(enemyBossExplosions, enemyBossExplosionsToRemove);
   }
 
   Duration _computeDeltaT(Duration now, Duration lastTimestamp) {
@@ -192,12 +207,22 @@ class GameState {
   void _updateActors(Game game, Duration timestamp, Duration deltaT) {
     updateActorList(stars, game, deltaT);
     updateActorList(asteroids, game, deltaT);
-    updateActorList(enemies, game, deltaT);
     updateActorList(crystals, game, deltaT);
+    updateActorList(enemies, game, deltaT);
+    updateActorList(enemyBosses, game, deltaT);
 
-    updateActorList(torpedoes, game, deltaT);
     updateActorList(rockets, game, deltaT);
+    updateActorList(torpedoes, game, deltaT);
+    updateActorList(enemyTorpedoes, game, deltaT);
+    updateActorList(enemyBossTorpedoes, game, deltaT);
+
+    updateActorList(hits, game, deltaT);
+    updateActorList(enemyBossHits, game, deltaT);
+
+    updateActorList(rocketExplosions, game, deltaT);
+    updateActorList(crystalExplosions, game, deltaT);
     updateActorList(asteroidExplosions, game, deltaT);
+    updateActorList(enemyBossExplosions, game, deltaT);
 
     spaceShip.update(game, timestamp);
   }

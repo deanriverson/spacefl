@@ -35,5 +35,13 @@ void updateActorList<T>(T actors, Game game, Duration deltaT) {
   }
 }
 
+/// Remove items from [actors] if they are present in the [actorsToRemove] Set, then clear it.
+void clearActors<T>(List<T> actors, Set<T> actorsToRemove) {
+  if (actorsToRemove.isNotEmpty) {
+    actors.removeWhere((c) => actorsToRemove.contains(c));
+    actorsToRemove.clear();
+  }
+}
+
 /// Returns true if [interval] has passed since the [last] spawn time.
 bool isTimeToSpawn(Duration now, Duration last, Duration interval) => now > last + interval;

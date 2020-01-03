@@ -31,15 +31,19 @@ import 'package:spacefl/widgets/space_fl_game.dart';
  *   [x] Handle input events
  *   [x] Draw player torpedoes and rockets
  *   [x] Hit testing on asteroids
- *   [ ] Hit testing on enemies
+ *   [x] Hit testing on enemies
  *   [x] Draw asteroid and enemy explosions
  *   [ ] Draw enemy torpedoes
  *   [ ] Hit testing on space ship
- *   [ ] Enemies fire back
  *   [ ] Draw space ship explosion
  *   [ ] Draw score, lives, and mini shields
  *   [ ] Play sound effects
  *   [ ] Play music
+ *
+ * Future Ideas:
+ *   [ ] Create class/mixin hierarchy for actor classes to eliminate some duplicate code
+ *   [ ] Refactor asset loading code by creating a list of asset names and look them up by name
+ *   [ ] Use asset list to provide progress indicator on loading screen
  */
 
 /// Run the application using a Stateless Widget

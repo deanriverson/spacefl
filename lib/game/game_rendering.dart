@@ -17,7 +17,11 @@
 import 'dart:ui';
 import 'package:flutter/rendering.dart';
 import 'package:spacefl/game/actors/asteroid_explosion.dart';
+import 'package:spacefl/game/actors/enemy_torpedo.dart';
 import 'package:spacefl/game/actors/rocket.dart';
+import 'package:spacefl/game/actors/rocket_explosion.dart';
+import 'package:spacefl/game/actors/rocket_explosion.dart';
+import 'package:spacefl/game/actors/rocket_explosion.dart';
 import 'package:spacefl/game/actors/torpedo.dart';
 import 'package:spacefl/game/game.dart';
 
@@ -137,27 +141,15 @@ void drawShots(Canvas canvas, Game game) {
   for (Rocket r in game.state.rockets) {
     _drawImageWithOffset(canvas, r.image, r.x, r.y, r.halfWidth, r.halfHeight);
   }
+
+  for (EnemyTorpedo et in game.state.enemyTorpedoes) {
+    _drawImageWithOffset(canvas, et.image, et.x, et.y, et.radius, et.radius);
+  }
 }
 
 void drawExplosions(Canvas canvas, Game game) {
-  final aeImg = game.images.asteroidExplosionImage;
-  for (AsteroidExplosion ae in game.state.asteroidExplosions) {
-    final src = Rect.fromLTWH(
-      ae.countX * AsteroidExplosion.frameWidth,
-      ae.countY * AsteroidExplosion.frameHeight,
-      AsteroidExplosion.frameWidth,
-      AsteroidExplosion.frameHeight
-    );
-
-    final dst = Rect.fromLTWH(
-      ae.x,
-      ae.y,
-      AsteroidExplosion.frameWidth * ae.scale,
-      AsteroidExplosion.frameHeight * ae.scale
-    );
-
-    canvas.drawImageRect(aeImg, src, dst, _imagePaint);
-  }
+  _drawAsteroidExplosions(canvas, game.state.asteroidExplosions, game.images.asteroidExplosionImage);
+  _drawRocketExplosions(canvas, game.state.rocketExplosions, game.images.rocketExplosionImage);
 }
 
 void _drawImageWithOffset(Canvas canvas,
@@ -170,3 +162,33 @@ void _drawImageWithOffset(Canvas canvas,
   final offset = Offset(x - xOffset, y - yOffset);
   canvas.drawImage(image, offset, paint ?? _imagePaint);
 }
+
+void _drawAsteroidExplosions(Canvas canvas, List<AsteroidExplosion> explosions, Image img) {
+  final frameWidth = AsteroidExplosion.frameWidth;
+  final frameHeight = AsteroidExplosion.frameHeight;
+
+  for (AsteroidExplosion exp in explosions) {
+    final src = _srcRect(exp.countX, exp.countY, frameWidth, frameHeight);
+    final dst = _dstRect(exp.x, exp.y, frameWidth, frameHeight, exp.scale);
+    canvas.drawImageRect(img, src, dst, _imagePaint);
+  }
+}
+
+void _drawRocketExplosions(Canvas canvas, List<RocketExplosion> explosions, Image img) {
+  final frameWidth = RocketExplosion.frameWidth;
+  final frameHeight = RocketExplosion.frameHeight;
+
+  for (RocketExplosion exp in explosions) {
+    final src = _srcRect(exp.countX, exp.countY, frameWidth, frameHeight);
+    final dst = _dstRect(exp.x, exp.y, frameWidth, frameHeight, exp.scale);
+    canvas.drawImageRect(img, src, dst, _imagePaint);
+  }
+}
+
+Rect _srcRect(int countX, int countY, double width, double height) =>
+  Rect.fromLTWH(countX * width, countY * height, width, height);
+
+Rect _dstRect(double x, double y, double width, double height, double scale) =>
+  Rect.fromLTWH(x, y, width * scale, height * scale);
+
+

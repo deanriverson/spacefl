@@ -16,6 +16,8 @@
 
 import 'dart:ui';
 
+import 'package:spacefl/game/actors/enemy_torpedo.dart';
+import 'package:spacefl/game/actors/torpedo.dart';
 import 'package:spacefl/game/game.dart';
 
 class SpaceShip {
@@ -76,7 +78,8 @@ class SpaceShip {
   Image get shieldImage => _shieldImage;
 
   void update(Game game, Duration timestamp) {
-    final boardSize = game.state.boardSize;
+    var state = game.state;
+    final boardSize = state.boardSize;
 
     _x += vX;
     _y += vY;
@@ -98,6 +101,30 @@ class SpaceShip {
         _shieldUp = false;
         _shieldCount--;
       }
+    }
+
+    for (EnemyTorpedo et in state.enemyTorpedoes) {
+//      if (!hasBeenHit) {
+//        bool hit;
+//        if (_shieldUp) {
+//          hit = isHitCircleCircle(x, y, radius, spaceShip.x, spaceShip.y, deflectorShieldRadius);
+//        } else {
+//          hit = isHitCircleCircle(x, y, radius, spaceShip.x, spaceShip.y, spaceShip.radius);
+//        }
+//        if (hit) {
+//          enemyTorpedoesToRemove.add(EnemyTorpedo.this);
+//          if (spaceShip.shield) {
+//            playSound(shieldHitSound);
+//          } else {
+//            hasBeenHit = true;
+//            playSound(spaceShipExplosionSound);
+//            noOfLifes--;
+//            if (0 == noOfLifes) {
+//              gameOver();
+//            }
+//          }
+//        }
+//      }
     }
   }
 

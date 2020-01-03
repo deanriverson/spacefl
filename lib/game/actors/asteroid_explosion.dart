@@ -42,7 +42,7 @@ class AsteroidExplosion {
     if (countX == maxFrameX) {
       countY++;
       if (countX == maxFrameX && countY == maxFrameY) {
-        game.state.asteroidExplosionsToRemove.add(this);
+        game.state.destroyAsteroidExplosion(this);
       }
       countX = 0;
       if (countY == maxFrameY) {

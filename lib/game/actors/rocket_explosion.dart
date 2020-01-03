@@ -17,19 +17,20 @@
 import 'package:spacefl/game/game.dart';
 
 class RocketExplosion {
-  static const double FRAME_WIDTH  = 128;
-  static const double FRAME_HEIGHT = 128;
-  static const double FRAME_CENTER = 64;
-  static const int    MAX_FRAME_X  = 4;
-  static const int    MAX_FRAME_Y  = 7;
+  static const int maxFrameX = 4;
+  static const int maxFrameY = 7;
+
+  static const double frameWidth = 128;
+  static const double frameHeight = 128;
+  static const double frameCenter = 64;
 
   double x;
   double y;
   double vX;
   double vY;
   double scale;
-  int    countX = 0;
-  int    countY = 0;
+  int countX = 0;
+  int countY = 0;
 
   RocketExplosion(this.x, this.y, this.vX, this.vY, this.scale);
 
@@ -38,13 +39,13 @@ class RocketExplosion {
     y += vY;
 
     countX++;
-    if (countX == MAX_FRAME_X) {
+    if (countX == maxFrameX) {
       countY++;
-      if (countX == MAX_FRAME_X && countY == MAX_FRAME_Y) {
+      if (countX == maxFrameX && countY == maxFrameY) {
         game.state.rocketExplosionsToRemove.add(this);
       }
       countX = 0;
-      if (countY == MAX_FRAME_Y) {
+      if (countY == maxFrameY) {
         countY = 0;
       }
     }

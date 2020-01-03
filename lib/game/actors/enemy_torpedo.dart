@@ -26,19 +26,7 @@ class EnemyTorpedo {
   double vX;
   double vY;
 
-  EnemyTorpedo(this.image, this.x, this.y, this.vX, this.vY);
-
-//  {
-//    this.image = image;
-//    this.x = x - image.getWidth() / 2.0;
-//    this.y = y;
-//    this.width = image.getWidth();
-//    this.height = image.getHeight();
-//    this.size = width > height ? width : height;
-//    this.radius = size * 0.5;
-//    this.vX = vX;
-//    this.vY = vY;
-//  }
+  EnemyTorpedo(Game game, this.x, this.y, this.vX, this.vY) : image = game.images.enemyTorpedoImage;
 
   get width => image.width;
 
@@ -49,33 +37,11 @@ class EnemyTorpedo {
   get radius => size * 0.5;
 
   void update(Game game) {
-    throw UnimplementedError();
+    x += vX;
+    y += vY;
 
-//    x += vX;
-//    y += vY;
-//
-//    if (!hasBeenHit) {
-//      boolean hit;
-//      if (spaceShip.shield) {
-//        hit = isHitCircleCircle(x, y, radius, spaceShip.x, spaceShip.y, deflectorShieldRadius);
-//      } else {
-//        hit = isHitCircleCircle(x, y, radius, spaceShip.x, spaceShip.y, spaceShip.radius);
-//      }
-//      if (hit) {
-//        enemyTorpedoesToRemove.add(EnemyTorpedo.this);
-//        if (spaceShip.shield) {
-//          playSound(shieldHitSound);
-//        } else {
-//          hasBeenHit = true;
-//          playSound(spaceShipExplosionSound);
-//          noOfLifes--;
-//          if (0 == noOfLifes) {
-//            gameOver();
-//          }
-//        }
-//      }
-//    } else if (y > HEIGHT) {
-//      state.enemyTorpedoesToRemove.add(this);
-//    }
+    if (y > game.state.boardSize.height) {
+      game.state.destroyEnemyTorpedo(this);
+    }
   }
 }

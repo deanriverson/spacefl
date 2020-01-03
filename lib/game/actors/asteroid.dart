@@ -133,7 +133,7 @@ class Asteroid {
       if (isHitCircleCircle(r.x, r.y, r.radius, cX, cY, radius)) {
         --hits;
         if (hits == 0) {
-          state.spawnAsteroidExplosion(cX, cY, vX, vY, scale);
+          state.spawnRocketExplosion(cX, cY, vX, vY, scale);
           state.destroyRocket(r);
           init(game);
         }
