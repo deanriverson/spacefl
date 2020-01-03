@@ -67,7 +67,7 @@ class Enemy {
 
     for (Torpedo t in state.torpedoes) {
       if (isHitCircleCircle(t.x, t.y, t.radius, x, y, radius)) {
-        state.spawnAsteroidExplosion(x, y, vX, vY, 0.5);
+        state.spawnAsteroidExplosion(game, x, y, vX, vY, 0.5);
         state.destroyTorpedo(t);
         _init(game);
       }
@@ -75,7 +75,7 @@ class Enemy {
 
     for (Rocket r in state.rockets) {
       if (isHitCircleCircle(r.x, r.y, r.radius, x, y, radius)) {
-        state.spawnRocketExplosion(x, y, vX, vY, 0.5);
+        state.spawnRocketExplosion(game, x, y, vX, vY, 0.5);
         state.destroyRocket(r);
         _init(game);
       }

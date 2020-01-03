@@ -17,7 +17,6 @@
 import 'dart:ui';
 
 import 'package:spacefl/game/actors/enemy_torpedo.dart';
-import 'package:spacefl/game/actors/torpedo.dart';
 import 'package:spacefl/game/game.dart';
 
 class SpaceShip {
@@ -96,11 +95,9 @@ class SpaceShip {
       _y = height * 0.5;
     }
 
-    if (_shieldUp) {
-      if (timestamp - _lastShieldActivated > Game.deflectorShieldDuration) {
-        _shieldUp = false;
-        _shieldCount--;
-      }
+    if (_shieldUp && _shieldTimeout(timestamp)) {
+      _shieldUp = false;
+      _shieldCount--;
     }
 
     for (EnemyTorpedo et in state.enemyTorpedoes) {
@@ -182,4 +179,6 @@ class SpaceShip {
   }
 
   bool _isMoving() => vX != 0 || vY != 0;
+
+  bool _shieldTimeout(Duration timestamp) => timestamp - _lastShieldActivated > Game.deflectorShieldDuration;
 }

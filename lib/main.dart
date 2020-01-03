@@ -33,8 +33,10 @@ import 'package:spacefl/widgets/space_fl_game.dart';
  *   [x] Hit testing on asteroids
  *   [x] Hit testing on enemies
  *   [x] Draw asteroid and enemy explosions
- *   [ ] Draw enemy torpedoes
+ *   [x] Draw enemy torpedoes
  *   [ ] Hit testing on space ship
+ *   [ ] Draw enemy bosses
+ *   [ ] Draw enemy boss explosions
  *   [ ] Draw space ship explosion
  *   [ ] Draw score, lives, and mini shields
  *   [ ] Play sound effects

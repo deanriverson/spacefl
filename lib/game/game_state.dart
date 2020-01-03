@@ -136,10 +136,11 @@ class GameState {
     _updateAutoSpawns(game, timestamp);
   }
 
-  void spawnAsteroidExplosion(double x, double y, double vX, double vY, double scale) {
+  void spawnAsteroidExplosion(Game game, double x, double y, double vX, double vY, double scale) {
     final xPos = x - AsteroidExplosion.frameCenter * scale;
     final yPos = y - AsteroidExplosion.frameCenter * scale;
     asteroidExplosions.add(AsteroidExplosion(xPos, yPos, vX, vY, scale));
+    // TODO - play sound
   }
 
   void spawnEnemyTorpedo(Game game, double x, double y, double vX, double vY) {
@@ -153,16 +154,19 @@ class GameState {
     if (rockets.length < Game.maxRocketCount) {
       rockets.add(Rocket(game, x, y));
     }
+    // TODO - play sound
   }
 
-  void spawnRocketExplosion(double x, double y, double vX, double vY, double scale) {
+  void spawnRocketExplosion(Game game, double x, double y, double vX, double vY, double scale) {
     final xPos = x - RocketExplosion.frameCenter * scale;
     final yPos = y - RocketExplosion.frameCenter * scale;
     rocketExplosions.add(RocketExplosion(xPos, yPos, vX, vY, scale));
+    // TODO - play sound
   }
 
   void spawnTorpedo(Game game, double x, double y) {
     torpedoes.add(Torpedo(game, x, y));
+    // TODO - play sound
   }
 
   void destroyAsteroidExplosion(AsteroidExplosion ae) => asteroidExplosionsToRemove.add(ae);
