@@ -68,6 +68,7 @@ flutter:
     - assets/images/fighterThrust.png
     - assets/images/rocket.png
     - assets/images/rocketExplosion.png
+    - assets/images/spaceshipExplosion.png
     - assets/images/torpedo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see

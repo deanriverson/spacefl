@@ -26,13 +26,16 @@ class EnemyBossTorpedo {
   double vX;
   double vY;
 
-
-  EnemyBossTorpedo(this.image, double x, this.y, this.vX, this.vY)
-    : this.x = x - image.width / 2.0;
+  EnemyBossTorpedo(Game game, double x, this.y, this.vX, this.vY) : image = game.images.enemyTorpedoImage {
+    this.x = x - image.width / 2.0;
+  }
 
   get width => image.width;
+
   get height => image.height;
+
   get size => width > height ? width : height;
+
   get radius => size * 0.5;
 
   void update(Game game) {

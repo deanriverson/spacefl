@@ -17,31 +17,30 @@
 import 'package:spacefl/game/game.dart';
 
 class SpaceShipExplosion {
-  static const double FRAME_WIDTH  = 100;
-  static const double FRAME_HEIGHT = 100;
-  static const double FRAME_CENTER = 50;
-  static const int    MAX_FRAME_X  = 8;
-  static const int    MAX_FRAME_Y  = 6;
+  static const int maxFrameX = 8;
+  static const int maxFrameY = 6;
+
+  static const double frameWidth = 100;
+  static const double frameHeight = 100;
+  static const double frameCenter = 50;
 
   double x;
   double y;
-  int    countX = 0;
-  int    countY = 0;
+  int countX = 0;
+  int countY = 0;
 
   SpaceShipExplosion(this.x, this.y);
 
   void update(Game game) {
     countX++;
-    if (countX == MAX_FRAME_X) {
+    if (countX == maxFrameX) {
       countX = 0;
       countY++;
-      if (countY == MAX_FRAME_Y) {
+      if (countY == maxFrameY) {
         countY = 0;
       }
       if (countX == 0 && countY == 0) {
-        final state = game.state;
-        state.hasBeenHit = false;
-        state.spaceShip.resetPosition(game);
+        game.state.resetSpaceShip(game);
       }
     }
   }

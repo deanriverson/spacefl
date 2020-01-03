@@ -94,7 +94,6 @@ class GameState {
   int score = 0;
   int lifeCount = Game.lifeCount;
 
-  bool hasBeenHit = false;
   bool initialized = false;
   bool running = false;
   bool gameOverScreen = false;
@@ -136,6 +135,17 @@ class GameState {
     _updateAutoSpawns(game, timestamp);
   }
 
+  void resetSpaceShip(Game game) {
+    if (lifeCount == 0) {
+      // TODO notify that game is over, for not just reset lifeCount
+      //gameOver();
+      //return;
+      lifeCount = Game.lifeCount;
+    }
+
+    spaceShip.reset(game);
+  }
+
   void spawnAsteroidExplosion(Game game, double x, double y, double vX, double vY, double scale) {
     final xPos = x - AsteroidExplosion.frameCenter * scale;
     final yPos = y - AsteroidExplosion.frameCenter * scale;
@@ -146,6 +156,13 @@ class GameState {
   void spawnEnemyTorpedo(Game game, double x, double y, double vX, double vY) {
     double vFactor = Game.enemyTorpedoSpeed / vY;
     enemyTorpedoes.add(EnemyTorpedo(game, x, y, vFactor * vX, vFactor * vY));
+    // TODO - play sound
+//    playSound(enemyLaserSound);
+  }
+
+  void spawnEnemyBossTorpedo(Game game, double x, double y, double vX, double vY) {
+    double vFactor = Game.enemyTorpedoSpeed / vY;
+    enemyBossTorpedoes.add(EnemyBossTorpedo(game, x, y, vFactor * vX, vFactor * vY));
     // TODO - play sound
 //    playSound(enemyLaserSound);
   }
@@ -173,9 +190,19 @@ class GameState {
 
   void destroyEnemyTorpedo(EnemyTorpedo t) => enemyTorpedoesToRemove.add(t);
 
+  void destroyEnemyBossTorpedo(EnemyBossTorpedo ebt) => enemyBossTorpedoesToRemove.add(ebt);
+
   void destroyRocket(Rocket r) => rocketsToRemove.add(r);
 
   void destroyRocketExplosion(RocketExplosion re) => rocketExplosionsToRemove.add(re);
+
+  void destroySpaceShip(Game game) {
+    // TODO play sound
+//    playSound(spaceShipExplosionSound);
+
+    lifeCount--;
+    spaceShipExplosion = SpaceShipExplosion(spaceShip.x, spaceShip.y);
+  }
 
   void destroyTorpedo(Torpedo t) => torpedoesToRemove.add(t);
 
@@ -228,7 +255,11 @@ class GameState {
     updateActorList(asteroidExplosions, game, deltaT);
     updateActorList(enemyBossExplosions, game, deltaT);
 
-    spaceShip.update(game, timestamp);
+    if (spaceShip.isAlive) {
+      spaceShip.update(game, timestamp);
+    } else {
+      spaceShipExplosion.update(game);
+    }
   }
 
   void _updateAutoSpawns(Game game, Duration now) {

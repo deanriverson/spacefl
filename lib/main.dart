@@ -30,14 +30,15 @@ import 'package:spacefl/widgets/space_fl_game.dart';
  *   [x] Draw space ship and shield
  *   [x] Handle input events
  *   [x] Draw player torpedoes and rockets
- *   [x] Hit testing on asteroids
- *   [x] Hit testing on enemies
+ *   [x] Hit testing on asteroids w.r.t player torpedoes
+ *   [x] Hit testing on enemies w.r.t. player torpedoes
  *   [x] Draw asteroid and enemy explosions
  *   [x] Draw enemy torpedoes
- *   [ ] Hit testing on space ship
+ *   [x] Hit testing on space ship w.r.t enemy torpedoes
+ *   [x] Draw space ship explosion
  *   [ ] Draw enemy bosses
  *   [ ] Draw enemy boss explosions
- *   [ ] Draw space ship explosion
+ *   [ ] Detect ship-to-ship and ship-to-asteroid collisions
  *   [ ] Draw score, lives, and mini shields
  *   [ ] Play sound effects
  *   [ ] Play music
@@ -46,6 +47,9 @@ import 'package:spacefl/widgets/space_fl_game.dart';
  *   [ ] Create class/mixin hierarchy for actor classes to eliminate some duplicate code
  *   [ ] Refactor asset loading code by creating a list of asset names and look them up by name
  *   [ ] Use asset list to provide progress indicator on loading screen
+ *   [ ] Move draw fns to actor classes to allow, for example, space ship to draw based on it's internal state
+ *   [ ] Implement state machine in space ship for states: alive, exploding, respawning.
+ *   [ ] Implement respawning animation in spaceship (shimmering translucent effect?)
  */
 
 /// Run the application using a Stateless Widget

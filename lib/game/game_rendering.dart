@@ -20,8 +20,7 @@ import 'package:spacefl/game/actors/asteroid_explosion.dart';
 import 'package:spacefl/game/actors/enemy_torpedo.dart';
 import 'package:spacefl/game/actors/rocket.dart';
 import 'package:spacefl/game/actors/rocket_explosion.dart';
-import 'package:spacefl/game/actors/rocket_explosion.dart';
-import 'package:spacefl/game/actors/rocket_explosion.dart';
+import 'package:spacefl/game/actors/space_ship_explosion.dart';
 import 'package:spacefl/game/actors/torpedo.dart';
 import 'package:spacefl/game/game.dart';
 
@@ -112,6 +111,11 @@ void drawCrystals(Canvas canvas, Game game) {
 
 void drawSpaceShip(Canvas canvas, Game game) {
   final spaceShip = game.state.spaceShip;
+
+  if (!spaceShip.isAlive) {
+    return;
+  }
+
   final offset = Offset(spaceShip.x - spaceShip.radius, spaceShip.y - spaceShip.radius);
   canvas.drawImage(spaceShip.image, offset, _imagePaint);
 
@@ -123,13 +127,6 @@ void drawSpaceShip(Canvas canvas, Game game) {
     final offset = Offset(spaceShip.x - spaceShip.shieldRadius, spaceShip.y - spaceShip.shieldRadius);
 
     canvas.drawImage(spaceShip.shieldImage, offset, shieldPaint);
-
-    // TODO: Draw shield indicator.  Do this here or in a separate drawUI function?
-//    ctx.setStroke(Game.scoreColor);
-//    ctx.setFill(Game.scoreColor);
-//    ctx.strokeRect(Game.shieldIn, SHIELD_INDICATOR_Y, SHIELD_INDICATOR_WIDTH, SHIELD_INDICATOR_HEIGHT);
-//    ctx.fillRect(Game.shieldIn, SHIELD_INDICATOR_Y,
-//        SHIELD_INDICATOR_WIDTH - SHIELD_INDICATOR_WIDTH * delta / DEFLECTOR_SHIELD_TIME, SHIELD_INDICATOR_HEIGHT);
   }
 }
 
@@ -148,8 +145,25 @@ void drawShots(Canvas canvas, Game game) {
 }
 
 void drawExplosions(Canvas canvas, Game game) {
-  _drawAsteroidExplosions(canvas, game.state.asteroidExplosions, game.images.asteroidExplosionImage);
-  _drawRocketExplosions(canvas, game.state.rocketExplosions, game.images.rocketExplosionImage);
+  final state = game.state;
+
+  _drawAsteroidExplosions(canvas, state.asteroidExplosions, game.images.asteroidExplosionImage);
+  _drawRocketExplosions(canvas, state.rocketExplosions, game.images.rocketExplosionImage);
+
+  if (!state.spaceShip.isAlive) {
+    _drawSpaceShipExplosion(canvas, state.spaceShipExplosion, game.images.spaceShipExplosionImage);
+  }
+}
+
+void drawUI(Canvas canvas, Game game) {
+  // TODO: Draw shield indicator
+//    ctx.setStroke(Game.scoreColor);
+//    ctx.setFill(Game.scoreColor);
+//    ctx.strokeRect(Game.shieldIn, SHIELD_INDICATOR_Y, SHIELD_INDICATOR_WIDTH, SHIELD_INDICATOR_HEIGHT);
+//    ctx.fillRect(Game.shieldIn, SHIELD_INDICATOR_Y,
+//        SHIELD_INDICATOR_WIDTH - SHIELD_INDICATOR_WIDTH * delta / DEFLECTOR_SHIELD_TIME, SHIELD_INDICATOR_HEIGHT);
+
+  return;
 }
 
 void _drawImageWithOffset(Canvas canvas,
@@ -169,7 +183,7 @@ void _drawAsteroidExplosions(Canvas canvas, List<AsteroidExplosion> explosions, 
 
   for (AsteroidExplosion exp in explosions) {
     final src = _srcRect(exp.countX, exp.countY, frameWidth, frameHeight);
-    final dst = _dstRect(exp.x, exp.y, frameWidth, frameHeight, exp.scale);
+    final dst = _dstRect(exp.x, exp.y, frameWidth, frameHeight, scale: exp.scale);
     canvas.drawImageRect(img, src, dst, _imagePaint);
   }
 }
@@ -180,15 +194,25 @@ void _drawRocketExplosions(Canvas canvas, List<RocketExplosion> explosions, Imag
 
   for (RocketExplosion exp in explosions) {
     final src = _srcRect(exp.countX, exp.countY, frameWidth, frameHeight);
-    final dst = _dstRect(exp.x, exp.y, frameWidth, frameHeight, exp.scale);
+    final dst = _dstRect(exp.x, exp.y, frameWidth, frameHeight, scale: exp.scale);
     canvas.drawImageRect(img, src, dst, _imagePaint);
   }
+}
+
+void _drawSpaceShipExplosion(Canvas canvas, SpaceShipExplosion sse, Image img) {
+  final frameWidth = SpaceShipExplosion.frameWidth;
+  final frameHeight = SpaceShipExplosion.frameHeight;
+  final frameCenter = SpaceShipExplosion.frameCenter;
+
+  final src = _srcRect(sse.countX, sse.countY, frameWidth, frameHeight);
+  final dst = _dstRect(sse.x - frameCenter, sse.y - frameCenter, frameWidth, frameHeight);
+  canvas.drawImageRect(img, src, dst, _imagePaint);
 }
 
 Rect _srcRect(int countX, int countY, double width, double height) =>
   Rect.fromLTWH(countX * width, countY * height, width, height);
 
-Rect _dstRect(double x, double y, double width, double height, double scale) =>
+Rect _dstRect(double x, double y, double width, double height, {double scale = 1.0}) =>
   Rect.fromLTWH(x, y, width * scale, height * scale);
 
 
