@@ -45,11 +45,13 @@ class ImageAsset {
   String get assetPath => '$_imageAssetPath/$name.$ext';
 }
 
-const _asteroidImageSizes = [140, 140, 140, 110, 100, 120, 110, 100, 130, 120, 140];
+const _asteroidImageSizes = [140, 140, 140  , 110, 100, 120, 110, 100, 130, 120, 140];
 const _enemyImageSizes = [56, 50, 68];
+const _enemyBossImageSizes = [100, 100, 100, 100, 100];
 
 final asteroidImageCount = _asteroidImageSizes.length;
 final enemyImageCount = _enemyImageSizes.length;
+final enemyBossImageCount = _enemyBossImageSizes.length;
 
 /// Note that indexed assets are 1-based!
 String indexedAssetName(String assetName, int idx) => '$assetName${idx + 1}';
@@ -66,6 +68,9 @@ final imageAssets = [
 
   for (int i = 0; i < enemyImageCount; ++i)
     ImageAsset.square(indexedAssetName('enemy', i), _enemyImageSizes[i]),
+
+  for (int i = 0; i < enemyBossImageCount; ++i)
+    ImageAsset.square(indexedAssetName('enemyBoss', i), _enemyBossImageSizes[i]),
 
   ImageAsset.square('enemyTorpedo', 21),
   ImageAsset('explosion', targetWidth: 960, targetHeight: 768),

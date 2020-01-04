@@ -20,9 +20,9 @@ import 'dart:ui';
 import 'package:spacefl/game/game.dart';
 
 class EnemyBoss {
-  static const int MAX_VALUE = 99;
+  static const int maxValue = 99;
+  static const int maxHits = 5;
 
-  final math.Random rnd = new math.Random();
   final double xVariation = 1;
   final double minSpeedY = 3;
 
@@ -39,77 +39,76 @@ class EnemyBoss {
   double vYVariation;
   int value;
   double lastShotY;
-  int hits;
+  int hits = EnemyBoss.maxHits;
 
 
-  EnemyBoss(Game game) : image = game.images.lookupImage('enemyBoss') {
-    init();
+  EnemyBoss(Game game) : image = game.images.lookupImageWithIndex('enemyBoss', 5) {
+    init(game);
   }
 
-  void init() {
-    throw UnimplementedError();
+  void init(Game game) {
+    final state = game.state;
+    final rnd = state.random;
+    final boardSize = state.boardSize;
 
-//    // Position
-//    x = rnd.nextDouble() * WIDTH;
-//    y = -image.getHeight();
-//
-//    // Value
-//    value = rnd.nextInt(MAX_VALUE) + 1;
-//
-//    // Random Speed
-//    vYVariation = (rnd.nextDouble() * 0.5) + 0.2;
-//
-//    width = image.getWidth();
-//    height = image.getHeight();
-//    size = width > height ? width : height;
-//    radius = size * 0.5;
-//
-//    // Velocity
-//    if (x < FIRST_QUARTER_WIDTH) {
-//      vX = (rnd.nextDouble() * 0.5) * VELOCITY_FACTOR_X;
-//    } else if (x > LAST_QUARTER_WIDTH) {
-//      vX = -(rnd.nextDouble() * 0.5) * VELOCITY_FACTOR_X;
-//    } else {
-//      vX = ((rnd.nextDouble() * xVariation) - xVariation * 0.5) * VELOCITY_FACTOR_X;
-//    }
-//    vY = (((rnd.nextDouble() * 1.5) + minSpeedY) * vYVariation) * VELOCITY_FACTOR_Y;
-//
-//    // Rotation
-//    rot = Math.toDegrees(Math.atan2(vY, vX)) - 90;
-//
-//    // Related to laser fire
-//    lastShotY = 0;
-//
-//    // No of hits
-//    hits = 5; //RND.nextInt(5);
+    // Position
+    x = rnd.nextDouble() * boardSize.width;
+    y = -image.height.toDouble();
+
+    // Value
+    value = rnd.nextInt(maxValue) + 1;
+
+    // Random Speed
+    vYVariation = (rnd.nextDouble() * 0.5) + 0.2;
+
+    width = image.width.toDouble();
+    height = image.height.toDouble();
+    size = width > height ? width : height;
+    radius = size * 0.5;
+
+    // Velocity
+    final firstQuarterWidth = boardSize.width * 0.25;
+    final lastQuarterWidth = boardSize.width * 0.75;
+
+    // TODO: This is the exact same code as in Enemy. Mixin?
+    if (x < firstQuarterWidth) {
+      vX = (rnd.nextDouble() * 0.5) * Game.velocityFactorX;
+    } else if (x > lastQuarterWidth) {
+      vX = -(rnd.nextDouble() * 0.5) * Game.velocityFactorX;
+    } else {
+      vX = ((rnd.nextDouble() * xVariation) - xVariation * 0.5) * Game.velocityFactorY;
+    }
+    vY = (((rnd.nextDouble() * 1.5) + minSpeedY) * vYVariation) * Game.velocityFactorY;
+
+    // Rotation
+    rot = math.atan2(vY, vX) - math.pi / 2;
+
+    // Related to laser fire
+    lastShotY = 0;
+
+    // No of hits
+    hits = EnemyBoss.maxHits;
   }
 
   void update(Game game) {
-    throw UnimplementedError();
-//    x += vX;
-//    y += vY;
-//
-//    switch (hits) {
-//      case 5:
-//        image = enemyBossImg4;
-//        break;
-//      case 4:
-//        image = enemyBossImg3;
-//        break;
-//      case 3:
-//        image = enemyBossImg2;
-//        break;
-//      case 2:
-//        image = enemyBossImg1;
-//        break;
-//      case 1:
-//        image = enemyBossImg0;
-//        break;
-//    }
-//
-//    // Respawn Enemy
-//    if (x < -size || x > WIDTH + size || y > HEIGHT + size) {
-//      state.enemyBossesToRemove.add(this);
-//    }
+    x += vX;
+    y += vY;
+
+    // TODO: Check for hits
+    int newHits = hits;
+
+    if (newHits == 0) {
+      // Blown up, sir!
+    } else if (newHits != hits) {
+      image = game.images.lookupImageWithIndex('enemyBoss', newHits);
+    }
+
+    hits = newHits;
+
+    if (_isOffBoard(game.state.boardSize)) {
+      game.state.destroyEnemyBoss(this);
+    }
   }
+
+  bool _isOffBoard(Size boardSize) => x < -size || x > boardSize.width + size || y > boardSize.height + size;
 }

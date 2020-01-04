@@ -137,7 +137,7 @@ class GameState {
 
   void resetSpaceShip(Game game) {
     if (lifeCount == 0) {
-      // TODO notify that game is over, for not just reset lifeCount
+      // TODO notify that game is over, for now just reset lifeCount.  Unlimited plays!!!
       //gameOver();
       //return;
       lifeCount = Game.lifeCount;
@@ -153,17 +153,21 @@ class GameState {
     // TODO - play sound
   }
 
-  void spawnEnemyTorpedo(Game game, double x, double y, double vX, double vY) {
-    double vFactor = Game.enemyTorpedoSpeed / vY;
-    enemyTorpedoes.add(EnemyTorpedo(game, x, y, vFactor * vX, vFactor * vY));
-    // TODO - play sound
-//    playSound(enemyLaserSound);
-  }
+  void spawnCrystal(Game game) => crystals.add(Crystal(game));
+
+  void spawnEnemyBoss(Game game) => enemyBosses.add(EnemyBoss(game));
 
   void spawnEnemyBossTorpedo(Game game, double x, double y, double vX, double vY) {
     double vFactor = Game.enemyTorpedoSpeed / vY;
     enemyBossTorpedoes.add(EnemyBossTorpedo(game, x, y, vFactor * vX, vFactor * vY));
-    // TODO - play sound
+    // TODO: play sound
+//    playSound(enemyLaserSound);
+  }
+
+  void spawnEnemyTorpedo(Game game, double x, double y, double vX, double vY) {
+    double vFactor = Game.enemyTorpedoSpeed / vY;
+    enemyTorpedoes.add(EnemyTorpedo(game, x, y, vFactor * vX, vFactor * vY));
+    // TODO: play sound
 //    playSound(enemyLaserSound);
   }
 
@@ -171,24 +175,26 @@ class GameState {
     if (rockets.length < Game.maxRocketCount) {
       rockets.add(Rocket(game, x, y));
     }
-    // TODO - play sound
+    // TODO: play sound
   }
 
   void spawnRocketExplosion(Game game, double x, double y, double vX, double vY, double scale) {
     final xPos = x - RocketExplosion.frameCenter * scale;
     final yPos = y - RocketExplosion.frameCenter * scale;
     rocketExplosions.add(RocketExplosion(xPos, yPos, vX, vY, scale));
-    // TODO - play sound
+    // TODO: play sound
   }
 
   void spawnTorpedo(Game game, double x, double y) {
     torpedoes.add(Torpedo(game, x, y));
-    // TODO - play sound
+    // TODO: play sound
   }
 
   void destroyAsteroidExplosion(AsteroidExplosion ae) => asteroidExplosionsToRemove.add(ae);
 
   void destroyEnemyTorpedo(EnemyTorpedo t) => enemyTorpedoesToRemove.add(t);
+
+  void destroyEnemyBoss(EnemyBoss eb) => enemyBossesToRemove.add(eb);
 
   void destroyEnemyBossTorpedo(EnemyBossTorpedo ebt) => enemyBossTorpedoesToRemove.add(ebt);
 
@@ -197,8 +203,8 @@ class GameState {
   void destroyRocketExplosion(RocketExplosion re) => rocketExplosionsToRemove.add(re);
 
   void destroySpaceShip(Game game) {
-    // TODO play sound
-//    playSound(spaceShipExplosionSound);
+    // TODO: play sound
+    //playSound(spaceShipExplosionSound);
 
     lifeCount--;
     spaceShipExplosion = SpaceShipExplosion(spaceShip.x, spaceShip.y);
@@ -263,12 +269,13 @@ class GameState {
   }
 
   void _updateAutoSpawns(Game game, Duration now) {
-//    if (now > lastEnemyBossAttack + ENEMY_BOSS_ATTACK_INTERVAL) {
-//      spawnEnemyBoss();
-//      lastEnemyBossAttack = now;
-//    }
+    if (now > lastEnemyBossAttack + Game.enemyBossAttackInterval) {
+      spawnEnemyBoss(game);
+      lastEnemyBossAttack = now;
+    }
+
     if (isTimeToSpawn(now, lastCrystal, Game.crystalSpawnInterval)) {
-      Crystal.spawn(game);
+      spawnCrystal(game);
       lastCrystal = now;
     }
   }

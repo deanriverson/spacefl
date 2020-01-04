@@ -62,7 +62,11 @@ flutter:
     - assets/images/enemy1.png
     - assets/images/enemy2.png
     - assets/images/enemy3.png
+    - assets/images/enemyBoss1.png
+    - assets/images/enemyBoss2.png
+    - assets/images/enemyBoss3.png
     - assets/images/enemyBoss4.png
+    - assets/images/enemyBoss5.png
     - assets/images/enemyBossTorpedo.png
     - assets/images/enemyBossExplosion.png
     - assets/images/enemyTorpedo.png

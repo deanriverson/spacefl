@@ -43,10 +43,6 @@ class Crystal {
   bool rotateRight;
   double vYVariation;
 
-  static void spawn(Game game) {
-    game.state.crystals.add(new Crystal(game));
-  }
-
   Crystal(Game game) {
     init(game);
   }

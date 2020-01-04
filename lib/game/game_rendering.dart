@@ -92,8 +92,17 @@ void drawEnemies(Canvas canvas, Game game) {
     canvas.restore();
   }
 
-//  for (final boss in game.state.enemyBosses) {
-//  }
+  for (final eb in game.state.enemyBosses) {
+//    print('drawing enemy boss at ${eb.x}, ${eb.y}');
+
+    canvas.save();
+
+    canvas.translate(eb.x, eb.y);
+    canvas.rotate(eb.rot);
+    canvas.drawImage(eb.image, Offset(-eb.radius, -eb.radius), _imagePaint);
+
+    canvas.restore();
+  }
 }
 
 void drawCrystals(Canvas canvas, Game game) {

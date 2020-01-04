@@ -104,6 +104,7 @@ class Enemy {
     radius = size * 0.5;
 
     // Velocity
+    // TODO: This is the exact same code as in EnemyBoss. Mixin?
     if (x < boardSize.width * 0.25) {
       vX = (rnd.nextDouble() * 0.5) * Game.velocityFactorX;
     } else if (x > boardSize.width * 0.75) {
