@@ -26,7 +26,7 @@ class EnemyTorpedo {
   double vX;
   double vY;
 
-  EnemyTorpedo(Game game, this.x, this.y, this.vX, this.vY) : image = game.images.enemyTorpedoImage;
+  EnemyTorpedo(Game game, this.x, this.y, this.vX, this.vY) : image = game.images.lookupImage('enemyTorpedo');
 
   get width => image.width;
 

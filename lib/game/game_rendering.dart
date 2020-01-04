@@ -44,7 +44,7 @@ void drawBackground(Canvas canvas, Game game) {
 
   final state = game.state;
   final size = state.boardSize;
-  final backgroundImage = game.images.backgroundImage;
+  final backgroundImage = game.images.lookupImage('background');
 
   state.backgroundViewportY -= 0.5;
   if (state.backgroundViewportY <= 0) {
@@ -147,11 +147,11 @@ void drawShots(Canvas canvas, Game game) {
 void drawExplosions(Canvas canvas, Game game) {
   final state = game.state;
 
-  _drawAsteroidExplosions(canvas, state.asteroidExplosions, game.images.asteroidExplosionImage);
-  _drawRocketExplosions(canvas, state.rocketExplosions, game.images.rocketExplosionImage);
+  _drawAsteroidExplosions(canvas, state.asteroidExplosions, game.images.lookupImage('asteroidExplosion'));
+  _drawRocketExplosions(canvas, state.rocketExplosions, game.images.lookupImage('rocketExplosion'));
 
   if (!state.spaceShip.isAlive) {
-    _drawSpaceShipExplosion(canvas, state.spaceShipExplosion, game.images.spaceShipExplosionImage);
+    _drawSpaceShipExplosion(canvas, state.spaceShipExplosion, game.images.lookupImage('fighterExplosion'));
   }
 }
 

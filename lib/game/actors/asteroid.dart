@@ -56,9 +56,8 @@ class Asteroid {
   void init(Game game) {
     final rnd = game.state.random;
     final boardSize = game.state.boardSize;
-    final asteroidImages = game.images.asteroidImages;
 
-    image = asteroidImages[game.state.random.nextInt(asteroidImages.length)];
+    image = game.images.randomAsteroidImage;
 
     // Position
     x = rnd.nextDouble() * boardSize.width;

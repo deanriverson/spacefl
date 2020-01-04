@@ -86,7 +86,7 @@ class Enemy {
     final rnd = game.state.random;
     final boardSize = game.state.boardSize;
 
-    image = game.images.enemyImages[rnd.nextInt(game.images.enemyImages.length)];
+    image = game.images.randomEnemyImage;
 
     // Position
     x = rnd.nextDouble() * boardSize.width;

@@ -32,7 +32,7 @@ class Rocket {
   double vX = 0;
   double vY = Game.rocketSpeed;
 
-  Rocket(Game game, this.x, y) : image = game.images.rocketImage {
+  Rocket(Game game, this.x, y) : image = game.images.lookupImage('rocket') {
     this.y = y - image.height;
     this.width      = image.width.toDouble();
     this.height     = image.height.toDouble();

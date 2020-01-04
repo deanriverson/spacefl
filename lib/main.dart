@@ -45,7 +45,7 @@ import 'package:spacefl/widgets/space_fl_game.dart';
  *
  * Future Ideas:
  *   [ ] Create class/mixin hierarchy for actor classes to eliminate some duplicate code
- *   [ ] Refactor asset loading code by creating a list of asset names and look them up by name
+ *   [x] Refactor asset loading code by creating a list of asset names and look them up by name
  *   [ ] Use asset list to provide progress indicator on loading screen
  *   [ ] Move draw fns to actor classes to allow, for example, space ship to draw based on it's internal state
  *   [ ] Implement state machine in space ship for states: alive, exploding, respawning.

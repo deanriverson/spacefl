@@ -45,9 +45,11 @@ class SpaceShip {
   double vY = 0;
 
   SpaceShip(Game game)
-    : _noThrustImage = game.images.spaceShipImage,
-      _thrustImage = game.images.spaceShipThrustImage,
-      _shieldImage = game.images.deflectorShieldImage {
+      : _noThrustImage = game.images.lookupImage('fighter'),
+        _thrustImage = game.images.lookupImage('fighterThrust'),
+        _shieldImage = game.images.lookupImage('shield') {
+    assert(_noThrustImage != null && _noThrustImage != null && _shieldImage != null);
+
     _size = (width > height ? width : height).toDouble();
 
     _radius = _size * 0.5;
@@ -146,10 +148,10 @@ class SpaceShip {
         _activateShield(game);
         return;
       case GameEvent.fireRocket:
-      // TODO: Handle this case.
+        // TODO: Handle this case.
         return;
       case GameEvent.fireTorpedo:
-      // TODO: Handle this case.
+        // TODO: Handle this case.
         return;
       default:
         return;
@@ -182,13 +184,11 @@ class SpaceShip {
     }
   }
 
-  bool _isTorpedoHit(EnemyTorpedo et) =>
-    _shieldUp
+  bool _isTorpedoHit(EnemyTorpedo et) => _shieldUp
       ? isHitCircleCircle(et.x, et.y, et.radius, x, y, _shieldRadius)
       : isHitCircleCircle(et.x, et.y, et.radius, x, y, radius);
 
-  bool _isBossTorpedoHit(EnemyBossTorpedo et) =>
-    _shieldUp
+  bool _isBossTorpedoHit(EnemyBossTorpedo et) => _shieldUp
       ? isHitCircleCircle(et.x, et.y, et.radius, x, y, _shieldRadius)
       : isHitCircleCircle(et.x, et.y, et.radius, x, y, radius);
 

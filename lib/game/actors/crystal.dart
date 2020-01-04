@@ -55,7 +55,7 @@ class Crystal {
     final rnd = game.state.random;
     final boardSize = game.state.boardSize;
 
-    image = game.images.crystalImage;
+    image = game.images.lookupImage('crystal');
 
     // Position
     x = rnd.nextDouble() * boardSize.width;

@@ -26,7 +26,7 @@ class Torpedo {
   double vY;
 
   Torpedo(Game game, this.x, double y)
-      : _image = game.images.torpedoImage,
+      : _image = game.images.lookupImage('torpedo'),
         vY = Game.torpedoSpeed {
     this.y = y - _image.height;
   }

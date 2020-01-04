@@ -42,7 +42,7 @@ class EnemyBoss {
   int hits;
 
 
-  EnemyBoss(this.image) {
+  EnemyBoss(Game game) : image = game.images.lookupImage('enemyBoss') {
     init();
   }
 
