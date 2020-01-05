@@ -14,39 +14,20 @@
  * limitations under the License.
  */
 
+import 'package:spacefl/game/actors/actor.dart';
+import 'package:spacefl/game/actors/mixins/sheet_animation.dart';
+import 'package:spacefl/game/actors/mixins/simple_kinematics.dart';
 import 'package:spacefl/game/game.dart';
 
-class CrystalExplosion {
-  static const double FRAME_WIDTH  = 100;
-  static const double FRAME_HEIGHT = 100;
-  static const double FRAME_CENTER = 50;
-  static const int    MAX_FRAME_X  = 4;
-  static const int    MAX_FRAME_Y  = 7;
+class CrystalExplosion extends Actor with SimpleKinematics, SheetAnimation {
+  CrystalExplosion(Game game, double x, double y, double vX, double vY) {
+    image = game.images.lookupImage('crystalExplosion');
+    initKinematics(x, y, vX, vY);
+    initFrames(4, 7, 100, 100, 1.0);
+  }
 
-  double y;
-  double x;
-  double vX;
-  double vY;
-  double scale;
-  int    countX = 0;
-  int    countY = 0;
-
-  CrystalExplosion(this.x, this.y, this.vX, this.vY, this.scale);
-
-  void update(Game game) {
-    x += vX;
-    y += vY;
-
-    countX++;
-    if (countX == MAX_FRAME_X) {
-      countY++;
-      if (countX == MAX_FRAME_X && countY == MAX_FRAME_Y) {
-        game.state.crystalExplosionsToRemove.add(this);
-      }
-      countX = 0;
-      if (countY == MAX_FRAME_Y) {
-        countY = 0;
-      }
-    }
+  void update(Game game, Duration deltaT) {
+    updateKinematics();
+    updateAnimation(onEnd: () => game.state.destroyCrystalExplosion(this));
   }
 }

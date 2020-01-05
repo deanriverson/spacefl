@@ -16,9 +16,10 @@
 
 import 'dart:ui';
 
+import 'package:spacefl/game/actors/actor.dart';
 import 'package:spacefl/game/game.dart';
 
-class Star {
+class Star extends Actor {
   final double xVariation = 0;
   final double minSpeedY = 4;
 
@@ -47,7 +48,7 @@ class Star {
     vY = (((rnd.nextDouble() * 1.5) + minSpeedY) * vYVariation).round() * Game.velocityFactorY;
   }
 
-  void update(Game game) {
+  void update(Game game, Duration deltaT) {
     double x = rect.left + vX;
     double y = rect.top + vY;
 

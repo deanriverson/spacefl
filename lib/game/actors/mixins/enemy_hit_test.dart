@@ -15,31 +15,32 @@
  */
 
 import 'package:spacefl/game/actors/actor.dart';
-import 'package:spacefl/game/actors/mixins/enemy_hit_test.dart';
 import 'package:spacefl/game/actors/mixins/kinematics.dart';
-import 'package:spacefl/game/actors/mixins/kinematics_opts.dart';
+import 'package:spacefl/game/actors/rocket.dart';
+import 'package:spacefl/game/actors/torpedo.dart';
 import 'package:spacefl/game/game.dart';
+import 'package:spacefl/game/math_utils.dart';
 
-class Crystal extends Actor with Kinematics, EnemyHitTest {
-  final kinematicsOpts = KinematicsOpts(xVariation: 2.0, minSpeedY: 2.0, minSpeedR: 0.1);
+typedef void OnHitFn(Actor ordinance);
 
-  Crystal(Game game) {
-    image = game.images.lookupImage('crystal');
-    initKinematics(game);
-  }
-
-  void update(Game game, Duration deltaT) {
-    updateKinematics(game, whenOffBoard: () => game.state.destroyCrystal(this));
-    doHitTest(game, onHit: (actor) => _processHit(game));
-  }
-
-  @override
-  String toString() => 'Crystal@($x, $y)';
-
-  void _processHit(Game game) {
+mixin EnemyHitTest on Kinematics {
+  void doHitTest(Game game, {OnHitFn onHit}) {
     final state = game.state;
-    state.destroyCrystal(this);
-    state.spawnCrystalExplosion(game, centerX, centerY, vX, vY);
-    state.spaceShip.addShield();
+
+    for (Torpedo t in state.torpedoes) {
+      if (isHitCircleCircle(t.x, t.y, t.radius, centerX, centerY, radius)) {
+        state.destroyTorpedo(t);
+        onHit?.call(t);
+        return;
+      }
+    }
+
+    for (Rocket r in state.rockets) {
+      if (isHitCircleCircle(r.x, r.y, r.radius, centerX, centerY, radius)) {
+        state.destroyRocket(r);
+        onHit?.call(r);
+        return;
+      }
+    }
   }
 }

@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
+import 'package:spacefl/game/actors/actor.dart';
 import 'package:spacefl/game/game.dart';
 
-class EnemyBossHit {
+class EnemyBossHit extends Actor {
   static const double FRAME_WIDTH  = 80;
   static const double FRAME_HEIGHT = 80;
   static const double FRAME_CENTER = 40;
@@ -32,7 +33,7 @@ class EnemyBossHit {
 
   EnemyBossHit(this.x, this.y, this.vX, this.vY);
 
-  void update(Game game) {
+  void update(Game game, Duration deltaT) {
     x += vX;
     y += vY;
 

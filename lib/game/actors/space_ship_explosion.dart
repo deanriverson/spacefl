@@ -14,34 +14,20 @@
  * limitations under the License.
  */
 
+import 'package:spacefl/game/actors/actor.dart';
+import 'package:spacefl/game/actors/mixins/sheet_animation.dart';
+import 'package:spacefl/game/actors/mixins/simple_kinematics.dart';
 import 'package:spacefl/game/game.dart';
 
-class SpaceShipExplosion {
-  static const int maxFrameX = 8;
-  static const int maxFrameY = 6;
+class SpaceShipExplosion extends Actor with SimpleKinematics, SheetAnimation {
+  SpaceShipExplosion(Game game, double x, double y, double vX, double vY) {
+    image = game.images.lookupImage('fighterExplosion');
+    initKinematics(x, y, vX, vY);
+    initFrames(8, 6, 100, 100, 1.0);
+  }
 
-  static const double frameWidth = 100;
-  static const double frameHeight = 100;
-  static const double frameCenter = 50;
-
-  double x;
-  double y;
-  int countX = 0;
-  int countY = 0;
-
-  SpaceShipExplosion(this.x, this.y);
-
-  void update(Game game) {
-    countX++;
-    if (countX == maxFrameX) {
-      countX = 0;
-      countY++;
-      if (countY == maxFrameY) {
-        countY = 0;
-      }
-      if (countX == 0 && countY == 0) {
-        game.state.resetSpaceShip(game);
-      }
-    }
+  void update(Game game, Duration deltaT) {
+    updateKinematics();
+    updateAnimation(onEnd: () => game.state.resetSpaceShip(game));
   }
 }

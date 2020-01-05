@@ -147,15 +147,22 @@ class GameState {
   }
 
   void spawnAsteroidExplosion(Game game, double x, double y, double vX, double vY, double scale) {
-    final xPos = x - AsteroidExplosion.frameCenter * scale;
-    final yPos = y - AsteroidExplosion.frameCenter * scale;
-    asteroidExplosions.add(AsteroidExplosion(xPos, yPos, vX, vY, scale));
+    asteroidExplosions.add(AsteroidExplosion(game, x, y, vX, vY, scale));
     // TODO - play sound
   }
 
   void spawnCrystal(Game game) => crystals.add(Crystal(game));
 
+  void spawnCrystalExplosion(Game game, double x, double y, double vX, double vY) {
+    crystalExplosions.add(CrystalExplosion(game, x, y, vX, vY));
+  }
+
   void spawnEnemyBoss(Game game) => enemyBosses.add(EnemyBoss(game));
+
+  void spawnEnemyBossExplosion(Game game, double centerX, double centerY, double vX, double vY) {
+    enemyBossExplosions.add(EnemyBossExplosion(game, centerX, centerY, vX, vY));
+    // TODO: play sound
+  }
 
   void spawnEnemyBossTorpedo(Game game, double x, double y, double vX, double vY) {
     double vFactor = Game.enemyTorpedoSpeed / vY;
@@ -171,6 +178,11 @@ class GameState {
 //    playSound(enemyLaserSound);
   }
 
+  void spawnExplosion(Game game, double x, double y, double vX, double vY, double scale) {
+    explosions.add(Explosion(game, x, y, vX, vY, scale));
+    // TODO - play sound
+  }
+
   void spawnRocket(Game game, double x, double y) {
     if (rockets.length < Game.maxRocketCount) {
       rockets.add(Rocket(game, x, y));
@@ -179,9 +191,7 @@ class GameState {
   }
 
   void spawnRocketExplosion(Game game, double x, double y, double vX, double vY, double scale) {
-    final xPos = x - RocketExplosion.frameCenter * scale;
-    final yPos = y - RocketExplosion.frameCenter * scale;
-    rocketExplosions.add(RocketExplosion(xPos, yPos, vX, vY, scale));
+    rocketExplosions.add(RocketExplosion(game, x, y, vX, vY, scale));
     // TODO: play sound
   }
 
@@ -192,11 +202,19 @@ class GameState {
 
   void destroyAsteroidExplosion(AsteroidExplosion ae) => asteroidExplosionsToRemove.add(ae);
 
+  void destroyCrystal(Crystal c) => crystalsToRemove.add(c);
+
+  void destroyCrystalExplosion(CrystalExplosion ce) => crystalExplosionsToRemove.add(ce);
+
   void destroyEnemyTorpedo(EnemyTorpedo t) => enemyTorpedoesToRemove.add(t);
 
   void destroyEnemyBoss(EnemyBoss eb) => enemyBossesToRemove.add(eb);
 
+  void destroyEnemyBossExplosion(EnemyBossExplosion ebe) => enemyBossExplosionsToRemove.add(ebe);
+
   void destroyEnemyBossTorpedo(EnemyBossTorpedo ebt) => enemyBossTorpedoesToRemove.add(ebt);
+
+  void destroyExplosion(Explosion e) => explosionsToRemove.add(e);
 
   void destroyRocket(Rocket r) => rocketsToRemove.add(r);
 
@@ -207,7 +225,7 @@ class GameState {
     //playSound(spaceShipExplosionSound);
 
     lifeCount--;
-    spaceShipExplosion = SpaceShipExplosion(spaceShip.x, spaceShip.y);
+    spaceShipExplosion = SpaceShipExplosion(game, spaceShip.x, spaceShip.y, spaceShip.vX * .1, spaceShip.vY * .1);
   }
 
   void destroyTorpedo(Torpedo t) => torpedoesToRemove.add(t);
@@ -256,15 +274,16 @@ class GameState {
     updateActorList(hits, game, deltaT);
     updateActorList(enemyBossHits, game, deltaT);
 
-    updateActorList(rocketExplosions, game, deltaT);
-    updateActorList(crystalExplosions, game, deltaT);
     updateActorList(asteroidExplosions, game, deltaT);
+    updateActorList(crystalExplosions, game, deltaT);
     updateActorList(enemyBossExplosions, game, deltaT);
+    updateActorList(explosions, game, deltaT);
+    updateActorList(rocketExplosions, game, deltaT);
 
     if (spaceShip.isAlive) {
-      spaceShip.update(game, timestamp);
+      spaceShip.update(game, deltaT);
     } else {
-      spaceShipExplosion.update(game);
+      spaceShipExplosion.update(game, deltaT);
     }
   }
 

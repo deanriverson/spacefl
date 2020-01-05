@@ -14,35 +14,29 @@
  * limitations under the License.
  */
 
-import 'dart:ui';
-
-import 'package:spacefl/game/actors/actor.dart';
+import 'package:spacefl/game/actors/mixins/kinematics.dart';
+import 'package:spacefl/game/actors/space_ship.dart';
 import 'package:spacefl/game/game.dart';
 
-class EnemyTorpedo extends Actor {
-  final Image image;
+typedef void OnFireFn();
 
-  double x;
-  double y;
-  double vX;
-  double vY;
+mixin EnemyWeapons on Kinematics {
+  static const minShotSpacing = 15.0;
 
-  EnemyTorpedo(Game game, this.x, this.y, this.vX, this.vY) : image = game.images.lookupImage('enemyTorpedo');
+  double _lastShotY = 0;
 
-  get width => image.width;
+  void initWeapons(Game game) {
+    _lastShotY = 0;
+  }
 
-  get height => image.height;
-
-  get size => width > height ? width : height;
-
-  get radius => size * 0.5;
-
-  void update(Game game, Duration deltaT) {
-    x += vX;
-    y += vY;
-
-    if (y > game.state.boardSize.height) {
-      game.state.destroyEnemyTorpedo(this);
+  void aimWeapons(SpaceShip player, {OnFireFn onFire}) {
+    if (_isLinedUpWith(player) && y - _lastShotY > minShotSpacing) {
+      _lastShotY = y;
+      onFire?.call();
     }
   }
+
+  bool _isLinedUpWith(SpaceShip spaceShip) =>
+    x > spaceShip.x - Game.enemyFireSensitivity && x < spaceShip.x + Game.enemyFireSensitivity;
 }
+

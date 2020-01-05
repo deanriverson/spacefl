@@ -14,129 +14,51 @@
  * limitations under the License.
  */
 
-import 'dart:ui';
-
-import 'package:spacefl/game/actors/rocket.dart';
+import 'package:spacefl/game/actors/actor.dart';
+import 'package:spacefl/game/actors/mixins/enemy_hit_test.dart';
+import 'package:spacefl/game/actors/mixins/kinematics.dart';
+import 'package:spacefl/game/actors/mixins/kinematics_opts.dart';
 import 'package:spacefl/game/actors/torpedo.dart';
 import 'package:spacefl/game/game.dart';
-import 'package:spacefl/game/math_utils.dart';
 
-class Asteroid {
-  static const int MAX_VALUE = 10;
+class Asteroid extends Actor with Kinematics, EnemyHitTest {
+  final kinematicsOpts = KinematicsOpts(
+    xVariation: 2.0,
+    minSpeedY: 2.0,
+    scaleOffset: 0.2,
+    scaleSpread: 0.6,
+  );
 
-  final double xVariation = 2.0;
-  final double minSpeedY = 2.0;
-  final double minRotationR = 0.1;
-
-  Image image;
-  double x;
-  double y;
-  double width;
-  double height;
-  double size;
-  double imgCenterX;
-  double imgCenterY;
-  double radius;
-  double cX;
-  double cY;
-  double rot;
-  double vX;
-  double vY;
-  double vR;
-  bool rotateRight;
-  double scale;
-  double vYVariation;
-  int value;
-  int hits;
+  int _hits = 0;
 
   Asteroid(Game game) {
-    init(game);
+    _init(game);
   }
 
-  void init(Game game) {
-    final rnd = game.state.random;
-    final boardSize = game.state.boardSize;
+  void update(Game game, Duration deltaT) {
+    updateKinematics(game, whenOffBoard: () => _init(game));
+    doHitTest(game, onHit: (actor) => _processHit(game, actor));
+  }
 
+  void _init(Game game) {
     image = game.images.randomAsteroidImage;
-
-    // Position
-    x = rnd.nextDouble() * boardSize.width;
-    y = -image.height.toDouble();
-    rot = 0;
-
-    // Random Size
-    scale = (rnd.nextDouble() * 0.6) + 0.2;
-
-    // No of hits (0.2 - 0.8)
-    hits = (scale * 5.0).toInt();
-
-    // Value
-    value = (1 / scale * MAX_VALUE).toInt();
-
-    // Random Speed
-    vYVariation = (rnd.nextDouble() * 0.5) + 0.2;
-
-    width = image.width * scale;
-    height = image.height * scale;
-    size = width > height ? width : height;
-    radius = size * 0.5;
-    imgCenterX = image.width * 0.5;
-    imgCenterY = image.height * 0.5;
-
-    // Velocity
-    vX = ((rnd.nextDouble() * xVariation) - xVariation * 0.5) * Game.velocityFactorX;
-    vY = (((rnd.nextDouble() * 1.5) + minSpeedY * 1 / scale) * vYVariation) * Game.velocityFactorY;
-    vR = (((rnd.nextDouble()) * 0.5) + minRotationR) * Game.velocityFactorR;
-    rotateRight = rnd.nextBool();
+    initKinematics(game);
+    _hits = (scale * 5.0).toInt();
   }
 
-  void update(Game game) {
-    final state = game.state;
-    final boardSize = state.boardSize;
-
-    x += vX;
-    y += vY;
-
-    // Respawn asteroid
-    if (x < -(2*size) || x - radius > boardSize.width || y - height > boardSize.height) {
-      init(game);
-    }
-
-    cX = x + imgCenterX;
-    cY = y + imgCenterY;
-
-    if (rotateRight) {
-      rot += vR;
-      if (rot > 360) {
-        rot = 0;
-      }
+  void _processHit(Game game, Actor actor) {
+    if (actor.runtimeType == Torpedo) {
+      _processTorpedoHit(game);
     } else {
-      rot -= vR;
-      if (rot < 0) {
-        rot = 360;
-      }
+      game.state.spawnRocketExplosion(game, centerX, centerY, vX, vY, scale);
+      _init(game);
     }
+  }
 
-    for (Torpedo t in state.torpedoes) {
-      if (isHitCircleCircle(t.x, t.y, t.radius, cX, cY, radius)) {
-        --hits;
-        if (hits == 0) {
-          state.spawnAsteroidExplosion(game, cX, cY, vX, vY, scale);
-          state.destroyTorpedo(t);
-          init(game);
-        }
-      }
-    }
-
-    for (Rocket r in state.rockets) {
-      if (isHitCircleCircle(r.x, r.y, r.radius, cX, cY, radius)) {
-        --hits;
-        if (hits == 0) {
-          state.spawnRocketExplosion(game, cX, cY, vX, vY, scale);
-          state.destroyRocket(r);
-          init(game);
-        }
-      }
+  void _processTorpedoHit(Game game) {
+    if (--_hits == 0) {
+      game.state.spawnAsteroidExplosion(game, centerX, centerY, vX, vY, scale);
+      _init(game);
     }
   }
 }

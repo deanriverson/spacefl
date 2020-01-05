@@ -14,115 +14,47 @@
  * limitations under the License.
  */
 
-import 'dart:math' as math;
-import 'dart:ui';
+import 'dart:math';
 
-import 'package:spacefl/game/actors/rocket.dart';
-import 'package:spacefl/game/actors/space_ship.dart';
+import 'package:spacefl/game/actors/actor.dart';
+import 'package:spacefl/game/actors/mixins/enemy_hit_test.dart';
+import 'package:spacefl/game/actors/mixins/enemy_weapons.dart';
+import 'package:spacefl/game/actors/mixins/kinematics.dart';
+import 'package:spacefl/game/actors/mixins/kinematics_opts.dart';
 import 'package:spacefl/game/actors/torpedo.dart';
 import 'package:spacefl/game/game.dart';
-import 'package:spacefl/game/math_utils.dart';
 
-class Enemy {
-  static const int MAX_VALUE = 49;
-
-  final double xVariation = 1;
-  final double minSpeedY = 3;
-
-  Image image;
-  double x;
-  double y;
-  double rot;
-  double width;
-  double height;
-  double size;
-  double radius;
-  double vX;
-  double vY;
-  double vYVariation;
-  int value;
-  double lastShotY;
+class Enemy extends Actor with Kinematics, EnemyHitTest, EnemyWeapons {
+  final kinematicsOpts = KinematicsOpts(xVariation: 1.0, minSpeedY: 3.0, hasSpeedR: false);
 
   Enemy(Game game) {
     _init(game);
   }
 
-  void update(Game game) {
+  void update(Game game, Duration deltaT) {
     final state = game.state;
-    final boardSize = state.boardSize;
 
-    x += vX;
-    y += vY;
-
-    if (_isOffBoard(boardSize)) {
-      _init(game);
-    }
-
-    if (_shouldFireOn(state.spaceShip)) {
-      if (y - lastShotY > 15) {
-        state.spawnEnemyTorpedo(game, x, y, vX, vY);
-        lastShotY = y;
-      }
-    }
-
-    for (Torpedo t in state.torpedoes) {
-      if (isHitCircleCircle(t.x, t.y, t.radius, x, y, radius)) {
-        state.spawnAsteroidExplosion(game, x, y, vX, vY, 0.5);
-        state.destroyTorpedo(t);
-        _init(game);
-      }
-    }
-
-    for (Rocket r in state.rockets) {
-      if (isHitCircleCircle(r.x, r.y, r.radius, x, y, radius)) {
-        state.spawnRocketExplosion(game, x, y, vX, vY, 0.5);
-        state.destroyRocket(r);
-        _init(game);
-      }
-    }
+    updateKinematics(game, whenOffBoard: () => _init(game));
+    doHitTest(game, onHit: (actor) => _processHit(game, actor));
+    aimWeapons(state.spaceShip, onFire: () => _fireTorpedo(game));
   }
 
   void _init(Game game) {
-    final rnd = game.state.random;
-    final boardSize = game.state.boardSize;
-
     image = game.images.randomEnemyImage;
-
-    // Position
-    x = rnd.nextDouble() * boardSize.width;
-    y = -image.height.toDouble();
-
-    // Value
-    value = rnd.nextInt(MAX_VALUE) + 1;
-
-    // Random Speed
-    vYVariation = (rnd.nextDouble() * 0.5) + 0.2;
-
-    width = image.width.toDouble();
-    height = image.height.toDouble();
-    size = width > height ? width : height;
-    radius = size * 0.5;
-
-    // Velocity
-    // TODO: This is the exact same code as in EnemyBoss. Mixin?
-    if (x < boardSize.width * 0.25) {
-      vX = (rnd.nextDouble() * 0.5) * Game.velocityFactorX;
-    } else if (x > boardSize.width * 0.75) {
-      vX = -(rnd.nextDouble() * 0.5) * Game.velocityFactorX;
-    } else {
-      vX = ((rnd.nextDouble() * xVariation) - xVariation * 0.5) * Game.velocityFactorX;
-    }
-    vY = (((rnd.nextDouble() * 1.5) + minSpeedY) * vYVariation) * Game.velocityFactorY;
-
-    // Rotation
-    rot = math.atan2(vY, vX) - math.pi / 2;
-
-    // Related to laser fire
-    lastShotY = 0;
+    initWeapons(game);
+    initKinematics(game, initialRotation: _calcRotation);
   }
 
-  bool _isOffBoard(Size boardSize) => x < -size || x > boardSize.width + size || y > boardSize.height + size;
+  double _calcRotation() => atan2(vY, vX) - pi / 2.0;
 
-  bool _shouldFireOn(SpaceShip spaceShip) =>
-      x > spaceShip.x - Game.enemyFireSensitivity && x < spaceShip.x + Game.enemyFireSensitivity;
+  void _processHit(Game game, Actor actor) {
+    if (actor.runtimeType == Torpedo) {
+      game.state.spawnExplosion(game, centerX, centerY, vX, vY, 0.5);
+    } else {
+      game.state.spawnRocketExplosion(game, centerX, centerY, vX, vY, 0.5);
+    }
+    _init(game);
+  }
+
+  void _fireTorpedo(Game game) => game.state.spawnEnemyTorpedo(game, centerX, centerY, vX, vY);
 }

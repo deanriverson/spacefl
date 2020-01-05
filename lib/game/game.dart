@@ -65,10 +65,6 @@ class Game {
 
   static const Color scoreColor = Color.fromARGB(255, 51, 210, 206);
 
-//  static const double WIDTH = 700;
-//  static const double HEIGHT = 900;
-//  static const double FIRST_QUARTER_WIDTH = WIDTH * 0.25;
-//  static const double LAST_QUARTER_WIDTH = WIDTH * 0.75;
 //  static const double SHIELD_INDICATOR_X = WIDTH * 0.73;
 //  static const double SHIELD_INDICATOR_Y = HEIGHT * 0.06;
 //  static const double SHIELD_INDICATOR_WIDTH = WIDTH * 0.26;
@@ -94,7 +90,7 @@ class Game {
 
   void init(Size size) => _instance.state.init(this, size);
 
-  void update(Duration deltaT) => _instance.state.update(this, deltaT);
+  void update(Duration timestamp) => _instance.state.update(this, timestamp);
 
   void repaint(Canvas canvas) {
     drawBackground(canvas, this);

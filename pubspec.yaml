@@ -58,6 +58,7 @@ flutter:
     - assets/images/asteroid11.png
     - assets/images/asteroidExplosion.png
     - assets/images/crystal.png
+    - assets/images/crystalExplosion.png
     - assets/images/deflectorshield.png
     - assets/images/enemy1.png
     - assets/images/enemy2.png

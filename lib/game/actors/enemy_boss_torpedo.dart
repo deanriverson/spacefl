@@ -16,9 +16,10 @@
 
 import 'dart:ui';
 
+import 'package:spacefl/game/actors/actor.dart';
 import 'package:spacefl/game/game.dart';
 
-class EnemyBossTorpedo {
+class EnemyBossTorpedo extends Actor {
   final Image image;
 
   double x;
@@ -38,9 +39,7 @@ class EnemyBossTorpedo {
 
   get radius => size * 0.5;
 
-  void update(Game game) {
-    throw UnimplementedError();
-
+  void update(Game game, Duration deltaT) {
 //    x += vX;
 //    y += vY;
 

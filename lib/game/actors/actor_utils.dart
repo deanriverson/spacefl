@@ -16,8 +16,10 @@
 
 import 'package:spacefl/game/game.dart';
 
-/// Generator function (a.k.a. coroutine that generates [count] actors.
-Iterable<T> actorGenerator<T>(int count, Function creator) sync* {
+typedef T ActorFactory<T>();
+
+/// Generator function (a.k.a. coroutine) that generates [count] actors.
+Iterable<T> actorGenerator<T>(int count, ActorFactory<T> creator) sync* {
   for(int i = 0; i < count; ++i) {
     yield creator();
   }
@@ -28,10 +30,10 @@ void initActorList<T>(List<T> actors, int count, Function actorCreator) {
   actors.setAll(0, actorGenerator(count, actorCreator));
 }
 
-/// Generic function that calls the update method on each acdtor in [actors].
+/// Generic function that calls the update method on each actor in [actors].
 void updateActorList<T>(T actors, Game game, Duration deltaT) {
   for (final actor in actors) {
-    actor.update(game);
+    actor.update(game, deltaT);
   }
 }
 

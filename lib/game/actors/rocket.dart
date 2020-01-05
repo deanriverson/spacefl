@@ -16,9 +16,10 @@
 
 import 'dart:ui';
 
+import 'package:spacefl/game/actors/actor.dart';
 import 'package:spacefl/game/game.dart';
 
-class Rocket {
+class Rocket extends Actor {
   final Image image;
 
   double x;
@@ -44,7 +45,7 @@ class Rocket {
     this.radius     = size * 0.5;
   }
 
-  void update(Game game) {
+  void update(Game game, Duration deltaT) {
     y -= vY;
     if (y < -size) {
       game.state.rocketsToRemove.add(this);

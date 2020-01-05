@@ -14,40 +14,20 @@
  * limitations under the License.
  */
 
+import 'package:spacefl/game/actors/actor.dart';
+import 'package:spacefl/game/actors/mixins/sheet_animation.dart';
+import 'package:spacefl/game/actors/mixins/simple_kinematics.dart';
 import 'package:spacefl/game/game.dart';
 
-class AsteroidExplosion {
-  static const int maxFrameX = 8;
-  static const int maxFrameY = 7;
+class AsteroidExplosion extends Actor with SimpleKinematics, SheetAnimation {
+  AsteroidExplosion(Game game, double x, double y, double vX, double vY, double scale) {
+    image = game.images.lookupImage('asteroidExplosion');
+    initFrames(8, 7, 256, 256, scale);
+    initKinematics(x, y, vX, vY);
+  }
 
-  static const double frameWidth = 256;
-  static const double frameHeight = 256;
-  static const double frameCenter = 128;
-
-  double x;
-  double y;
-  double vX;
-  double vY;
-  double scale;
-  int countX = 0;
-  int countY = 0;
-
-  AsteroidExplosion(this.x, this.y, this.vX, this.vY, this.scale);
-
-  void update(Game game) {
-    x += vX;
-    y += vY;
-
-    countX++;
-    if (countX == maxFrameX) {
-      countY++;
-      if (countX == maxFrameX && countY == maxFrameY) {
-        game.state.destroyAsteroidExplosion(this);
-      }
-      countX = 0;
-      if (countY == maxFrameY) {
-        countY = 0;
-      }
-    }
+  void update(Game game, Duration deltaT) {
+    updateKinematics();
+    updateAnimation(onEnd: () => game.state.destroyAsteroidExplosion(this));
   }
 }

@@ -15,16 +15,16 @@
  */
 
 import 'dart:ui';
+
 import 'package:flutter/rendering.dart';
-import 'package:spacefl/game/actors/asteroid_explosion.dart';
 import 'package:spacefl/game/actors/enemy_torpedo.dart';
+import 'package:spacefl/game/actors/mixins/sheet_animation.dart';
 import 'package:spacefl/game/actors/rocket.dart';
-import 'package:spacefl/game/actors/rocket_explosion.dart';
-import 'package:spacefl/game/actors/space_ship_explosion.dart';
 import 'package:spacefl/game/actors/torpedo.dart';
 import 'package:spacefl/game/game.dart';
 
 final _imagePaint = Paint();
+
 final _starPaint = Paint()
   ..color = Color.fromARGB(230, 255, 255, 255);
 
@@ -70,8 +70,8 @@ void drawAsteroids(Canvas canvas, Game game) {
     for (final a in game.state.asteroids) {
       canvas.save();
 
-      canvas.translate(a.cX, a.cY);
-      canvas.rotate(a.rot);
+      canvas.translate(a.centerX, a.centerY);
+      canvas.rotate(a.rotation);
       canvas.scale(a.scale, a.scale);
       canvas.translate(-a.imgCenterX, -a.imgCenterY);
       canvas.drawImage(a.image, Offset.zero, _imagePaint);
@@ -85,21 +85,21 @@ void drawEnemies(Canvas canvas, Game game) {
   for (final e in game.state.enemies) {
     canvas.save();
 
-    canvas.translate(e.x, e.y);
-    canvas.rotate(e.rot);
-    canvas.drawImage(e.image, Offset(-e.radius, -e.radius), _imagePaint);
+    canvas.translate(e.centerX, e.centerY);
+    canvas.rotate(e.rotation);
+    canvas.translate(-e.imgCenterX, -e.imgCenterY);
+    canvas.drawImage(e.image, Offset.zero, _imagePaint);
 
     canvas.restore();
   }
 
-  for (final eb in game.state.enemyBosses) {
-//    print('drawing enemy boss at ${eb.x}, ${eb.y}');
-
+  for (final e in game.state.enemyBosses) {
     canvas.save();
 
-    canvas.translate(eb.x, eb.y);
-    canvas.rotate(eb.rot);
-    canvas.drawImage(eb.image, Offset(-eb.radius, -eb.radius), _imagePaint);
+    canvas.translate(e.centerX, e.centerY);
+    canvas.rotate(e.rotation);
+    canvas.translate(-e.imgCenterX, -e.imgCenterY);
+    canvas.drawImage(e.image, Offset.zero, _imagePaint);
 
     canvas.restore();
   }
@@ -109,10 +109,10 @@ void drawCrystals(Canvas canvas, Game game) {
   for (final c in game.state.crystals) {
     canvas.save();
 
-    canvas.translate(c.cX, c.cY);
-    canvas.rotate(c.rot);
-    canvas.translate(-c.imgCenterX, -c.imgCenterY);
-    canvas.drawImage(c.image, Offset.zero, _imagePaint);
+    canvas.translate(c.centerX, c.centerY);
+    canvas.rotate(c.rotation);
+    canvas.translate(-c.centerX, -c.centerY);
+    canvas.drawImage(c.image, Offset(c.x, c.y), _imagePaint);
 
     canvas.restore();
   }
@@ -156,11 +156,14 @@ void drawShots(Canvas canvas, Game game) {
 void drawExplosions(Canvas canvas, Game game) {
   final state = game.state;
 
-  _drawAsteroidExplosions(canvas, state.asteroidExplosions, game.images.lookupImage('asteroidExplosion'));
-  _drawRocketExplosions(canvas, state.rocketExplosions, game.images.lookupImage('rocketExplosion'));
+  _drawSheetAnimations(canvas, state.asteroidExplosions);
+  _drawSheetAnimations(canvas, state.crystalExplosions);
+  _drawSheetAnimations(canvas, state.enemyBossExplosions);
+  _drawSheetAnimations(canvas, state.explosions);
+  _drawSheetAnimations(canvas, state.rocketExplosions);
 
   if (!state.spaceShip.isAlive) {
-    _drawSpaceShipExplosion(canvas, state.spaceShipExplosion, game.images.lookupImage('fighterExplosion'));
+    state.spaceShipExplosion.paintAnimation(canvas, _imagePaint);
   }
 }
 
@@ -175,6 +178,12 @@ void drawUI(Canvas canvas, Game game) {
   return;
 }
 
+void _drawSheetAnimations(Canvas canvas, List<SheetAnimation> anims) {
+  for (SheetAnimation anim in anims) {
+    anim.paintAnimation(canvas, _imagePaint);
+  }
+}
+
 void _drawImageWithOffset(Canvas canvas,
   Image image,
   double x,
@@ -185,43 +194,3 @@ void _drawImageWithOffset(Canvas canvas,
   final offset = Offset(x - xOffset, y - yOffset);
   canvas.drawImage(image, offset, paint ?? _imagePaint);
 }
-
-void _drawAsteroidExplosions(Canvas canvas, List<AsteroidExplosion> explosions, Image img) {
-  final frameWidth = AsteroidExplosion.frameWidth;
-  final frameHeight = AsteroidExplosion.frameHeight;
-
-  for (AsteroidExplosion exp in explosions) {
-    final src = _srcRect(exp.countX, exp.countY, frameWidth, frameHeight);
-    final dst = _dstRect(exp.x, exp.y, frameWidth, frameHeight, scale: exp.scale);
-    canvas.drawImageRect(img, src, dst, _imagePaint);
-  }
-}
-
-void _drawRocketExplosions(Canvas canvas, List<RocketExplosion> explosions, Image img) {
-  final frameWidth = RocketExplosion.frameWidth;
-  final frameHeight = RocketExplosion.frameHeight;
-
-  for (RocketExplosion exp in explosions) {
-    final src = _srcRect(exp.countX, exp.countY, frameWidth, frameHeight);
-    final dst = _dstRect(exp.x, exp.y, frameWidth, frameHeight, scale: exp.scale);
-    canvas.drawImageRect(img, src, dst, _imagePaint);
-  }
-}
-
-void _drawSpaceShipExplosion(Canvas canvas, SpaceShipExplosion sse, Image img) {
-  final frameWidth = SpaceShipExplosion.frameWidth;
-  final frameHeight = SpaceShipExplosion.frameHeight;
-  final frameCenter = SpaceShipExplosion.frameCenter;
-
-  final src = _srcRect(sse.countX, sse.countY, frameWidth, frameHeight);
-  final dst = _dstRect(sse.x - frameCenter, sse.y - frameCenter, frameWidth, frameHeight);
-  canvas.drawImageRect(img, src, dst, _imagePaint);
-}
-
-Rect _srcRect(int countX, int countY, double width, double height) =>
-  Rect.fromLTWH(countX * width, countY * height, width, height);
-
-Rect _dstRect(double x, double y, double width, double height, {double scale = 1.0}) =>
-  Rect.fromLTWH(x, y, width * scale, height * scale);
-
-

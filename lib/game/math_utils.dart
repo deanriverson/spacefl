@@ -15,6 +15,8 @@
  */
 import 'dart:math' as math;
 
+double tau = math.pi * 2.0;
+
 /// Convert radians to degrees
 double radToDeg(double radians) => radians * 180.0 / math.pi;
 

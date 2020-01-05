@@ -36,15 +36,15 @@ import 'package:spacefl/widgets/space_fl_game.dart';
  *   [x] Draw enemy torpedoes
  *   [x] Hit testing on space ship w.r.t enemy torpedoes
  *   [x] Draw space ship explosion
- *   [ ] Draw enemy bosses
- *   [ ] Draw enemy boss explosions
+ *   [x] Draw enemy bosses
+ *   [x] Draw enemy boss explosions
  *   [ ] Detect ship-to-ship and ship-to-asteroid collisions
  *   [ ] Draw score, lives, and mini shields
  *   [ ] Play sound effects
  *   [ ] Play music
  *
  * Future Ideas:
- *   [ ] Create class/mixin hierarchy for actor classes to eliminate some duplicate code
+ *   [x] Create class/mixin hierarchy for actor classes to eliminate some duplicate code
  *   [x] Refactor asset loading code by creating a list of asset names and look them up by name
  *   [ ] Use asset list to provide progress indicator on loading screen
  *   [ ] Move draw fns to actor classes to allow, for example, space ship to draw based on it's internal state

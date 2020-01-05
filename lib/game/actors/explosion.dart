@@ -14,40 +14,21 @@
  * limitations under the License.
  */
 
+import 'package:spacefl/game/actors/actor.dart';
+import 'package:spacefl/game/actors/mixins/sheet_animation.dart';
+import 'package:spacefl/game/actors/mixins/simple_kinematics.dart';
 import 'package:spacefl/game/game.dart';
 
-class Explosion {
-  static const int maxFrameX = 5;
-  static const int maxFrameY = 4;
+class Explosion extends Actor with SimpleKinematics, SheetAnimation {
 
-  static const double frameWidth = 192;
-  static const double frameHeight = 192;
-  static const double frameCenter = 96;
+  Explosion(Game game, double x, double y, double vX, double vY, double scale) {
+    image = game.images.lookupImage('explosion');
+    initFrames(5, 4, 192, 192, scale);
+    initKinematics(x, y, vX, vY);
+  }
 
-  double x;
-  double y;
-  double vX;
-  double vY;
-  double scale;
-  int countX = 0;
-  int countY = 0;
-
-  Explosion(this.x, this.y, this.vX, this.vY, this.scale);
-
-  void update(Game game) {
-    x += vX;
-    y += vY;
-
-    countX++;
-    if (countX == maxFrameX) {
-      countY++;
-      if (countX == maxFrameX && countY == maxFrameY) {
-        game.state.explosionsToRemove.add(this);
-      }
-      countX = 0;
-      if (countY == maxFrameY) {
-        countY = 0;
-      }
-    }
+  void update(Game game, Duration deltaT) {
+    updateKinematics();
+    updateAnimation(onEnd: () => game.state.destroyExplosion(this));
   }
 }

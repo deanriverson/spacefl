@@ -14,101 +14,59 @@
  * limitations under the License.
  */
 
-import 'dart:math' as math;
-import 'dart:ui';
+import 'dart:math';
 
+import 'package:spacefl/game/actors/actor.dart';
+import 'package:spacefl/game/actors/mixins/enemy_hit_test.dart';
+import 'package:spacefl/game/actors/mixins/enemy_weapons.dart';
+import 'package:spacefl/game/actors/mixins/kinematics.dart';
+import 'package:spacefl/game/actors/mixins/kinematics_opts.dart';
+import 'package:spacefl/game/actors/torpedo.dart';
 import 'package:spacefl/game/game.dart';
 
-class EnemyBoss {
-  static const int maxValue = 99;
+class EnemyBoss extends Actor with Kinematics, EnemyHitTest, EnemyWeapons {
   static const int maxHits = 5;
 
-  final double xVariation = 1;
-  final double minSpeedY = 3;
+  final kinematicsOpts = KinematicsOpts(xVariation: 1.0, minSpeedY: 3.0, hasSpeedR: false);
 
-  Image image;
-  double x;
-  double y;
-  double rot;
-  double width;
-  double height;
-  double size;
-  double radius;
-  double vX;
-  double vY;
-  double vYVariation;
-  int value;
-  double lastShotY;
-  int hits = EnemyBoss.maxHits;
+  int _hits = EnemyBoss.maxHits;
 
-
-  EnemyBoss(Game game) : image = game.images.lookupImageWithIndex('enemyBoss', 5) {
-    init(game);
+  EnemyBoss(Game game) {
+    image = game.images.lookupImageWithIndex('enemyBoss', _hits);
+    initWeapons(game);
+    initKinematics(game, initialRotation: _calcRotation);
   }
 
-  void init(Game game) {
+  void update(Game game, Duration deltaT) {
     final state = game.state;
-    final rnd = state.random;
-    final boardSize = state.boardSize;
 
-    // Position
-    x = rnd.nextDouble() * boardSize.width;
-    y = -image.height.toDouble();
+    updateKinematics(game, whenOffBoard: () => state.destroyEnemyBoss(this));
+    doHitTest(game, onHit: (actor) => _processHit(game, actor));
+    aimWeapons(state.spaceShip, onFire: () => _fireBossTorpedo(game));
+  }
 
-    // Value
-    value = rnd.nextInt(maxValue) + 1;
+  double _calcRotation() => atan2(vY, vX) - pi / 2.0;
 
-    // Random Speed
-    vYVariation = (rnd.nextDouble() * 0.5) + 0.2;
-
-    width = image.width.toDouble();
-    height = image.height.toDouble();
-    size = width > height ? width : height;
-    radius = size * 0.5;
-
-    // Velocity
-    final firstQuarterWidth = boardSize.width * 0.25;
-    final lastQuarterWidth = boardSize.width * 0.75;
-
-    // TODO: This is the exact same code as in Enemy. Mixin?
-    if (x < firstQuarterWidth) {
-      vX = (rnd.nextDouble() * 0.5) * Game.velocityFactorX;
-    } else if (x > lastQuarterWidth) {
-      vX = -(rnd.nextDouble() * 0.5) * Game.velocityFactorX;
+  void _processHit(Game game, Actor actor) {
+    if (actor.runtimeType == Torpedo) {
+      _processTorpedoHit(game);
     } else {
-      vX = ((rnd.nextDouble() * xVariation) - xVariation * 0.5) * Game.velocityFactorY;
-    }
-    vY = (((rnd.nextDouble() * 1.5) + minSpeedY) * vYVariation) * Game.velocityFactorY;
-
-    // Rotation
-    rot = math.atan2(vY, vX) - math.pi / 2;
-
-    // Related to laser fire
-    lastShotY = 0;
-
-    // No of hits
-    hits = EnemyBoss.maxHits;
-  }
-
-  void update(Game game) {
-    x += vX;
-    y += vY;
-
-    // TODO: Check for hits
-    int newHits = hits;
-
-    if (newHits == 0) {
-      // Blown up, sir!
-    } else if (newHits != hits) {
-      image = game.images.lookupImageWithIndex('enemyBoss', newHits);
-    }
-
-    hits = newHits;
-
-    if (_isOffBoard(game.state.boardSize)) {
-      game.state.destroyEnemyBoss(this);
+      _destroyMe(game);
     }
   }
 
-  bool _isOffBoard(Size boardSize) => x < -size || x > boardSize.width + size || y > boardSize.height + size;
+  void _fireBossTorpedo(Game game) => game.state.spawnEnemyBossTorpedo(game, x, y, vX, vY);
+
+  void _processTorpedoHit(Game game) {
+    if (--_hits == 0) {
+      _destroyMe(game);
+    } else {
+      image = game.images.lookupImageWithIndex('enemyBoss', _hits);
+    }
+  }
+
+  void _destroyMe(Game game) {
+    game.state.spawnEnemyBossExplosion(game, centerX, centerY, vX, vY);
+    game.state.destroyEnemyBoss(this);
+  }
 }

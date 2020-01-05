@@ -63,6 +63,7 @@ final imageAssets = [
   ImageAsset('asteroidExplosion', targetWidth: 2048, targetHeight: 1792),
   ImageAsset('background', ext: 'jpg'),
   ImageAsset.square('crystal', 100),
+  ImageAsset('crystalExplosion', targetWidth: 400, targetHeight: 700),
   ImageAsset.square('deflectorshield', 100, alias: 'shield'),
   ImageAsset.square('deflectorshield', 16, alias: 'miniShield'),
 
@@ -72,6 +73,7 @@ final imageAssets = [
   for (int i = 0; i < enemyBossImageCount; ++i)
     ImageAsset.square(indexedAssetName('enemyBoss', i), _enemyBossImageSizes[i]),
 
+  ImageAsset('enemyBossExplosion', targetWidth: 800, targetHeight: 1400),
   ImageAsset.square('enemyTorpedo', 21),
   ImageAsset('explosion', targetWidth: 960, targetHeight: 768),
   ImageAsset.square('fighter', 48),

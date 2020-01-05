@@ -14,40 +14,20 @@
  * limitations under the License.
  */
 
+import 'package:spacefl/game/actors/actor.dart';
+import 'package:spacefl/game/actors/mixins/sheet_animation.dart';
+import 'package:spacefl/game/actors/mixins/simple_kinematics.dart';
 import 'package:spacefl/game/game.dart';
 
-class RocketExplosion {
-  static const int maxFrameX = 4;
-  static const int maxFrameY = 7;
+class RocketExplosion extends Actor with SimpleKinematics, SheetAnimation {
+  RocketExplosion(Game game, double x, double y, double vX, double vY, double scale) {
+    image = game.images.lookupImage('rocketExplosion');
+    initFrames(4, 7, 128, 128, scale);
+    initKinematics(x, y, vX, vY);
+  }
 
-  static const double frameWidth = 128;
-  static const double frameHeight = 128;
-  static const double frameCenter = 64;
-
-  double x;
-  double y;
-  double vX;
-  double vY;
-  double scale;
-  int countX = 0;
-  int countY = 0;
-
-  RocketExplosion(this.x, this.y, this.vX, this.vY, this.scale);
-
-  void update(Game game) {
-    x += vX;
-    y += vY;
-
-    countX++;
-    if (countX == maxFrameX) {
-      countY++;
-      if (countX == maxFrameX && countY == maxFrameY) {
-        game.state.rocketExplosionsToRemove.add(this);
-      }
-      countX = 0;
-      if (countY == maxFrameY) {
-        countY = 0;
-      }
-    }
+  void update(Game game, Duration deltaT) {
+    updateKinematics();
+    updateAnimation(onEnd: () => game.state.destroyRocketExplosion(this));
   }
 }

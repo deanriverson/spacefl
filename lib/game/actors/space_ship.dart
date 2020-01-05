@@ -16,12 +16,13 @@
 
 import 'dart:ui';
 
+import 'package:spacefl/game/actors/actor.dart';
 import 'package:spacefl/game/actors/enemy_boss_torpedo.dart';
 import 'package:spacefl/game/actors/enemy_torpedo.dart';
 import 'package:spacefl/game/game.dart';
 import 'package:spacefl/game/math_utils.dart';
 
-class SpaceShip {
+class SpaceShip extends Actor {
   static const maxHitPoints = 1;
 
   final Image _shieldImage;
@@ -88,7 +89,7 @@ class SpaceShip {
 
   Image get shieldImage => _shieldImage;
 
-  void update(Game game, Duration timestamp) {
+  void update(Game game, Duration deltaT) {
     var state = game.state;
     final boardSize = state.boardSize;
 
@@ -107,7 +108,7 @@ class SpaceShip {
       _y = height * 0.5;
     }
 
-    if (_shieldUp && _shieldTimeout(timestamp)) {
+    if (_shieldUp && _shieldTimeout(state.lastTimestamp)) {
       _shieldUp = false;
       _shieldCount--;
     }
@@ -222,5 +223,10 @@ class SpaceShip {
         return;
       }
     }
+  }
+
+  // TODO: implement
+  void addShield() {
+    print("You get another shield!!");
   }
 }
