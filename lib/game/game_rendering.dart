@@ -145,7 +145,7 @@ void drawShots(Canvas canvas, Game game) {
   }
 
   for (Rocket r in game.state.rockets) {
-    _drawImageWithOffset(canvas, r.image, r.x, r.y, r.halfWidth, r.halfHeight);
+    _drawImageWithOffset(canvas, r.image, r.x, r.y, r.imgCenterX, r.imgCenterY);
   }
 
   for (EnemyTorpedo et in game.state.enemyTorpedoes) {
