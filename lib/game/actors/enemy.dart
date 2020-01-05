@@ -34,7 +34,7 @@ class Enemy extends Actor with Kinematics, EnemyHitTest, EnemyWeapons {
   void update(Game game, Duration deltaT) {
     final state = game.state;
 
-    updateKinematics(game, whenOffBoard: () => _init(game));
+    updateKinematics(state.boardSize, whenOffBoard: () => _init(game));
     doHitTest(game, onHit: (actor) => _processHit(game, actor));
     aimWeapons(state.spaceShip, onFire: () => _fireTorpedo(game));
   }

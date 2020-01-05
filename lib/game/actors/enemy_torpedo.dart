@@ -14,35 +14,18 @@
  * limitations under the License.
  */
 
-import 'dart:ui';
-
 import 'package:spacefl/game/actors/actor.dart';
+import 'package:spacefl/game/actors/mixins/simple_kinematics.dart';
 import 'package:spacefl/game/game.dart';
 
-class EnemyTorpedo extends Actor {
-  final Image image;
-
-  double x;
-  double y;
-  double vX;
-  double vY;
-
-  EnemyTorpedo(Game game, this.x, this.y, this.vX, this.vY) : image = game.images.lookupImage('enemyTorpedo');
-
-  get width => image.width;
-
-  get height => image.height;
-
-  get size => width > height ? width : height;
-
-  get radius => size * 0.5;
+class EnemyTorpedo extends Actor with SimpleKinematics {
+  EnemyTorpedo(Game game, double x, double y, double vX, double vY) {
+    image = game.images.lookupImage('enemyTorpedo');
+    initKinematics(x, y, vX, vY);
+  }
 
   void update(Game game, Duration deltaT) {
-    x += vX;
-    y += vY;
-
-    if (y > game.state.boardSize.height) {
-      game.state.destroyEnemyTorpedo(this);
-    }
+    final state = game.state;
+    updateKinematics(state.boardSize, whenOffBoard: () => state.destroyEnemyTorpedo(this));
   }
 }

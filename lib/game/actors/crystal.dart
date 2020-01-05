@@ -29,7 +29,8 @@ class Crystal extends Actor with Kinematics, EnemyHitTest {
   }
 
   void update(Game game, Duration deltaT) {
-    updateKinematics(game, whenOffBoard: () => game.state.destroyCrystal(this));
+    final state = game.state;
+    updateKinematics(state.boardSize, whenOffBoard: () => state.destroyCrystal(this));
     doHitTest(game, onHit: (actor) => _processHit(game));
   }
 

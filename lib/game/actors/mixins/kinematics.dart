@@ -23,7 +23,12 @@ import 'package:spacefl/game/game.dart';
 typedef void OffBoardCallback();
 typedef double RotationCallback();
 
-  mixin Kinematics on Actor {
+/// Kinematics determines the Actor's initial x, y, rotation, and their corresponding
+/// velocities by assigning random values and then updating the Actor's position on
+/// each frame.  It would be good to give more control over how the initial values
+/// are generated.  Right now the initial rotation can be overridden but none of the
+/// other values can.
+mixin Kinematics on Actor {
   KinematicsOpts get kinematicsOpts;
 
   double _x = 0;
@@ -32,51 +37,37 @@ typedef double RotationCallback();
   double _vX = 0;
   double _vY = 0;
   double _vR = 0;
-  double _width = 0;
-  double _height = 0;
-  double _scale = 0.0;
-  double _size = 0;
   double _vYVariation = 0;
 
-  double _imgCenterX = 0;
-  double _imgCenterY = 0;
+  double get centerX => _x + imgCenterX;
+
+  double get centerY => _y + imgCenterY;
 
   double get x => _x;
-  double get y => _y;
-  double get rotation => _rot;
-  double get vX => _vX;
-  double get vY => _vY;
-  double get vR => _vR;
-  double get width => _width;
-  double get height => _height;
-  double get scale => _scale;
-  double get size => _size;
 
-  double get radius => _size * 0.5;
-  double get imgCenterX => _imgCenterX;
-  double get imgCenterY => _imgCenterY;
-  double get centerX => _x + _imgCenterX;
-  double get centerY => _y + _imgCenterY;
+  double get y => _y;
+
+  double get rotation => _rot;
+
+  double get vX => _vX;
+
+  double get vY => _vY;
+
+  double get vR => _vR;
 
   void initKinematics(Game game, {RotationCallback initialRotation}) {
     final rnd = game.state.random;
     final boardSize = game.state.boardSize;
 
-    _x = rnd.nextDouble() * boardSize.width;
-    _y = -image.height.toDouble();
-
     // Random Size
-    _scale = game.state.random.nextDouble() * kinematicsOpts.scaleSpread + kinematicsOpts.scaleOffset;
+    scale = game.state.random.nextDouble() * kinematicsOpts.scaleSpread + kinematicsOpts.scaleOffset;
+
+    // Random Position
+    _x = rnd.nextDouble() * boardSize.width;
+    _y = -image.height * scale;
 
     // Random Speed
     _vYVariation = (rnd.nextDouble() * 0.5) + 0.2;
-
-    _width = image.width * _scale;
-    _height = image.height * _scale;
-    _size = width > height ? width : height;
-
-    _imgCenterX = image.width * 0.5;
-    _imgCenterY = image.height * 0.5;
 
     final xVariation = kinematicsOpts.xVariation;
     final firstQuarterWidth = boardSize.width * 0.25;
@@ -91,7 +82,7 @@ typedef double RotationCallback();
       _vX = ((rnd.nextDouble() * xVariation) - xVariation * 0.5) * Game.velocityFactorX;
     }
 
-    _vY = (((rnd.nextDouble() * 1.5) + kinematicsOpts.minSpeedY * 1/_scale) * _vYVariation) * Game.velocityFactorY;
+    _vY = (((rnd.nextDouble() * 1.5) + kinematicsOpts.minSpeedY * 1 / scale) * _vYVariation) * Game.velocityFactorY;
 
     _rot = initialRotation?.call() ?? 0.0;
 
@@ -104,21 +95,17 @@ typedef double RotationCallback();
   }
 
   /// Update the Actor's position on the board.  If the actor has gone off the board,
-  /// the offBoardFn callback will be triggered.  By default the actor is just
-  /// reinitialized if it leaves the board.
-  void updateKinematics(Game game, {OffBoardCallback whenOffBoard}) {
+  /// the offBoardFn callback will be triggered.
+  void updateKinematics(Size boardSize, {OffBoardCallback whenOffBoard}) {
     _x += _vX;
     _y += _vY;
     _rot += _vR;
 
-    if (isOffBoard(game.state.boardSize)) {
-      if (whenOffBoard != null) {
+    if (whenOffBoard != null && isOffBoard(boardSize, x, y, size)) {
         whenOffBoard();
-      } else {
-        initKinematics(game);
-      }
     }
   }
-
-  bool isOffBoard(Size boardSize) => x < -size || x > boardSize.width + size || y > boardSize.height + size;
 }
+
+bool isOffBoard(Size boardSize, double x, double y, double size) =>
+  x < -size || x > boardSize.width + size || y < -size || y > boardSize.height + size;

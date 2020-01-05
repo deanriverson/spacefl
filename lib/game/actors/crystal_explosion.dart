@@ -27,7 +27,7 @@ class CrystalExplosion extends Actor with SimpleKinematics, SheetAnimation {
   }
 
   void update(Game game, Duration deltaT) {
-    updateKinematics();
+    updateKinematics(game.state.boardSize);
     updateAnimation(onEnd: () => game.state.destroyCrystalExplosion(this));
   }
 }

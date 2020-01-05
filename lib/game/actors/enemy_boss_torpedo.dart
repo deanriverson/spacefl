@@ -14,60 +14,18 @@
  * limitations under the License.
  */
 
-import 'dart:ui';
-
 import 'package:spacefl/game/actors/actor.dart';
+import 'package:spacefl/game/actors/mixins/simple_kinematics.dart';
 import 'package:spacefl/game/game.dart';
 
-class EnemyBossTorpedo extends Actor {
-  final Image image;
-
-  double x;
-  double y;
-  double vX;
-  double vY;
-
-  EnemyBossTorpedo(Game game, double x, this.y, this.vX, this.vY) : image = game.images.lookupImage('enemyTorpedo') {
-    this.x = x - image.width / 2.0;
+class EnemyBossTorpedo extends Actor with SimpleKinematics {
+  EnemyBossTorpedo(Game game, double x, double y, double vX, double vY) {
+    image = game.images.lookupImage('enemyTorpedo');
+    initKinematics(x - imgCenterX, y - imgCenterY, vX, vY);
   }
 
-  get width => image.width;
-
-  get height => image.height;
-
-  get size => width > height ? width : height;
-
-  get radius => size * 0.5;
-
   void update(Game game, Duration deltaT) {
-//    x += vX;
-//    y += vY;
-
-//    final hasBeenHit = state.hasBeenHit;
-//    final spaceShip = state.spaceShip;
-//
-//    if (!hasBeenHit) {
-//      bool hit;
-//      if (spaceShip.shield) {
-//        hit = isHitCircleCircle(x, y, radius, spaceShip.x, spaceShip.y, deflectorShieldRadius);
-//      } else {
-//        hit = isHitCircleCircle(x, y, radius, spaceShip.x, spaceShip.y, spaceShip.radius);
-//      }
-//      if (hit) {
-//        enemyBossTorpedosToRemove.add(EnemyBossTorpedo.this);
-//        if (spaceShip.shield) {
-//          playSound(shieldHitSound);
-//        } else {
-//          hasBeenHit = true;
-//          playSound(spaceShipExplosionSound);
-//          noOfLifes--;
-//          if (0 == noOfLifes) {
-//            gameOver();
-//          }
-//        }
-//      }
-//    } else if (y > HEIGHT) {
-//      enemyBossTorpedosToRemove.add(EnemyBossTorpedo.this);
-//    }
+    final state = game.state;
+    updateKinematics(state.boardSize, whenOffBoard: () => state.destroyEnemyBossTorpedo(this));
   }
 }

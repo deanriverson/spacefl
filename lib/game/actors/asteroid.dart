@@ -36,7 +36,7 @@ class Asteroid extends Actor with Kinematics, EnemyHitTest {
   }
 
   void update(Game game, Duration deltaT) {
-    updateKinematics(game, whenOffBoard: () => _init(game));
+    updateKinematics(game.state.boardSize, whenOffBoard: () => _init(game));
     doHitTest(game, onHit: (actor) => _processHit(game, actor));
   }
 

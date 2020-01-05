@@ -40,7 +40,7 @@ class EnemyBoss extends Actor with Kinematics, EnemyHitTest, EnemyWeapons {
   void update(Game game, Duration deltaT) {
     final state = game.state;
 
-    updateKinematics(game, whenOffBoard: () => state.destroyEnemyBoss(this));
+    updateKinematics(state.boardSize, whenOffBoard: () => state.destroyEnemyBoss(this));
     doHitTest(game, onHit: (actor) => _processHit(game, actor));
     aimWeapons(state.spaceShip, onFire: () => _fireBossTorpedo(game));
   }
@@ -55,7 +55,7 @@ class EnemyBoss extends Actor with Kinematics, EnemyHitTest, EnemyWeapons {
     }
   }
 
-  void _fireBossTorpedo(Game game) => game.state.spawnEnemyBossTorpedo(game, x, y, vX, vY);
+  void _fireBossTorpedo(Game game) => game.state.spawnEnemyBossTorpedo(game, centerX, centerY, vX, vY);
 
   void _processTorpedoHit(Game game) {
     if (--_hits == 0) {

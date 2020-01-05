@@ -79,9 +79,9 @@ class SpaceShip extends Actor {
 
   int get shieldCount => _shieldCount;
 
-  int get width => _noThrustImage.width;
-
-  int get height => _noThrustImage.height;
+//  int get width => _noThrustImage.width;
+//
+//  int get height => _noThrustImage.height;
 
   bool get isAlive => _hitPoints > 0;
 

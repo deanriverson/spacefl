@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-mixin SimpleKinematics {
+import 'dart:ui';
+
+import 'package:spacefl/game/actors/actor.dart';
+import 'package:spacefl/game/actors/mixins/kinematics.dart';
+
+mixin SimpleKinematics on Actor {
   double _x;
   double _y;
   double _vX;
@@ -32,8 +37,12 @@ mixin SimpleKinematics {
     _vY = vY;
   }
 
-  void updateKinematics() {
+  void updateKinematics(Size boardSize, {OffBoardCallback whenOffBoard}) {
     _x += _vX;
     _y += _vY;
+
+    if (whenOffBoard != null && isOffBoard(boardSize, x, y, size)) {
+      whenOffBoard();
+    }
   }
 }

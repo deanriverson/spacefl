@@ -16,10 +16,23 @@
 
 import 'dart:ui';
 
-import '../game.dart';
+import 'package:spacefl/game/game.dart';
 
 abstract class Actor {
   Image image;
+  double scale = 1.0;
+
+  double get width => image.width * scale;
+
+  double get height => image.height * scale;
+
+  double get size => width > height ? width : height;
+
+  double get radius => size * 0.5;
+
+  double get imgCenterX => image.width * 0.5;
+
+  double get imgCenterY => image.height * 0.5;
 
   void update(Game game, Duration deltaT);
 }
