@@ -17,32 +17,42 @@
 import 'dart:math';
 
 import 'package:spacefl/game/actors/actor.dart';
+import 'package:spacefl/game/actors/mixins/Respawn.dart';
 import 'package:spacefl/game/actors/mixins/enemy_hit_test.dart';
 import 'package:spacefl/game/actors/mixins/enemy_weapons.dart';
 import 'package:spacefl/game/actors/mixins/kinematics.dart';
 import 'package:spacefl/game/actors/mixins/kinematics_opts.dart';
 import 'package:spacefl/game/actors/torpedo.dart';
 import 'package:spacefl/game/game.dart';
+import 'package:spacefl/game/math_utils.dart';
 
-class Enemy extends Actor with Kinematics, EnemyHitTest, EnemyWeapons {
+class Enemy extends Actor with Kinematics, EnemyHitTest, EnemyWeapons, Respawn {
+  static const respawnMin = 2.0;
+  static const respawnMax = 5.0;
+
   final kinematicsOpts = KinematicsOpts(xVariation: 1.0, minSpeedY: 3.0, hasSpeedR: false);
 
   Enemy(Game game) {
-    _init(game);
+    respawn(game);
   }
 
   void update(Game game, Duration deltaT) {
     final state = game.state;
 
-    updateKinematics(state.boardSize, whenOffBoard: () => _init(game));
+    if (isRespawning(state.lastTimestamp)) return;
+
+    updateKinematics(state.boardSize, whenOffBoard: () => respawn(game));
     doHitTest(game, onHit: (actor) => _processHit(game, actor));
     aimWeapons(state.spaceShip, onFire: () => _fireTorpedo(game));
   }
 
-  void _init(Game game) {
+  void respawn(Game game, {Duration duration}) {
     image = game.images.randomEnemyImage;
     initWeapons(game);
     initKinematics(game, initialRotation: _calcRotation);
+
+    final respawnDuration = duration ?? randDurationInRange(game.state.random, respawnMin, respawnMax);
+    startRespawnTimer(game.state.lastTimestamp, duration: respawnDuration);
   }
 
   double _calcRotation() => atan2(vY, vX) - pi / 2.0;
@@ -53,7 +63,7 @@ class Enemy extends Actor with Kinematics, EnemyHitTest, EnemyWeapons {
     } else {
       game.state.spawnRocketExplosion(game, centerX, centerY, vX, vY, 0.5);
     }
-    _init(game);
+    respawn(game);
   }
 
   void _fireTorpedo(Game game) => game.state.spawnEnemyTorpedo(game, centerX, centerY, vX, vY);

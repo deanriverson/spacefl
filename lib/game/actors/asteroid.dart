@@ -15,13 +15,18 @@
  */
 
 import 'package:spacefl/game/actors/actor.dart';
+import 'package:spacefl/game/actors/mixins/Respawn.dart';
 import 'package:spacefl/game/actors/mixins/enemy_hit_test.dart';
 import 'package:spacefl/game/actors/mixins/kinematics.dart';
 import 'package:spacefl/game/actors/mixins/kinematics_opts.dart';
 import 'package:spacefl/game/actors/torpedo.dart';
 import 'package:spacefl/game/game.dart';
+import 'package:spacefl/game/math_utils.dart';
 
-class Asteroid extends Actor with Kinematics, EnemyHitTest {
+class Asteroid extends Actor with Kinematics, EnemyHitTest, Respawn {
+  static const respawnMin = 2.0;
+  static const respawnMax = 10.0;
+
   final kinematicsOpts = KinematicsOpts(
     xVariation: 2.0,
     minSpeedY: 2.0,
@@ -32,18 +37,23 @@ class Asteroid extends Actor with Kinematics, EnemyHitTest {
   int _hits = 0;
 
   Asteroid(Game game) {
-    _init(game);
+    respawn(game);
   }
 
   void update(Game game, Duration deltaT) {
-    updateKinematics(game.state.boardSize, whenOffBoard: () => _init(game));
+    if (isRespawning(game.state.lastTimestamp)) return;
+
+    updateKinematics(game.state.boardSize, whenOffBoard: () => respawn(game));
     doHitTest(game, onHit: (actor) => _processHit(game, actor));
   }
 
-  void _init(Game game) {
+  void respawn(Game game, {Duration duration}) {
     image = game.images.randomAsteroidImage;
     initKinematics(game);
     _hits = (scale * 5.0).toInt();
+
+    final respawnDuration = duration ?? randDurationInRange(game.state.random, respawnMin, respawnMax);
+    startRespawnTimer(game.state.lastTimestamp, duration: respawnDuration);
   }
 
   void _processHit(Game game, Actor actor) {
@@ -51,14 +61,14 @@ class Asteroid extends Actor with Kinematics, EnemyHitTest {
       _processTorpedoHit(game);
     } else {
       game.state.spawnRocketExplosion(game, centerX, centerY, vX, vY, scale);
-      _init(game);
+      respawn(game);
     }
   }
 
   void _processTorpedoHit(Game game) {
     if (--_hits == 0) {
       game.state.spawnAsteroidExplosion(game, centerX, centerY, vX, vY, scale);
-      _init(game);
+      respawn(game);
     }
   }
 }

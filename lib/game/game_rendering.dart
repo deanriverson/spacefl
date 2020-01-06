@@ -69,6 +69,8 @@ void drawStars(Canvas canvas, Game game) {
 void drawAsteroids(Canvas canvas, Game game) {
   if (Game.showAsteroids) {
     for (final a in game.state.asteroids) {
+      if (a.isRespawning(game.state.lastTimestamp)) continue;
+
       canvas.save();
 
       canvas.translate(a.centerX, a.centerY);
@@ -84,6 +86,8 @@ void drawAsteroids(Canvas canvas, Game game) {
 
 void drawEnemies(Canvas canvas, Game game) {
   for (final e in game.state.enemies) {
+    if (e.isRespawning(game.state.lastTimestamp)) continue;
+
     canvas.save();
 
     canvas.translate(e.centerX, e.centerY);

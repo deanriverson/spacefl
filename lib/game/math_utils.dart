@@ -41,3 +41,10 @@ bool isHitCircleCircle(
   double distance = math.sqrt((distX * distX) + (distY * distY));
   return (distance <= (c1R + c2R) * _hitTightnessFactor);
 }
+
+double randInRange(math.Random r, double min, double max) => r.nextDouble() * (max - min) + min;
+
+Duration randDurationInRange(math.Random r, double min, double max) {
+  final randSecs = randInRange(r, min, max);
+  return Duration(milliseconds: (randSecs * 1000).toInt());
+}

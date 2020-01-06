@@ -16,9 +16,8 @@
 
 import 'dart:ui';
 
-import 'package:spacefl/game/actors/enemy_boss_torpedo.dart';
-import 'package:spacefl/game/actors/enemy_torpedo.dart';
 import 'package:spacefl/game/actors/mixins/enemy_hit_test.dart' show OnHitFn;
+import 'package:spacefl/game/actors/mixins/kinematics.dart';
 import 'package:spacefl/game/actors/mixins/simple_kinematics.dart';
 import 'package:spacefl/game/game.dart';
 import 'package:spacefl/game/game_state.dart';
@@ -49,12 +48,16 @@ mixin PlayerHitTest {
 
   void incShieldCount() => _shieldCount++;
 
+  /// Initialize shields and hit testing state
   void initHitTesting() {
     _shieldUp = false;
     _shieldCount = Game.shieldCount;
     _lastShieldActivated = Duration.zero;
   }
 
+  /// Update shield status and do hit testing.  The [onHit] callback is optional.  If not
+  /// provided, no hit testing will be done (i.e. space ship can not be hit - may be useful
+  /// during respawn?).
   void doHitTest(Game game, {OnHitFn onHit}) {
     if (_shieldUp && _shieldTimeout(game.state.lastTimestamp)) {
       _shieldUp = false;
@@ -78,11 +81,21 @@ mixin PlayerHitTest {
   bool _shieldTimeout(Duration timestamp) => timestamp - _lastShieldActivated > Game.deflectorShieldDuration;
 
   void _performHitTests(GameState state, OnHitFn onHit) {
-    for (EnemyTorpedo et in state.enemyTorpedoes) if (_isHit(et)) onHit(et);
-    for (EnemyBossTorpedo ebt in state.enemyBossTorpedoes) if (_isHit(ebt)) onHit(ebt);
+    for (var actor in state.asteroids) if (_isHit(actor)) onHit(actor);
+    for (var actor in state.crystals) if (_isHit(actor)) onHit(actor);
+
+    for (var actor in state.enemies) if (_isHit(actor)) onHit(actor);
+    for (var actor in state.enemyTorpedoes) if (_isSimpleHit(actor)) onHit(actor);
+
+    for (var actor in state.enemyBosses) if (_isHit(actor)) onHit(actor);
+    for (var actor in state.enemyBossTorpedoes) if (_isSimpleHit(actor)) onHit(actor);
   }
 
-  bool _isHit(SimpleKinematics et) => _shieldUp
-      ? isHitCircleCircle(et.x, et.y, et.radius, x, y, shieldRadius)
-      : isHitCircleCircle(et.x, et.y, et.radius, x, y, radius);
+  bool _isHit(Kinematics actor) => _shieldUp
+      ? isHitCircleCircle(actor.centerX, actor.centerY, actor.radius, x, y, shieldRadius)
+      : isHitCircleCircle(actor.centerX, actor.centerY, actor.radius, x, y, radius);
+
+  bool _isSimpleHit(SimpleKinematics actor) => _shieldUp
+      ? isHitCircleCircle(actor.x, actor.y, actor.radius, x, y, shieldRadius)
+      : isHitCircleCircle(actor.x, actor.y, actor.radius, x, y, radius);
 }

@@ -17,8 +17,11 @@
 import 'dart:ui';
 
 import 'package:spacefl/game/actors/actor.dart';
+import 'package:spacefl/game/actors/asteroid.dart';
+import 'package:spacefl/game/actors/crystal.dart';
+import 'package:spacefl/game/actors/enemy.dart';
+import 'package:spacefl/game/actors/enemy_boss.dart';
 import 'package:spacefl/game/actors/enemy_boss_torpedo.dart';
-import 'package:spacefl/game/actors/enemy_torpedo.dart';
 import 'package:spacefl/game/actors/mixins/player_hit_test.dart';
 import 'package:spacefl/game/actors/mixins/player_kinematics.dart';
 import 'package:spacefl/game/game.dart';
@@ -131,13 +134,38 @@ class SpaceShip extends Actor with PlayerKinematics, PlayerHitTest {
   }
 
   void _destroyActor(Actor a, Game game) {
+    final state = game.state;
     switch (a.runtimeType) {
-      case EnemyTorpedo:
-        game.state.destroyEnemyTorpedo(a);
+      case Asteroid:
+        final ast = (a as Asteroid);
+        state.spawnAsteroidExplosion(game, ast.centerX, ast.centerY, ast.vX, ast.vY, ast.scale);
+        ast.respawn(game);
+        break;
+
+      case Crystal:
+        final c = (a as Crystal);
+        state.spawnCrystalExplosion(game, c.centerX, c.centerY, c.vX, c.vY);
+        state.destroyCrystal(c);
+        break;
+
+      case Enemy:
+        final e = (a as Enemy);
+        state.spawnExplosion(game, e.centerX, e.centerY, e.vX, e.vY, 0.5);
+        e.respawn(game);
+        break;
+
+      case EnemyBoss:
+        final e = a as EnemyBoss;
+        state.spawnEnemyBossExplosion(game, e.centerX, e.centerY, e.vX, e.vY);
+        state.destroyEnemyBoss(e);
         break;
 
       case EnemyBossTorpedo:
-        game.state.destroyEnemyBossTorpedo(a);
+        state.destroyEnemyBossTorpedo(a);
+        break;
+
+      case EnemyBossTorpedo:
+        state.destroyEnemyBossTorpedo(a);
         break;
     }
   }
