@@ -20,8 +20,8 @@ import 'package:spacefl/game/game.dart';
 
 class EnemyBossTorpedo extends Actor with SimpleKinematics {
   EnemyBossTorpedo(Game game, double x, double y, double vX, double vY) {
-    image = game.images.lookupImage('enemyTorpedo');
-    initKinematics(x - imgCenterX, y - imgCenterY, vX, vY);
+    image = game.images.lookupImage('enemyBossTorpedo');
+    initKinematics(x, y - imgCenterY, vX, vY);
   }
 
   void update(Game game, Duration deltaT) {

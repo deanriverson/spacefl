@@ -17,6 +17,7 @@
 import 'dart:ui';
 
 import 'package:flutter/rendering.dart';
+import 'package:spacefl/game/actors/enemy_boss_torpedo.dart';
 import 'package:spacefl/game/actors/enemy_torpedo.dart';
 import 'package:spacefl/game/actors/mixins/sheet_animation.dart';
 import 'package:spacefl/game/actors/rocket.dart';
@@ -149,6 +150,10 @@ void drawShots(Canvas canvas, Game game) {
   }
 
   for (EnemyTorpedo et in game.state.enemyTorpedoes) {
+    _drawImageWithOffset(canvas, et.image, et.x, et.y, et.radius, et.radius);
+  }
+
+  for (EnemyBossTorpedo et in game.state.enemyBossTorpedoes) {
     _drawImageWithOffset(canvas, et.image, et.x, et.y, et.radius, et.radius);
   }
 }

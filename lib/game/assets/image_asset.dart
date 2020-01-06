@@ -74,6 +74,7 @@ final imageAssets = [
     ImageAsset.square(indexedAssetName('enemyBoss', i), _enemyBossImageSizes[i]),
 
   ImageAsset('enemyBossExplosion', targetWidth: 800, targetHeight: 1400),
+  ImageAsset.square('enemyBossTorpedo', 26),
   ImageAsset.square('enemyTorpedo', 21),
   ImageAsset('explosion', targetWidth: 960, targetHeight: 768),
   ImageAsset.square('fighter', 48),
