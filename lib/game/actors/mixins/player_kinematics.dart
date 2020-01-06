@@ -17,39 +17,49 @@
 import 'dart:ui';
 
 import 'package:spacefl/game/actors/actor.dart';
-import 'package:spacefl/game/actors/mixins/kinematics.dart';
 
-mixin SimpleKinematics on Actor {
-  double _x;
-  double _y;
-  double _vX;
-  double _vY;
+mixin PlayerKinematics on Actor {
+  double _x = 0;
+  double _y = 0;
+
+  double _vX = 0;
+  double _vY = 0;
 
   double get x => _x;
 
   double get y => _y;
 
-  double get vX => _vX;
-
-  double get vY => _vY;
-
   double get centerX => _x + imgCenterX;
 
   double get centerY => _y + imgCenterY;
 
-  void initKinematics(double x, double y, double vX, double vY) {
-    _x = x;
-    _y = y;
-    _vX = vX;
-    _vY = vY;
+  double get vX => _vX;
+
+  double get vY => _vY;
+
+  set vX(double vel) => _vX = vel.clamp(-5, 5);
+
+  set vY(double vel) => _vY = vel.clamp(-5, 5);
+
+  void initKinematics(Size boardSize) {
+    _x = boardSize.width * 0.5;
+    _y = boardSize.height - 2 * image.height;
   }
 
-  void updateKinematics(Size boardSize, {OffBoardCallback whenOffBoard}) {
-    _x += _vX;
-    _y += _vY;
+  void updateKinematics(Size boardSize) {
+    _x += vX;
+    _y += vY;
 
-    if (whenOffBoard != null && isOffBoard(boardSize, x, y, size)) {
-      whenOffBoard();
+    if (_x + width * 0.5 > boardSize.width) {
+      _x = boardSize.width - width * 0.5;
+    } else if (_x - width * 0.5 < 0) {
+      _x = width * 0.5;
+    }
+
+    if (_y + height * 0.5 > boardSize.height) {
+      _y = boardSize.height - height * 0.5;
+    } else if (_y - height * 0.5 < 0) {
+      _y = height * 0.5;
     }
   }
 }

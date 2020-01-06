@@ -118,17 +118,9 @@ class Game {
       case GameEvent.decelerateUp:
       case GameEvent.decelerateDown:
       case GameEvent.activateShield:
-        state.spaceShip.handleEvent(ev, this);
-        return;
-
       case GameEvent.fireTorpedo:
-        state.spawnTorpedo(this, state.spaceShip.x, state.spaceShip.y);
-//        playSound(laserSound);
-        return;
-
       case GameEvent.fireRocket:
-        state.spawnRocket(this, state.spaceShip.x, state.spaceShip.y);
-//        playSound(rocketLaunchSound);
+        state.spaceShip.handleEvent(ev, this);
         return;
 
       case GameEvent.pauseGame:

@@ -41,6 +41,6 @@ class Crystal extends Actor with Kinematics, EnemyHitTest {
     final state = game.state;
     state.destroyCrystal(this);
     state.spawnCrystalExplosion(game, centerX, centerY, vX, vY);
-    state.spaceShip.addShield();
+    state.spaceShip.incShieldCount();
   }
 }

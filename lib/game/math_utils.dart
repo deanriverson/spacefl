@@ -15,7 +15,9 @@
  */
 import 'dart:math' as math;
 
-double tau = math.pi * 2.0;
+const double tau = math.pi * 2.0;
+
+const double _hitTightnessFactor = 0.8;
 
 /// Convert radians to degrees
 double radToDeg(double radians) => radians * 180.0 / math.pi;
@@ -37,5 +39,5 @@ bool isHitCircleCircle(
   double distX = c1X - c2X;
   double distY = c1Y - c2Y;
   double distance = math.sqrt((distX * distX) + (distY * distY));
-  return (distance <= c1R + c2R);
+  return (distance <= (c1R + c2R) * _hitTightnessFactor);
 }

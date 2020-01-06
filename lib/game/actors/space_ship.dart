@@ -19,101 +19,48 @@ import 'dart:ui';
 import 'package:spacefl/game/actors/actor.dart';
 import 'package:spacefl/game/actors/enemy_boss_torpedo.dart';
 import 'package:spacefl/game/actors/enemy_torpedo.dart';
+import 'package:spacefl/game/actors/mixins/player_hit_test.dart';
+import 'package:spacefl/game/actors/mixins/player_kinematics.dart';
 import 'package:spacefl/game/game.dart';
-import 'package:spacefl/game/math_utils.dart';
 
-class SpaceShip extends Actor {
+class SpaceShip extends Actor with PlayerKinematics, PlayerHitTest {
   static const maxHitPoints = 1;
 
   final Image _shieldImage;
   final Image _thrustImage;
   final Image _noThrustImage;
 
-  double _x;
-  double _y;
-  double _size;
-  double _radius;
-  double _shieldRadius;
-
-  bool _shieldUp = false;
-
-  int _shieldCount = Game.shieldCount;
   int _hitPoints = SpaceShip.maxHitPoints;
 
-  Duration _lastShieldActivated = Duration.zero;
-
-  double vX = 0;
-  double vY = 0;
-
   SpaceShip(Game game)
-      : _noThrustImage = game.images.lookupImage('fighter'),
-        _thrustImage = game.images.lookupImage('fighterThrust'),
-        _shieldImage = game.images.lookupImage('shield') {
+    : _noThrustImage = game.images.lookupImage('fighter'),
+      _thrustImage = game.images.lookupImage('fighterThrust'),
+      _shieldImage = game.images.lookupImage('shield') {
     assert(_noThrustImage != null && _noThrustImage != null && _shieldImage != null);
-
-    _size = (width > height ? width : height).toDouble();
-
-    _radius = _size * 0.5;
-    _shieldRadius = _shieldImage.width * 0.5;
-
     reset(game);
   }
 
-  void reset(Game game) {
-    _x = game.state.boardSize.width * 0.5;
-    _y = game.state.boardSize.height - 2 * image.height;
-    _hitPoints = SpaceShip.maxHitPoints;
-  }
-
-  double get x => _x;
-
-  double get y => _y;
-
-  double get size => _size;
-
-  double get radius => _radius;
-
-  double get shieldRadius => _shieldRadius;
-
-  bool get shieldUp => _shieldUp;
-
-  int get shieldCount => _shieldCount;
-
-//  int get width => _noThrustImage.width;
-//
-//  int get height => _noThrustImage.height;
-
   bool get isAlive => _hitPoints > 0;
 
-  Image get image => _isMoving() ? _thrustImage : _noThrustImage;
+  bool get isMoving => vX != 0 || vY != 0;
 
   Image get shieldImage => _shieldImage;
 
+  void reset(Game game) {
+    image = _noThrustImage;
+    _hitPoints = SpaceShip.maxHitPoints;
+    initHitTesting();
+    initKinematics(game.state.boardSize);
+  }
+
   void update(Game game, Duration deltaT) {
-    var state = game.state;
+    final state = game.state;
     final boardSize = state.boardSize;
 
-    _x += vX;
-    _y += vY;
+    updateKinematics(boardSize);
+    image = isMoving ? _thrustImage : _noThrustImage;
 
-    if (_x + width * 0.5 > boardSize.width) {
-      _x = boardSize.width - width * 0.5;
-    } else if (_x - width * 0.5 < 0) {
-      _x = width * 0.5;
-    }
-
-    if (_y + height * 0.5 > boardSize.height) {
-      _y = boardSize.height - height * 0.5;
-    } else if (_y - height * 0.5 < 0) {
-      _y = height * 0.5;
-    }
-
-    if (_shieldUp && _shieldTimeout(state.lastTimestamp)) {
-      _shieldUp = false;
-      _shieldCount--;
-    }
-
-    _performHitTests(game);
+    doHitTest(game, onHit: (Actor a) => _handleHit(game, a));
   }
 
   /// Handle game events that affect this space ship
@@ -146,87 +93,52 @@ class SpaceShip extends Actor {
         return;
 
       case GameEvent.activateShield:
-        _activateShield(game);
+        activateShield(game.state);
+        // TODO: play sound
+//      playSound(deflectorShieldSound);
         return;
+
       case GameEvent.fireRocket:
-        // TODO: Handle this case.
+        game.state.spawnRocket(game, x, y);
+//        playSound(rocketLaunchSound);
         return;
+
       case GameEvent.fireTorpedo:
-        // TODO: Handle this case.
+        game.state.spawnTorpedo(game, x, y);
+//        playSound(laserSound);
         return;
+
       default:
         return;
     }
   }
 
-  void _activateShield(Game game) {
-    if (_shieldCount > 0 && !_shieldUp) {
-      _lastShieldActivated = game.state.lastTimestamp;
-      _shieldUp = true;
+  void _handleHit(Game game, Actor a) {
+    _destroyActor(a, game);
 
-      // TODO: play sound
-//      playSound(deflectorShieldSound);
+    if (shieldUp) {
+      // TODO play sound
+//      playSound(shieldHitSound);
+      return;
+    }
+
+    _hitPoints--;
+    if (_hitPoints <= 0) {
+      game.state.destroySpaceShip(game);
+    } else {
+      // TODO play hit sound
     }
   }
 
-  bool _isMoving() => vX != 0 || vY != 0;
+  void _destroyActor(Actor a, Game game) {
+    switch (a.runtimeType) {
+      case EnemyTorpedo:
+        game.state.destroyEnemyTorpedo(a);
+        break;
 
-  bool _shieldTimeout(Duration timestamp) => timestamp - _lastShieldActivated > Game.deflectorShieldDuration;
-
-  void _performHitTests(Game game) {
-    final state = game.state;
-
-    for (EnemyTorpedo et in state.enemyTorpedoes) {
-      _checkTorpedoHit(game, et);
+      case EnemyBossTorpedo:
+        game.state.destroyEnemyBossTorpedo(a);
+        break;
     }
-
-    for (EnemyBossTorpedo ebt in state.enemyBossTorpedoes) {
-      _checkBossTorpedoHit(game, ebt);
-    }
-  }
-
-  bool _isTorpedoHit(EnemyTorpedo et) => _shieldUp
-      ? isHitCircleCircle(et.x, et.y, et.radius, x, y, _shieldRadius)
-      : isHitCircleCircle(et.x, et.y, et.radius, x, y, radius);
-
-  bool _isBossTorpedoHit(EnemyBossTorpedo et) => _shieldUp
-      ? isHitCircleCircle(et.x, et.y, et.radius, x, y, _shieldRadius)
-      : isHitCircleCircle(et.x, et.y, et.radius, x, y, radius);
-
-  void _checkTorpedoHit(Game game, EnemyTorpedo et) {
-    final state = game.state;
-    bool hit = _isTorpedoHit(et);
-
-    if (hit) {
-      state.destroyEnemyTorpedo(et);
-      if (_shieldUp) {
-        // TODO play sound
-//          playSound(shieldHitSound);
-      } else if (--_hitPoints <= 0) {
-        state.destroySpaceShip(game);
-        return;
-      }
-    }
-  }
-
-  void _checkBossTorpedoHit(Game game, EnemyBossTorpedo ebt) {
-    final state = game.state;
-    bool hit = _isBossTorpedoHit(ebt);
-
-    if (hit) {
-      state.destroyEnemyBossTorpedo(ebt);
-      if (_shieldUp) {
-        // TODO play sound
-//          playSound(shieldHitSound);
-      } else if (--_hitPoints <= 0) {
-        state.destroySpaceShip(game);
-        return;
-      }
-    }
-  }
-
-  // TODO: implement
-  void addShield() {
-    print("You get another shield!!");
   }
 }
