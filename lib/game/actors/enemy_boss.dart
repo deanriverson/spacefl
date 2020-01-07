@@ -49,7 +49,7 @@ class EnemyBoss extends Actor with Kinematics, EnemyHitTest, EnemyWeapons {
 
   void _processHit(Game game, Actor actor) {
     if (actor.runtimeType == Torpedo) {
-      _processTorpedoHit(game);
+      _processTorpedoHit(game, actor);
     } else {
       _destroyMe(game);
     }
@@ -57,11 +57,12 @@ class EnemyBoss extends Actor with Kinematics, EnemyHitTest, EnemyWeapons {
 
   void _fireBossTorpedo(Game game) => game.state.spawnEnemyBossTorpedo(game, centerX, centerY, vX, vY);
 
-  void _processTorpedoHit(Game game) {
+  void _processTorpedoHit(Game game, Torpedo torpedo) {
     if (--_hits == 0) {
       _destroyMe(game);
     } else {
       image = game.images.lookupImageWithIndex('enemyBoss', _hits);
+      game.state.spawnEnemyBossHit(game, torpedo.x, torpedo.y, vX, vY);
     }
   }
 

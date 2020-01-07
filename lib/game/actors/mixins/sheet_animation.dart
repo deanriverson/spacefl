@@ -27,7 +27,7 @@ mixin SheetAnimation {
   double _frameWidth = 256;
   double _frameHeight = 256;
   double _frameCenter = 128;
-  double _scale;
+  double _scale = 1.0;
 
   double get frameWidth => _frameWidth;
   double get frameHeight => _frameHeight;

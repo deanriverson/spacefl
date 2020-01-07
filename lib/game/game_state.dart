@@ -164,6 +164,11 @@ class GameState {
     // TODO: play sound
   }
 
+  void spawnEnemyBossHit(Game game, double x, double y, double vX, double vY) {
+    enemyBossHits.add(EnemyBossHit(game, x, y, vX, vY));
+    // TODO - play sound
+  }
+
   void spawnEnemyBossTorpedo(Game game, double x, double y, double vX, double vY) {
     double vFactor = Game.enemyTorpedoSpeed / vY;
     enemyBossTorpedoes.add(EnemyBossTorpedo(game, x, y, vFactor * vX, vFactor * vY));
@@ -180,6 +185,11 @@ class GameState {
 
   void spawnExplosion(Game game, double x, double y, double vX, double vY, double scale) {
     explosions.add(Explosion(game, x, y, vX, vY, scale));
+    // TODO - play sound
+  }
+
+  void spawnHit(Game game, double x, double y, double vX, double vY) {
+    hits.add(Hit(game, x, y, vX, vY));
     // TODO - play sound
   }
 
@@ -214,7 +224,11 @@ class GameState {
 
   void destroyEnemyBossTorpedo(EnemyBossTorpedo ebt) => enemyBossTorpedoesToRemove.add(ebt);
 
+  void destroyEnemyBossHit(EnemyBossHit ebh) => enemyBossHitsToRemove.add(ebh);
+
   void destroyExplosion(Explosion e) => explosionsToRemove.add(e);
+
+  void destroyHit(Hit h) => hitsToRemove.add(h);
 
   void destroyRocket(Rocket r) => rocketsToRemove.add(r);
 

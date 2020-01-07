@@ -84,4 +84,6 @@ final imageAssets = [
   ImageAsset('rocketExplosion', targetWidth: 512, targetHeight: 896),
   ImageAsset('spaceshipExplosion', targetWidth: 800, targetHeight: 600, alias: 'fighterExplosion'),
   ImageAsset('torpedo', targetWidth: 17, targetHeight: 20),
+  ImageAsset('torpedoHit2', targetWidth: 400, targetHeight: 160, alias: 'hit'),
+  ImageAsset('torpedoHit', targetWidth: 400, targetHeight: 160, alias: 'enemyBossHit'),
 ];

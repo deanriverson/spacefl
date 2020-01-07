@@ -39,7 +39,7 @@ import 'package:spacefl/widgets/space_fl_game.dart';
  *   [x] Draw enemy bosses
  *   [x] Draw enemy boss explosions
  *   [x] Detect ship-to-ship and ship-to-asteroid collisions
- *   [ ] Draw hits
+ *   [x] Draw hits
  *   [ ] Draw score, lives, and mini shields
  *   [ ] Play sound effects
  *   [ ] Play music

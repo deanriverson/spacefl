@@ -15,38 +15,19 @@
  */
 
 import 'package:spacefl/game/actors/actor.dart';
+import 'package:spacefl/game/actors/mixins/sheet_animation.dart';
+import 'package:spacefl/game/actors/mixins/simple_kinematics.dart';
 import 'package:spacefl/game/game.dart';
 
-class EnemyBossHit extends Actor {
-  static const double FRAME_WIDTH  = 80;
-  static const double FRAME_HEIGHT = 80;
-  static const double FRAME_CENTER = 40;
-  static const int    MAX_FRAME_X  = 5;
-  static const int    MAX_FRAME_Y  = 2;
-
-  double x;
-  double y;
-  double vX;
-  double vY;
-  int    countX = 0;
-  int    countY = 0;
-
-  EnemyBossHit(this.x, this.y, this.vX, this.vY);
+class EnemyBossHit extends Actor with SimpleKinematics, SheetAnimation {
+  EnemyBossHit(Game game, double x, double y, double vX, double vY) {
+    image = game.images.lookupImage('enemyBossHit');
+    initFrames(5, 2, 80, 80, 1.0);
+    initKinematics(x, y, vX, vY);
+  }
 
   void update(Game game, Duration deltaT) {
-    x += vX;
-    y += vY;
-
-    countX++;
-    if (countX == MAX_FRAME_X) {
-      countY++;
-      if (countX == MAX_FRAME_X && countY == MAX_FRAME_Y) {
-        game.state.enemyBossHitsToRemove.add(this);
-      }
-      countX = 0;
-      if (countY == MAX_FRAME_Y) {
-        countY = 0;
-      }
-    }
+    updateKinematics(game.state.boardSize);
+    updateAnimation(onEnd: () => game.state.destroyEnemyBossHit(this));
   }
 }

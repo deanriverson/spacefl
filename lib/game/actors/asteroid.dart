@@ -24,8 +24,8 @@ import 'package:spacefl/game/game.dart';
 import 'package:spacefl/game/math_utils.dart';
 
 class Asteroid extends Actor with Kinematics, EnemyHitTest, Respawn {
-  static const respawnMin = 2.0;
-  static const respawnMax = 10.0;
+  static const respawnMin = 1.0;
+  static const respawnMax = 5.0;
 
   final kinematicsOpts = KinematicsOpts(
     xVariation: 2.0,
@@ -58,17 +58,19 @@ class Asteroid extends Actor with Kinematics, EnemyHitTest, Respawn {
 
   void _processHit(Game game, Actor actor) {
     if (actor.runtimeType == Torpedo) {
-      _processTorpedoHit(game);
+      _processTorpedoHit(game, actor);
     } else {
       game.state.spawnRocketExplosion(game, centerX, centerY, vX, vY, scale);
       respawn(game);
     }
   }
 
-  void _processTorpedoHit(Game game) {
+  void _processTorpedoHit(Game game, Torpedo torpedo) {
     if (--_hits == 0) {
       game.state.spawnAsteroidExplosion(game, centerX, centerY, vX, vY, scale);
       respawn(game);
+    } else {
+      game.state.spawnHit(game, torpedo.x, torpedo.y, vX, vY);
     }
   }
 }

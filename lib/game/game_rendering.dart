@@ -17,11 +17,7 @@
 import 'dart:ui';
 
 import 'package:flutter/rendering.dart';
-import 'package:spacefl/game/actors/enemy_boss_torpedo.dart';
-import 'package:spacefl/game/actors/enemy_torpedo.dart';
 import 'package:spacefl/game/actors/mixins/sheet_animation.dart';
-import 'package:spacefl/game/actors/rocket.dart';
-import 'package:spacefl/game/actors/torpedo.dart';
 import 'package:spacefl/game/game.dart';
 
 final _imagePaint = Paint();
@@ -145,19 +141,19 @@ void drawSpaceShip(Canvas canvas, Game game) {
 }
 
 void drawShots(Canvas canvas, Game game) {
-  for (Torpedo t in game.state.torpedoes) {
+  for (var t in game.state.torpedoes) {
     _drawImageWithOffset(canvas, t.image, t.x, t.y, t.radius, t.radius);
   }
 
-  for (Rocket r in game.state.rockets) {
+  for (var r in game.state.rockets) {
     _drawImageWithOffset(canvas, r.image, r.x, r.y, r.imgCenterX, r.imgCenterY);
   }
 
-  for (EnemyTorpedo et in game.state.enemyTorpedoes) {
+  for (var et in game.state.enemyTorpedoes) {
     _drawImageWithOffset(canvas, et.image, et.x, et.y, et.radius, et.radius);
   }
 
-  for (EnemyBossTorpedo et in game.state.enemyBossTorpedoes) {
+  for (var et in game.state.enemyBossTorpedoes) {
     _drawImageWithOffset(canvas, et.image, et.x, et.y, et.radius, et.radius);
   }
 }
@@ -168,7 +164,9 @@ void drawExplosions(Canvas canvas, Game game) {
   _drawSheetAnimations(canvas, state.asteroidExplosions);
   _drawSheetAnimations(canvas, state.crystalExplosions);
   _drawSheetAnimations(canvas, state.enemyBossExplosions);
+  _drawSheetAnimations(canvas, state.enemyBossHits);
   _drawSheetAnimations(canvas, state.explosions);
+  _drawSheetAnimations(canvas, state.hits);
   _drawSheetAnimations(canvas, state.rocketExplosions);
 
   if (!state.spaceShip.isAlive) {
