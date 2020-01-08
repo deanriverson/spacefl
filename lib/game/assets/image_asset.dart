@@ -43,6 +43,8 @@ class ImageAsset {
     : this(name, targetWidth: size, targetHeight: size, ext: ext, alias: alias);
 
   String get assetPath => '$_imageAssetPath/$name.$ext';
+
+  bool get hasTargetSize => targetWidth != null && targetHeight != null;
 }
 
 const _asteroidImageSizes = [140, 140, 140  , 110, 100, 120, 110, 100, 130, 120, 140];

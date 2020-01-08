@@ -18,6 +18,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/services.dart';
+import 'package:image/image.dart' as img;
 import 'package:spacefl/game/assets/image_asset.dart';
 
 class GameImages {
@@ -49,6 +50,47 @@ class GameImages {
     );
 
     final frameInfo = await codec.getNextFrame();
-    return frameInfo.image;
+    Image image = frameInfo.image;
+
+    print('loaded ${ia.assetPath} as size ${image.width} x ${image.height}');
+
+    // Web platform doesn't support targetWidth/targetHeight so we
+    // have to resize manually for now
+    if (ia.hasTargetSize && image.width != ia.targetWidth || image.height != ia.targetHeight) {
+      print("Detected that resize is needed...");
+      Image resized = await _resizeIfNeeded(ia.ext, byteData, image.width, image.height, ia.targetWidth, ia.targetHeight);
+
+      if (resized == null) {
+        return image;
+      }
+
+      image.dispose();
+      return resized;
+    }
+
+    return image;
+  }
+
+  /// Resize the image using the image library if it doesn't match the target width/height.
+  Future<Image> _resizeIfNeeded(String ext, ByteData byteData, int width, int height, int targetWidth, int targetHeight) async {
+    try {
+      final imgData = byteData.buffer.asUint8List();
+      img.Image libImage = ext == 'png' ? img.decodePng(imgData) : img.decodeJpg(imgData);
+
+      print('...created libImage: $libImage');
+      img.Image resized = img.copyResize(libImage, width: targetWidth, height: targetHeight);
+      print('...resized libImage: $resized');
+
+      print('...created resized image ${resized.width} x ${resized.height}');
+      final codec = await instantiateImageCodec(img.encodePng(resized));
+      final frameInfo = await codec.getNextFrame();
+      Image result = frameInfo.image;
+
+      print('Resize needed: image loaded as $width x $height, resized to ${result.width} x ${result.height}');
+      return result;
+    } catch(e) {
+      print('Exception resizing image!! $e');
+    }
+    return null;
   }
 }
