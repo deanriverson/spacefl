@@ -5,12 +5,14 @@ and ported to Flutter and Dart.
 Gerrit is welcoming donations at [Paypal](https://paypal.me/hans0l0)
 
 ### Overview
-All Flutter source code is in the [lib](lib) directory. Platform-specifc build files and source code lives in the [ios](ios), [android](android), and [web](web) directories.
+All Flutter source code is in the [lib](lib) directory. Platform-specifc build files and source 
+code lives in the [ios](ios), [android](android), [web](web), and [macos](macos) directories.
 
-![Overview](https://raw.githubusercontent.com/HanSolo/SpaceFX/master/SpaceFX.png)
+![Overview](assets/images/spacefl_project.png)
 
 ### Youtube video
-Gerrit recorded a short [video](https://youtu.be/IS71geUu9RE) that shows the game in action.
+There is a short [video](https://www.youtube.com/watch?v=fk_6q-qR-Ns) that shows the game in action
+in its mobile, web, and desktop incarnations.
 
 ### Getting Started with Flutter
 
