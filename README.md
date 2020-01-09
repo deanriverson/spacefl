@@ -3,8 +3,6 @@ A simple tiny space game [originally written in JavaFX][1] by [Gerrit Grunwald (
 and ported to Flutter and Dart.  I wanted to see if a (fairly) graphics intensive app really could run 
 at 60 FPS on Android, iOS, web, and desktop; all from a single code base with no changes.
 
-Gerrit is welcoming donations at [Paypal](https://paypal.me/hans0l0)
-
 ### Overview
 All Flutter source code is in the [lib](lib) directory. Platform-specifc build files and source 
 code lives in the [ios](ios), [android](android), [web](web), and [macos](macos) directories.
