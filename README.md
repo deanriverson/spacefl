@@ -13,7 +13,7 @@ the code. The [actors](lib/game/actors) package contains all of the ships, torpe
 There are also several [mixins](lib/game/actors/mixins) that provide common behaviors to the actors, such
 as kinematics and hit testing.  The Flutter-specific bits are in the [lib/widgets](lib/widgets) package.
 The [RenderGameBoard](lib/widgets/render_game_board.dart) class might be of particular interest if you
-want to see how Flutter's RenderObjects work.
+want to see how Flutter RenderObjects work.
 
 ![Overview](assets/images/spacefl_project.png)
 
