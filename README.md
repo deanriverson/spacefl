@@ -7,7 +7,7 @@ at 60 FPS on Android, iOS, web, and desktop; all from a single code base with no
 All Flutter source code is in the [lib](lib) directory. Platform-specifc build files and source 
 code lives in the [ios](ios), [android](android), [web](web), and [macos](macos) directories.
 
-A few quick pointers to get you started. The [Game](lib/game/game.dart) singleton and its associated 
+A few quick pointers to get you started: the [Game](lib/game/game.dart) singleton and its associated 
 [GameState](lib/game/game_state.dart) class are where you should start if you want to get familiar with 
 the code. The [actors](lib/game/actors) package contains all of the ships, torpedoes, explosions, etc.
 There are also several [mixins](lib/game/actors/mixins) that provide common behaviors to the actors, such
