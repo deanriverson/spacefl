@@ -8,10 +8,10 @@ All Flutter source code is in the [lib](lib) directory. Platform-specifc build f
 code lives in the [ios](ios), [android](android), [web](web), and [macos](macos) directories.
 
 A few quick pointers to get you started. The [Game](lib/game/game.dart) singleton and its associated 
-[GameState](lib/game/game_state.dart) class are where you should start getting familiar with the code.
-The [actors](lib/game/actors) package contains all of the ships, torpedoes, explosions, etc.  There are
-also several [mixins](lib/game/actors/mixins) that provide common behaviors to the actors, such as
-kinematics and hit testing.  The Flutter-specific bits are in the [lib/widgets](lib/widgets) package.
+[GameState](lib/game/game_state.dart) class are where you should start if you want to get familiar with 
+the code. The [actors](lib/game/actors) package contains all of the ships, torpedoes, explosions, etc.
+There are also several [mixins](lib/game/actors/mixins) that provide common behaviors to the actors, such
+as kinematics and hit testing.  The Flutter-specific bits are in the [lib/widgets](lib/widgets) package.
 The [RenderGameBoard](lib/widgets/render_game_board.dart) class might be of particular interest if you
 want to see how Flutter's RenderObjects work.
 
