@@ -15,7 +15,7 @@
  */
 
 import 'package:spacefl/game/actors/actor.dart';
-import 'package:spacefl/game/actors/mixins/Respawn.dart';
+import 'package:spacefl/game/actors/mixins/respawn.dart';
 import 'package:spacefl/game/actors/mixins/enemy_hit_test.dart';
 import 'package:spacefl/game/actors/mixins/kinematics.dart';
 import 'package:spacefl/game/actors/mixins/kinematics_opts.dart';
